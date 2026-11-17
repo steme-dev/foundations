@@ -1,0 +1,38 @@
+/** Rspress's own interface words in French (`i18nSource`): the search, the outline, the pages' links. */
+const FR: Record<string, string> = {
+  languagesText: "Langues",
+  themeText: "Thème",
+  versionsText: "Versions",
+  menuTitle: "Menu",
+  outlineTitle: "Sur cette page",
+  scrollToTopText: "Revenir en haut",
+  lastUpdatedText: "Dernière mise à jour",
+  lastUpdatedAuthorText: "par",
+  prevPageText: "Page précédente",
+  nextPageText: "Page suivante",
+  sourceCodeText: "Code source",
+  searchPlaceholderText: "Rechercher",
+  searchPanelCancelText: "Annuler",
+  searchNoResultsText: "Aucun résultat pour",
+  searchSuggestedQueryText: "Essaie une autre recherche",
+  openInText: "Ouvrir dans",
+  copyMarkdownText: "Copier le Markdown",
+  copyMarkdownLinkText: "Copier le lien du Markdown",
+  editLinkText: "Modifier cette page",
+  codeButtonGroupCopyButtonText: "Copier",
+  codeButtonGroupWrapButtonText: "Retour à la ligne",
+  notFoundText: "Cette page n'existe pas",
+  takeMeHomeText: "Retour à l'accueil",
+  errorTitleText: "Une erreur est survenue",
+  errorDescriptionText: "La page n'a pas pu s'afficher.",
+  reloadPageText: "Recharger la page",
+  errorDetailsText: "Détails de l'erreur",
+  promptCopyText: "Copier",
+  promptCopiedText: "Copié",
+  promptExpandText: "Déplier",
+  promptCollapseText: "Replier",
+};
+
+export const i18nSourceFr = Object.fromEntries(
+  Object.entries(FR).map(([key, fr]) => [key, { fr }]),
+) as Record<string, { fr: string }>;

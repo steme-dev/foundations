@@ -44,8 +44,9 @@ export const signOut = async (): Promise<void> => {
 
 export const forgetMe = async (): Promise<boolean> => (await send("/api/me", "DELETE")).ok;
 
-/** A person's public list: `/u/<login>`, which the worker serves from the page at `/u/`. */
-export const profilePath = (login: string): string => `/u/${login}`;
+/** A person's public list: `/u/<login>`, `/fr/u/<login>` in French, served by the worker from the page at `/u/`. */
+export const profilePath = (login: string, link: (path: string) => string = (p) => p): string =>
+  link(`/u/${login}`);
 
 /** Where a reader proposes a practice: the issue form of the repository. */
 export const PROPOSE_URL =

@@ -2,11 +2,12 @@ import { useEffect, useState } from "react";
 
 import { CELLS, type Cell } from "../../data/grid.ts";
 import { PRACTICES, type PracticeId } from "../../data/practices.ts";
+import { useWords } from "./lang.ts";
 
 const ROWS = [
-  { label: "Guides", hint: "before the agent acts", cells: ["GI", "GC"] as const },
-  { label: "Sensors", hint: "after the agent acts", cells: ["SI", "SC"] as const },
-];
+  { label: "Guides", hint: "before", cells: ["GI", "GC"] as const },
+  { label: "Sensors", hint: "after", cells: ["SI", "SC"] as const },
+] as const;
 const STEP_MS = 260;
 
 const cellsOf = (id: PracticeId): readonly Cell[] => PRACTICES[id].cells;
@@ -23,6 +24,7 @@ export default function ProfileGrid({
   login: string;
   votes: readonly PracticeId[];
 }) {
+  const { t, link } = useWords();
   const ids = votes.filter((id) => id in PRACTICES);
   const [shown, setShown] = useState(0);
   const [run, setRun] = useState(0);
@@ -53,11 +55,10 @@ export default function ProfileGrid({
   return (
     <figure className="foundations-pgrid" aria-label="Where these practices act in Böckeler's grid">
       <header className="foundations-pgrid-head">
-        <h3>@{login}'s harness, built on the literature</h3>
+        <h3>{t.harnessTitle(login)}</h3>
         <p>
-          The practices {login} uses, each placed where it acts when an agent writes the code:
-          before it or after, judged by a model or decided by a program. The grid is{" "}
-          <a href="/grid/">Birgitta Böckeler's</a>.
+          {t.harnessLede(login)}
+          <a href={link("/grid/")}>{t.harnessLedeLink}</a>.
         </p>
       </header>
       <div className="foundations-pgrid-grid">
@@ -68,7 +69,7 @@ export default function ProfileGrid({
           <div key={row.label} className="foundations-placement-row">
             <span className="foundations-placement-axis">
               {row.label}
-              <small>{row.hint}</small>
+              <small>{t[row.hint]}</small>
             </span>
             {row.cells.map((cell) => {
               const here = ids
@@ -80,7 +81,7 @@ export default function ProfileGrid({
                   className="foundations-pgrid-cell"
                   data-on={here.length > 0 ? "" : undefined}
                 >
-                  <a className="foundations-pgrid-label" href={`/grid/${CELLS[cell].slug}`}>
+                  <a className="foundations-pgrid-label" href={link(`/grid/${CELLS[cell].slug}`)}>
                     {CELLS[cell].label}
                     <b>{here.length}</b>
                   </a>
@@ -88,7 +89,7 @@ export default function ProfileGrid({
                     {here.map(({ id, order }) => (
                       <a
                         key={id}
-                        href={`/practices/${id}`}
+                        href={link(`/practices/${id}`)}
                         className="foundations-pgrid-chip"
                         data-new={order === shown - 1 && playing ? "" : undefined}
                       >
@@ -104,15 +105,11 @@ export default function ProfileGrid({
       </div>
       <figcaption className="foundations-pgrid-caption">
         <span>
-          {covered.length} of 4 cells covered
-          {covered.length === 4
-            ? ": guides and sensors, inferred and computed."
-            : covered.includes("SC")
-              ? "."
-              : ", none yet where a program checks the work."}
+          {t.covered(covered.length)}
+          {covered.length === 4 ? t.coveredAll : covered.includes("SC") ? "." : t.coveredNoSensor}
         </span>
         <button type="button" onClick={() => setRun((r) => r + 1)} disabled={playing}>
-          {playing ? "Playing…" : "▶ Replay"}
+          {playing ? t.playing : t.replay}
         </button>
       </figcaption>
     </figure>

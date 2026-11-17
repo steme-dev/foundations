@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
-import { GRID_SOURCE } from "./grid.ts";
+import { CELLS, type Cell, GRID_SOURCE } from "./grid.ts";
+import { DEFINITIONS_FR, EXAMPLES_FR } from "./fr.ts";
 import { PEOPLE } from "./people.ts";
 import { PRACTICES, type Practice } from "./practices.ts";
 import { SHOP_ORDER, SHOPS } from "./shops.ts";
@@ -77,5 +78,18 @@ describe("the people", () => {
   it("each is the author of at least one source", () => {
     const authors = new Set(sources.flatMap(([, source]) => source.by));
     expect(Object.keys(PEOPLE).filter((id) => !authors.has(id as keyof typeof PEOPLE))).toEqual([]);
+  });
+});
+
+describe("the library in French", () => {
+  it.each(Object.entries(DEFINITIONS_FR))(
+    "%s is defined in one plain sentence",
+    (_, definition) => {
+      expect(definition).toMatch(/^[A-ZÀ-Ý][^.—]*\.$/u);
+    },
+  );
+
+  it.each(Object.keys(CELLS) as Cell[])("%s has as many examples as in English", (cell) => {
+    expect(EXAMPLES_FR[cell]).toHaveLength(CELLS[cell].examples.length);
   });
 });

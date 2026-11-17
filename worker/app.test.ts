@@ -188,6 +188,15 @@ describe("the pages", () => {
     );
   });
 
+  it("serves a French shared list from the French page, with French words", async () => {
+    const deps = setup();
+    await deps.store.upsertUser(ADA, NOW.toISOString());
+    const html = await (await call(deps, "/fr/u/ada")).text();
+    expect(html).toContain("<title>Le harness de @ada, fondé sur la littérature</title>");
+    expect(html).toContain('history.replaceState(null, "", "/fr/u/?login=ada")');
+    expect(html).toContain("asset /fr/u/");
+  });
+
   it("sends a /u/<login> no one holds to the page that says so", async () => {
     const shared = await call(setup(), "/u/nobody");
     expect([shared.status, shared.headers.get("Location")]).toEqual([302, "/u/?login=nobody"]);

@@ -185,7 +185,8 @@ body {
 /* The home's opening: the catchphrase, then what the library is. */
 /* The home's heading, the one page that holds the library. */
 .rp-doc:has(.foundations-library) h1 {
-  font-size: clamp(2rem, 4.5vw, 3rem) !important;
+  font-size: clamp(1.75rem, 3.2vw, 2.3rem) !important;
+  text-wrap: balance;
   line-height: 1.1 !important;
   letter-spacing: -0.03em;
   margin: 8px 0 16px !important;

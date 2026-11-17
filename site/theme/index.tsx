@@ -5,16 +5,24 @@ import { Layout as DefaultLayout } from "@rspress/core/theme-original";
 
 import { Account } from "./Account.tsx";
 import { PROPOSE_URL } from "./api.ts";
+import { useWords } from "./lang.ts";
 
 export * from "@rspress/core/theme-original";
+
+function Propose() {
+  const { t } = useWords();
+  return (
+    <a className="foundations-fab" href={PROPOSE_URL} target="_blank" rel="noopener noreferrer">
+      + {t.propose}
+    </a>
+  );
+}
 
 export function Layout(props: Parameters<typeof DefaultLayout>[0]) {
   return (
     <>
       <DefaultLayout {...props} beforeNavMenu={<Account />} />
-      <a className="foundations-fab" href={PROPOSE_URL} target="_blank" rel="noopener noreferrer">
-        + Propose a practice
-      </a>
+      <Propose />
     </>
   );
 }

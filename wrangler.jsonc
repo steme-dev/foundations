@@ -14,7 +14,7 @@
     "directory": "./dist",
     "binding": "ASSETS",
     "not_found_handling": "404-page",
-    "run_worker_first": ["/api/*", "/auth/*", "/u/*"],
+    "run_worker_first": ["/api/*", "/auth/*", "/u/*", "/fr/u/*"],
   },
   "d1_databases": [
     {

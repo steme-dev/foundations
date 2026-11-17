@@ -3,15 +3,17 @@ import { useEffect, useState } from "react";
 import { CELLS } from "../../data/grid.ts";
 import { PEOPLE } from "../../data/people.ts";
 import { PRACTICES, type Practice, type PracticeId } from "../../data/practices.ts";
-import { THEMES } from "../../data/themes.ts";
+import { definition, themeLabel } from "../i18n.ts";
 import { type Me, PROPOSE_URL, getCounts, getMe, profilePath, setVote, signIn } from "./api.ts";
 import { type Filter, Filters, NO_FILTER, type Sort, matches } from "./Filters.tsx";
 import GridTally from "./GridTally.tsx";
+import { useWords } from "./lang.ts";
 
 const practices = Object.entries(PRACTICES) as [PracticeId, Practice][];
 
 /** The library on the home: one practice per row, its "I use it" on the right, counted by the worker. */
 export default function Library() {
+  const { lang, t, link } = useWords();
   const [filter, setFilter] = useState<Filter>(NO_FILTER);
   const [sort, setSort] = useState<Sort>("name");
   const [me, setMe] = useState<Me>({ user: null, votes: [] });
@@ -53,9 +55,11 @@ export default function Library() {
     <section className="foundations-library">
       {firstVote && me.user !== null ? (
         <p className="foundations-notice">
-          Your list is public at{" "}
-          <a href={profilePath(me.user.login)}>{profilePath(me.user.login)}</a>, for you to share.
-          You can delete it, with your account, from <a href="/me">your page</a>.
+          {t.firstVote.before}
+          <a href={profilePath(me.user.login, link)}>{profilePath(me.user.login, link)}</a>
+          {t.firstVote.middle}
+          <a href={link("/me")}>{t.firstVote.page}</a>
+          {t.firstVote.end}
         </p>
       ) : null}
 
@@ -73,10 +77,10 @@ export default function Library() {
           return (
             <li key={id} className="foundations-row">
               <div className="foundations-row-body">
-                <a className="foundations-row-name" href={`/practices/${id}`}>
+                <a className="foundations-row-name" href={link(`/practices/${id}`)}>
                   {practice.name}
                 </a>
-                <p className="foundations-row-definition">{practice.definition}</p>
+                <p className="foundations-row-definition">{definition(lang, id)}</p>
                 <p className="foundations-row-meta">
                   {practice.cells.map((c) => (
                     <button
@@ -88,44 +92,44 @@ export default function Library() {
                       {CELLS[c].label}
                     </button>
                   ))}
-                  {practice.themes.map((t) => (
+                  {practice.themes.map((theme) => (
                     <button
                       type="button"
-                      key={t}
+                      key={theme}
                       className="foundations-tag"
-                      onClick={() => setFilter({ ...filter, theme: t })}
+                      onClick={() => setFilter({ ...filter, theme })}
                     >
-                      {THEMES[t]}
+                      {themeLabel(lang, theme)}
                     </button>
                   ))}
                   {practice.credited.length > 0 ? (
-                    <span>named by {practice.credited.map((p) => PEOPLE[p].name).join(", ")}</span>
+                    <span>
+                      {t.namedBy} {practice.credited.map((p) => PEOPLE[p].name).join(", ")}
+                    </span>
                   ) : null}
-                  <span>
-                    {practice.sources.length} source{practice.sources.length > 1 ? "s" : ""}
-                  </span>
+                  <span>{t.sources(practice.sources.length)}</span>
                 </p>
               </div>
               <button
                 type="button"
                 className="foundations-use"
                 aria-pressed={mine}
-                aria-label={`I use ${practice.name}`}
+                aria-label={t.iUse(practice.name)}
                 onClick={() => void toggle(id)}
               >
-                <span className="foundations-use-label">I use it</span>
+                <span className="foundations-use-label">{t.iUseIt}</span>
                 <span className="foundations-use-count">{counts[id] ?? 0}</span>
               </button>
             </li>
           );
         })}
       </ol>
-      {shown.length === 0 ? <p>No practice acts there in this theme yet.</p> : null}
+      {shown.length === 0 ? <p>{t.noneThere}</p> : null}
       {me.user === null ? null : <GridTally login={me.user.login} votes={me.votes} />}
       <div className="foundations-propose">
-        <span>A practice missing?</span>
+        <span>{t.missing}</span>
         <a className="foundations-cta" href={PROPOSE_URL} target="_blank" rel="noopener noreferrer">
-          Propose a practice
+          {t.propose}
         </a>
       </div>
     </section>

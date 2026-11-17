@@ -5,14 +5,16 @@ import { type Profile as ProfileData, getProfile } from "./api.ts";
 import { type Filter, Filters, NO_FILTER, matches } from "./Filters.tsx";
 import { PracticeList } from "./PracticeList.tsx";
 import ProfileGrid from "./ProfileGrid.tsx";
+import { useWords } from "./lang.ts";
 
-/** The login a profile page is for: `/u/<login>`, or `/u/?login=<login>` where no worker rewrites the path. */
+/** The login a profile page is for: `/u/?login=<login>`, where the worker sends `/u/<login>`. */
 const loginOf = (location: Location): string =>
-  decodeURIComponent(location.pathname.replace(/^\/u\/?/u, "").replace(/\/$/u, "")) ||
+  decodeURIComponent(location.pathname.replace(/^(?:\/fr)?\/u\/?/u, "").replace(/\/$/u, "")) ||
   (new URLSearchParams(location.search).get("login") ?? "");
 
 /** A person's public list of the practices they use. */
 export default function Profile() {
+  const { t, link } = useWords();
   const [profile, setProfile] = useState<ProfileData | null | undefined>(undefined);
   const [filter, setFilter] = useState<Filter>(NO_FILTER);
   useEffect(() => {
@@ -21,11 +23,11 @@ export default function Profile() {
     else void getProfile(login).then(setProfile);
   }, []);
 
-  if (profile === undefined) return <p>Loading…</p>;
+  if (profile === undefined) return <p>{t.loading}</p>;
   if (profile === null)
     return (
       <p>
-        No one here. <a href="/">Back to the library</a>.
+        {t.noOne} <a href={link("/")}>{t.backToLibrary}</a>.
       </p>
     );
   const shown = profile.votes.filter((id) => id in PRACTICES && matches(PRACTICES[id], filter));
@@ -45,17 +47,14 @@ export default function Profile() {
               @{profile.login}
             </a>
           </h2>
-          <p>
-            Builds on {profile.votes.length} practice{profile.votes.length === 1 ? "" : "s"} of
-            software engineering.
-          </p>
+          <p>{t.buildsOn(profile.votes.length)}</p>
         </div>
       </div>
       <ProfileGrid login={profile.login} votes={profile.votes} />
       <Filters filter={filter} onChange={setFilter} shown={shown.length} />
       <PracticeList ids={shown} />
-      <a className="foundations-cta" href="/">
-        Say which ones you use
+      <a className="foundations-cta" href={link("/")}>
+        {t.sayWhich}
       </a>
     </section>
   );

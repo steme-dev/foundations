@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { CELLS, type Cell } from "../../data/grid.ts";
 import { PRACTICES, type PracticeId } from "../../data/practices.ts";
 import { profilePath } from "./api.ts";
+import { useWords } from "./lang.ts";
 
 const ORDER: readonly Cell[] = ["GI", "GC", "SI", "SC"];
 const SHORT: Record<Cell, string> = {
@@ -31,6 +32,7 @@ export default function GridTally({
   login: string;
   votes: readonly PracticeId[];
 }) {
+  const { t, link } = useWords();
   const counts = tally(votes);
   const before = useRef(counts);
   const [bumped, setBumped] = useState<Cell[]>([]);
@@ -47,12 +49,12 @@ export default function GridTally({
   if (votes.length === 0) return null;
   return (
     <aside className="foundations-tally" aria-label="Your grid so far">
-      <p className="foundations-tally-title">Your harness, cell by cell</p>
+      <p className="foundations-tally-title">{t.tallyTitle}</p>
       <div className="foundations-tally-grid">
         {ORDER.map((cell) => (
           <a
             key={cell}
-            href={`/grid/${CELLS[cell].slug}`}
+            href={link(`/grid/${CELLS[cell].slug}`)}
             className="foundations-tally-cell"
             data-on={counts[cell] > 0 ? "" : undefined}
             data-bump={bumped.includes(cell) ? "" : undefined}
@@ -63,8 +65,8 @@ export default function GridTally({
           </a>
         ))}
       </div>
-      <a className="foundations-tally-cta" href={profilePath(login)}>
-        See my grid →
+      <a className="foundations-tally-cta" href={profilePath(login, link)}>
+        {t.seeMyGrid}
       </a>
     </aside>
   );

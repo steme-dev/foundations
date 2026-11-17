@@ -2,12 +2,14 @@ import { useEffect, useState } from "react";
 
 import type { PracticeId } from "../../data/practices.ts";
 import { type Me, VOTES_EVENT, getMe, profilePath, signIn } from "./api.ts";
+import { useWords } from "./lang.ts";
 
 /**
  * The reader's place in the top navigation, which stays on screen: "Sign in with GitHub", or their
  * avatar and their list, its count kept up to date by every vote, and their page.
  */
 export function Account() {
+  const { t, link } = useWords();
   const [me, setMe] = useState<Me | null>(null);
   useEffect(() => {
     void getMe().then(setMe);
@@ -29,19 +31,19 @@ export function Account() {
         className="foundations-nav-signin"
         onClick={() => signIn(window.location.pathname + window.location.search)}
       >
-        Sign in with GitHub
+        {t.signIn}
       </button>
     );
   return (
     <div className="foundations-nav-account">
-      <a className="foundations-nav-list" href={profilePath(me.user.login)}>
+      <a className="foundations-nav-list" href={profilePath(me.user.login, link)}>
         {me.user.avatarUrl === null ? null : (
           <img src={me.user.avatarUrl} alt="" width={22} height={22} />
         )}
-        <span>Your list</span>
+        <span>{t.yourList}</span>
         <span className="foundations-nav-count">{me.votes.length}</span>
       </a>
-      <a className="foundations-nav-me" href="/me" title="Your account">
+      <a className="foundations-nav-me" href={link("/me")} title={t.yourAccount}>
         @{me.user.login}
       </a>
     </div>

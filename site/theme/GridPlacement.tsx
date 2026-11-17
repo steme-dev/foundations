@@ -1,15 +1,17 @@
 import { CELLS, type Cell } from "../../data/grid.ts";
+import { useWords } from "./lang.ts";
 
 const ROWS = [
-  { label: "Guides", hint: "before the agent acts", cells: ["GI", "GC"] as const },
-  { label: "Sensors", hint: "after the agent acts", cells: ["SI", "SC"] as const },
-];
+  { label: "Guides", hint: "before", cells: ["GI", "GC"] as const },
+  { label: "Sensors", hint: "after", cells: ["SI", "SC"] as const },
+] as const;
 
 /**
  * Böckeler's grid in small, a practice's cells lit: where it acts when an agent writes the code. Each
  * cell links to its page; the lit ones light up in turn as the page opens.
  */
 export default function GridPlacement({ cells }: { cells: readonly Cell[] }) {
+  const { t, link } = useWords();
   return (
     <figure
       className="foundations-placement"
@@ -23,14 +25,14 @@ export default function GridPlacement({ cells }: { cells: readonly Cell[] }) {
           <div key={row.label} className="foundations-placement-row">
             <span className="foundations-placement-axis">
               {row.label}
-              <small>{row.hint}</small>
+              <small>{t[row.hint]}</small>
             </span>
             {row.cells.map((cell) => {
               const on = cells.includes(cell);
               return (
                 <a
                   key={cell}
-                  href={`/grid/${CELLS[cell].slug}`}
+                  href={link(`/grid/${CELLS[cell].slug}`)}
                   className="foundations-placement-cell"
                   data-on={on ? "" : undefined}
                   style={
@@ -38,7 +40,7 @@ export default function GridPlacement({ cells }: { cells: readonly Cell[] }) {
                   }
                 >
                   <span>{CELLS[cell].label}</span>
-                  {on ? <small>here</small> : null}
+                  {on ? <small>{t.here}</small> : null}
                 </a>
               );
             })}

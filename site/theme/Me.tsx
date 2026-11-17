@@ -1,43 +1,44 @@
 import { useEffect, useState } from "react";
 
 import { type Me as MeState, forgetMe, getMe, profilePath, signIn, signOut } from "./api.ts";
+import { useWords } from "./lang.ts";
 import { PracticeList } from "./PracticeList.tsx";
 
 /** The signed-in reader's page: the practices they use, the link to share, sign out, delete everything. */
 export default function Me() {
+  const { t, link: to } = useWords();
   const [me, setMe] = useState<MeState | null>(null);
   const [copied, setCopied] = useState(false);
   useEffect(() => void getMe().then(setMe), []);
 
-  if (me === null) return <p>Loading…</p>;
+  if (me === null) return <p>{t.loading}</p>;
   if (me.user === null)
     return (
-      <button type="button" className="foundations-signin" onClick={() => signIn("/me")}>
-        Sign in with GitHub
+      <button type="button" className="foundations-signin" onClick={() => signIn(to("/me"))}>
+        {t.signIn}
       </button>
     );
 
   const { login } = me.user;
-  const link = `${window.location.origin}${profilePath(login)}`;
+  const link = `${window.location.origin}${profilePath(login, to)}`;
   return (
     <section className="foundations-me">
       <p>
-        Signed in as <strong>@{login}</strong>. You use {me.votes.length} practice
-        {me.votes.length === 1 ? "" : "s"}.
+        {t.signedInAs} <strong>@{login}</strong>. {t.youUse(me.votes.length)}
       </p>
       <div className="foundations-share">
-        <a href={profilePath(login)}>{link}</a>
+        <a href={profilePath(login, to)}>{link}</a>
         <button
           type="button"
           onClick={() => void navigator.clipboard.writeText(link).then(() => setCopied(true))}
         >
-          {copied ? "Copied" : "Copy the link"}
+          {copied ? t.copied : t.copyLink}
         </button>
       </div>
-      <p className="foundations-hint">This list is public, for you to share.</p>
+      <p className="foundations-hint">{t.publicList}</p>
       {me.votes.length === 0 ? (
         <p>
-          None yet: say which ones you use on <a href="/">the library</a>.
+          {t.noneYet} <a href={to("/")}>{t.theLibrary}</a>.
         </p>
       ) : (
         <PracticeList ids={me.votes} />
@@ -45,23 +46,19 @@ export default function Me() {
       <div className="foundations-account-actions">
         <button
           type="button"
-          onClick={() => void signOut().then(() => window.location.assign("/"))}
+          onClick={() => void signOut().then(() => window.location.assign(to("/")))}
         >
-          Sign out
+          {t.signOut}
         </button>
         <button
           type="button"
           className="foundations-danger"
           onClick={() => {
-            if (
-              window.confirm(
-                "Delete your account and every practice you said you use? This cannot be undone.",
-              )
-            )
-              void forgetMe().then(() => window.location.assign("/"));
+            if (window.confirm(t.confirmDelete))
+              void forgetMe().then(() => window.location.assign(to("/")));
           }}
         >
-          Delete my account and votes
+          {t.deleteAll}
         </button>
       </div>
     </section>

@@ -195,20 +195,26 @@ export async function handle(request: Request, deps: Deps): Promise<Response> {
   // A person's list is shared as /u/<login>. The site has one page for every list, /u/, which reads
   // the login from the query: the worker serves it with the preview's tags, which no crawler would
   // find in the page's script, and puts the query back in the address before the page starts.
-  const shared = /^\/u\/([^/]+)\/?$/u.exec(url.pathname);
+  const shared = /^(\/fr)?\/u\/([^/]+)\/?$/u.exec(url.pathname);
   if (shared !== null && request.method === "GET") {
-    const login = decodeURIComponent(shared[1] ?? "");
-    const back = `/u/?login=${encodeURIComponent(login)}`;
+    const lang = shared[1] ?? "";
+    const login = decodeURIComponent(shared[2] ?? "");
+    const back = `${lang}/u/?login=${encodeURIComponent(login)}`;
     const user = LOGIN.test(login) ? await store.userByLogin(login) : null;
     if (user === null) return new Response(null, { status: 302, headers: { Location: back } });
-    const page = await deps.assets.fetch(new Request(new URL("/u/", url), request));
+    const page = await deps.assets.fetch(new Request(new URL(`${lang}/u/`, url), request));
     if (!page.ok) return page;
     const votes = await store.votesOf(user.githubId);
+    const french = lang === "/fr";
     const html = withPreview(await page.text(), {
-      title: `@${user.login}'s harness, built on the literature`,
-      description: `${votes.length} practice${votes.length === 1 ? "" : "s"} of software engineering, each placed where it acts when an agent writes the code.`,
+      title: french
+        ? `Le harness de @${user.login}, fondé sur la littérature`
+        : `@${user.login}'s harness, built on the literature`,
+      description: french
+        ? `${votes.length} pratique${votes.length === 1 ? "" : "s"} du génie logiciel, chacune placée là où elle intervient quand un agent écrit le code.`
+        : `${votes.length} practice${votes.length === 1 ? "" : "s"} of software engineering, each placed where it acts when an agent writes the code.`,
       image: `${config.publicOrigin}/u/${user.login}/card.png?v=${await votesDigest(votes)}`,
-      url: `${config.publicOrigin}/u/${user.login}`,
+      url: `${config.publicOrigin}${lang}/u/${user.login}`,
       back,
     });
     return new Response(html, {
