@@ -3,18 +3,22 @@
   "name": "foundations",
   "main": "worker/index.ts",
   "compatibility_date": "2026-11-01",
+  // Served only at its own domain, which `wrangler deploy` attaches.
+  "workers_dev": false,
+  "preview_urls": false,
+  "routes": [{ "pattern": "foundations.steme.dev", "custom_domain": true }],
   // The static site Rspress builds; the worker runs first only on its own routes.
   "assets": {
     "directory": "./dist",
     "binding": "ASSETS",
+    "not_found_handling": "404-page",
     "run_worker_first": ["/api/*", "/auth/*", "/u/*"],
   },
   "d1_databases": [
     {
       "binding": "DB",
       "database_name": "foundations",
-      // The production id is set once the author has created the database; locally any value works.
-      "database_id": "00000000-0000-0000-0000-000000000000",
+      "database_id": "074e65f4-7437-4ccd-a449-d210dba02813",
       "migrations_dir": "migrations",
     },
   ],
