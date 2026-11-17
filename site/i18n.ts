@@ -34,6 +34,11 @@ const plural = (n: number, one: string, many: string): string => `${n} ${n === 1
 /** The interface's words. */
 export const UI = {
   en: {
+    searchPlaceholder: "Search a practice",
+    noMatch: "No practice matches this search.",
+    youUseIt: "You use it",
+    peopleUse: (n: number) => `${plural(n, "reader uses", "readers use")} it`,
+    beFirst: "Be among the first to say you use it.",
     start: {
       title: "Start your grid",
       text: (name: string) =>
@@ -54,7 +59,7 @@ export const UI = {
       },
       build: {
         title: "Build your harness",
-        text: "See your grid fill, and what each empty cell could hold.",
+        text: "Your harness is what guides and checks the code an agent writes. See your grid fill, and what each empty cell could hold.",
         action: "See my grid",
       },
     },
@@ -115,6 +120,11 @@ export const UI = {
       "Delete your account and every practice you said you use? This cannot be undone.",
   },
   fr: {
+    searchPlaceholder: "Chercher une pratique",
+    noMatch: "Aucune pratique ne correspond à cette recherche.",
+    youUseIt: "Tu l'utilises",
+    peopleUse: (n: number) => `${n} ${n === 1 ? "personne l'utilise" : "personnes l'utilisent"}`,
+    beFirst: "Sois parmi les premiers à dire que tu l'utilises.",
     start: {
       title: "Commence ta grille",
       text: (name: string) =>
@@ -135,7 +145,7 @@ export const UI = {
       },
       build: {
         title: "Construis ton harness",
-        text: "Regarde ta grille se remplir, et ce que chaque case vide pourrait accueillir.",
+        text: "Ton harness, c'est ce qui guide et vérifie le code qu'écrit un agent. Regarde ta grille se remplir, et ce que chaque case vide pourrait accueillir.",
         action: "Voir ma grille",
       },
     },

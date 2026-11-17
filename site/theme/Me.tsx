@@ -1,7 +1,16 @@
 import { useEffect, useState } from "react";
 
-import { type Me as MeState, forgetMe, getMe, profilePath, signIn, signOut } from "./api.ts";
+import {
+  type Me as MeState,
+  forgetMe,
+  getMe,
+  profilePath,
+  sharePath,
+  signIn,
+  signOut,
+} from "./api.ts";
 import { useWords } from "./lang.ts";
+import { track } from "./track.ts";
 import { PracticeList } from "./PracticeList.tsx";
 
 /** The signed-in reader's page: the practices they use, the link to share, sign out, delete everything. */
@@ -20,7 +29,7 @@ export default function Me() {
     );
 
   const { login } = me.user;
-  const link = `${window.location.origin}${profilePath(login, to)}`;
+  const link = `${window.location.origin}${sharePath(login, to)}`;
   return (
     <section className="foundations-me">
       <p>
@@ -30,7 +39,12 @@ export default function Me() {
         <a href={profilePath(login, to)}>{link}</a>
         <button
           type="button"
-          onClick={() => void navigator.clipboard.writeText(link).then(() => setCopied(true))}
+          onClick={() =>
+            void navigator.clipboard.writeText(link).then(() => {
+              setCopied(true);
+              track("share_copied", { from: "me" });
+            })
+          }
         >
           {copied ? t.copied : t.copyLink}
         </button>

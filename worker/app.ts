@@ -8,6 +8,7 @@
  * - `GET /api/counts`: how many people use each practice.
  * - `GET /api/users/<login>`: a person's public list.
  * - `DELETE /api/me`: forget the user and every vote of theirs.
+ * - `POST /t/e`: an event of the site, relayed to PostHog in its cookieless mode.
  * - `/u/<login>` serves the profile page with the tags a shared link's preview reads, its image
  *   `/u/<login>/card.png`, the person's grid drawn by the worker; everything else is the static site.
  */
@@ -22,6 +23,17 @@ export type Config = {
   readonly sessionSecret: string;
   /** The site's own origin, `https://foundations.steme.dev` or the local one: GitHub returns there. */
   readonly publicOrigin: string;
+  /** PostHog's project key; empty, nothing is counted. Public: PostHog's keys are sent by any page. */
+  readonly posthogKey: string;
+};
+
+/** An event as PostHog's capture endpoint takes it. */
+export type Captured = {
+  readonly api_key: string;
+  readonly event: string;
+  readonly distinct_id: string;
+  readonly properties: Record<string, unknown>;
+  readonly timestamp: string;
 };
 
 export interface GitHub {
@@ -39,7 +51,24 @@ export type Deps = {
   readonly now: () => Date;
   /** Rasterises a card's SVG to PNG. */
   readonly renderPng: (svg: string) => Promise<Uint8Array>;
+  /** Sends an event to PostHog, without making the reader wait. */
+  readonly capture: (event: Captured) => void;
 };
+
+/** The events the site sends (site/theme/track.ts), and the one the worker adds on a sign-in. */
+const EVENTS = new Set([
+  "$pageview",
+  "journey_step",
+  "start_dialog_shown",
+  "sign_in_started",
+  "signed_in",
+  "vote",
+  "grid_viewed",
+  "share_copied",
+  "propose_clicked",
+  "filter_used",
+  "search_used",
+]);
 
 const STATE_COOKIE = "foundations_oauth_state";
 const PRACTICE_IDS = new Set(Object.keys(PRACTICES));
@@ -57,6 +86,44 @@ export async function handle(request: Request, deps: Deps): Promise<Response> {
   const { store, config } = deps;
   const secure = config.publicOrigin.startsWith("https:");
   const now = deps.now();
+
+  // An event, counted without knowing who: PostHog's cookieless mode derives a daily, salted hash from
+  // the reader's address and browser, which only the worker sees.
+  const capture = (event: string, properties: Record<string, unknown>) => {
+    if (config.posthogKey === "" || !EVENTS.has(event)) return;
+    deps.capture({
+      api_key: config.posthogKey,
+      event,
+      distinct_id: "$posthog_cookieless",
+      timestamp: now.toISOString(),
+      properties: {
+        ...properties,
+        site: "foundations",
+        $cookieless_mode: true,
+        $ip: request.headers.get("CF-Connecting-IP") ?? "",
+        $raw_user_agent: request.headers.get("User-Agent") ?? "",
+      },
+    });
+  };
+
+  if (url.pathname === "/t/e" && request.method === "POST") {
+    const text = await request.text();
+    if (text.length > 8192) return new Response(null, { status: 413 });
+    let body: { event?: unknown; properties?: unknown } = {};
+    try {
+      body = JSON.parse(text) as typeof body;
+    } catch {
+      return new Response(null, { status: 400 });
+    }
+    const event = typeof body.event === "string" ? body.event : "";
+    if (!EVENTS.has(event) || event === "signed_in") return new Response(null, { status: 400 });
+    const properties =
+      body.properties !== null && typeof body.properties === "object"
+        ? (body.properties as Record<string, unknown>)
+        : {};
+    capture(event, properties);
+    return new Response(null, { status: 204 });
+  }
 
   // A session counts only while its person still exists: one who deleted their account on another
   // device is signed out here too, and their cookie cleared.
@@ -111,6 +178,7 @@ export async function handle(request: Request, deps: Deps): Promise<Response> {
     if (user === null)
       return new Response("Sign-in failed: GitHub did not answer.", { status: 502 });
     await store.upsertUser(user, now.toISOString());
+    capture("signed_in", { $current_url: url.toString() });
     const value = await sign(
       {
         githubId: user.githubId,

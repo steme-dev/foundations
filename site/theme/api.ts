@@ -44,8 +44,18 @@ export const signOut = async (): Promise<void> => {
 
 export const forgetMe = async (): Promise<boolean> => (await send("/api/me", "DELETE")).ok;
 
-/** A person's public list: `/u/<login>`, `/fr/u/<login>` in French, served by the worker from the page at `/u/`. */
+/**
+ * A person's public list, to go to from the site: the page `/u/` itself, the login in its query, which
+ * needs no worker in between (the development server has none).
+ */
 export const profilePath = (login: string, link: (path: string) => string = (p) => p): string =>
+  link(`/u/?login=${encodeURIComponent(login)}`);
+
+/**
+ * A person's public list, to share: `/u/<login>`, `/fr/u/<login>` in French, which the worker serves
+ * with the tags of a link's preview and their grid as its image.
+ */
+export const sharePath = (login: string, link: (path: string) => string = (p) => p): string =>
   link(`/u/${login}`);
 
 /** Where a reader proposes a practice: the issue form of the repository. */

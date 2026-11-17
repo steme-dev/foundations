@@ -15,6 +15,7 @@ type Env = {
   readonly GITHUB_CLIENT_SECRET: string;
   readonly SESSION_SECRET: string;
   readonly PUBLIC_ORIGIN: string;
+  readonly POSTHOG_KEY?: string;
 };
 
 const USER_AGENT = "foundations.steme.dev";
@@ -92,7 +93,16 @@ export default {
         githubClientSecret: env.GITHUB_CLIENT_SECRET,
         sessionSecret: env.SESSION_SECRET,
         publicOrigin: env.PUBLIC_ORIGIN,
+        posthogKey: env.POSTHOG_KEY ?? "",
       },
+      capture: (event) =>
+        ctx.waitUntil(
+          fetch("https://eu.i.posthog.com/i/v0/e/", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(event),
+          }).then(() => undefined),
+        ),
     });
     if (isCard && response.ok) ctx.waitUntil(caches.default.put(request, response.clone()));
     return response;

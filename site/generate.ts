@@ -39,6 +39,7 @@ const W = {
     inGrid: "in [Böckeler's grid]",
     sources: "Sources",
     practicesNamed: "Practices named",
+    related: "Related practices",
     practices: "Practices",
     people: "People",
     grid: "The grid",
@@ -63,6 +64,7 @@ const W = {
     inGrid: "dans [la grille de Böckeler]",
     sources: "Sources",
     practicesNamed: "Pratiques nommées",
+    related: "Pratiques voisines",
     practices: "Pratiques",
     people: "Personnes",
     grid: "La grille",
@@ -95,6 +97,26 @@ const bare = (path: string, title: string, body: string): [string, string] => [
   `---\npageType: doc\nsidebar: false\noutline: false\ntitle: ${JSON.stringify(title)}\n---\n\n${body}\n`,
 ];
 
+/** How many entries two lists share. */
+const shared = (a: readonly string[], b: readonly string[]): number =>
+  a.filter((x) => b.includes(x)).length;
+
+/**
+ * A practice's neighbours: the others sharing a cell of the grid with it, those also sharing a category
+ * first, then by name; four at most.
+ */
+function relatedTo(id: PracticeId, practice: Practice): [PracticeId, Practice][] {
+  return practices
+    .filter(([other, p]) => other !== id && shared(p.cells, practice.cells) > 0)
+    .map(([other, p]) => ({
+      entry: [other, p] as [PracticeId, Practice],
+      score: shared(p.themes, practice.themes),
+    }))
+    .toSorted((a, b) => b.score - a.score || a.entry[1].name.localeCompare(b.entry[1].name))
+    .slice(0, 4)
+    .map(({ entry }) => entry);
+}
+
 function pagesIn(lang: Lang): [string, string][] {
   const w = W[lang];
   const link = (path: string) => href(lang, path);
@@ -126,6 +148,8 @@ function pagesIn(lang: Lang): [string, string][] {
 # ${practice.name}
 
 ${definition(lang, id)}
+
+<PracticeVote id="${id}" />
 ${named}
 **${w.categories}${lang === "fr" ? " " : ""}:** ${categories}
 
@@ -136,7 +160,7 @@ ${named}
 ## ${w.sources}
 
 ${practice.sources.map(sourceLine).join("\n")}
-`,
+${relatedTo(id, practice).length === 0 ? "" : `\n## ${w.related}\n\n${relatedTo(id, practice).map(practiceLine).join("\n")}\n`}`,
     ];
   };
 

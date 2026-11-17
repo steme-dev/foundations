@@ -1,3 +1,11 @@
 # gitleaks' default rules; a value reviewed as not secret is allowed here by its file and its rule, with why.
 [extend]
 useDefault = true
+
+[[allowlists]]
+description = "PostHog's project key: public by design, sent by every page that counts with it"
+targetRules = ["generic-api-key"]
+paths = ['''^wrangler\.jsonc$''']
+regexTarget = "line"
+regexes = ['''"POSTHOG_KEY"\s*:''']
+condition = "AND"

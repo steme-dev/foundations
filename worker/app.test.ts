@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { type Config, type Deps, handle } from "./app.ts";
+import { type Captured, type Config, type Deps, handle } from "./app.ts";
 import { SESSION_COOKIE, sign, verify } from "./session.ts";
 import { memoryStore } from "./store.ts";
 
@@ -10,6 +10,7 @@ const config: Config = {
   githubClientSecret: "secret",
   sessionSecret: "a session secret for the tests",
   publicOrigin: ORIGIN,
+  posthogKey: "",
 };
 const NOW = new Date("2026-11-17T10:00:00Z");
 const ADA = { githubId: 1, login: "ada", avatarUrl: "https://avatars.example/ada" };
@@ -29,6 +30,7 @@ const setup = (): Deps => ({
       ),
   },
   renderPng: async (svg) => new TextEncoder().encode(svg),
+  capture: () => undefined,
 });
 
 const sessionOf = async (login = "ada", githubId = 1) =>
@@ -213,5 +215,67 @@ describe("the pages", () => {
     expect(svg).toContain("Fuzzing");
     expect(svg).toContain("1 of 4 cells");
     expect((await call(deps, "/u/nobody/card.png")).status).toBe(404);
+  });
+});
+
+const counting = () => {
+  const sent: Captured[] = [];
+  const deps: Deps = {
+    ...setup(),
+    config: { ...config, posthogKey: "phc_test" },
+    capture: (e) => sent.push(e),
+  };
+  return { deps, sent };
+};
+const post = (deps: Deps, body: unknown) =>
+  call(deps, "/t/e", {
+    method: "POST",
+    body: JSON.stringify(body),
+    headers: { "CF-Connecting-IP": "203.0.113.7", "User-Agent": "test" },
+  });
+
+describe("counting what readers do", () => {
+  it("relays a known event to PostHog in its cookieless mode, with the reader's address", async () => {
+    const { deps, sent } = counting();
+    expect((await post(deps, { event: "vote", properties: { practice: "fuzzing" } })).status).toBe(
+      204,
+    );
+    expect(sent).toHaveLength(1);
+    expect(sent[0]).toMatchObject({
+      api_key: "phc_test",
+      event: "vote",
+      distinct_id: "$posthog_cookieless",
+      properties: {
+        practice: "fuzzing",
+        site: "foundations",
+        $cookieless_mode: true,
+        $ip: "203.0.113.7",
+      },
+    });
+  });
+
+  it("refuses an event it does not know, and one only the worker sends", async () => {
+    const { deps, sent } = counting();
+    expect((await post(deps, { event: "anything" })).status).toBe(400);
+    expect((await post(deps, { event: "signed_in" })).status).toBe(400);
+    expect(sent).toHaveLength(0);
+  });
+
+  it("counts nothing without a key", async () => {
+    const sent: Captured[] = [];
+    const deps: Deps = { ...setup(), capture: (e) => sent.push(e) };
+    expect((await post(deps, { event: "vote" })).status).toBe(204);
+    expect(sent).toHaveLength(0);
+  });
+
+  it("counts a sign-in from the worker itself", async () => {
+    const { deps, sent } = counting();
+    const start = await call(deps, "/auth/github?return=/");
+    const state = new URL(start.headers.get("Location") ?? "").searchParams.get("state") ?? "";
+    const stateCookie = (start.headers.get("Set-Cookie") ?? "").split(";")[0] ?? "";
+    await call(deps, `/auth/callback?code=good&state=${state}`, {
+      headers: { Cookie: stateCookie },
+    });
+    expect(sent.map((e) => e.event)).toEqual(["signed_in"]);
   });
 });

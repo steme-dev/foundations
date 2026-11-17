@@ -14,7 +14,7 @@
     "directory": "./dist",
     "binding": "ASSETS",
     "not_found_handling": "404-page",
-    "run_worker_first": ["/api/*", "/auth/*", "/u/*", "/fr/u/*"],
+    "run_worker_first": ["/api/*", "/auth/*", "/t/*", "/u/*", "/fr/u/*"],
   },
   "d1_databases": [
     {
@@ -24,6 +24,10 @@
       "migrations_dir": "migrations",
     },
   ],
-  "vars": { "PUBLIC_ORIGIN": "https://foundations.steme.dev" },
+  // POSTHOG_KEY: PostHog's project key, public like every PostHog key; empty, nothing is counted.
+  "vars": {
+    "PUBLIC_ORIGIN": "https://foundations.steme.dev",
+    "POSTHOG_KEY": "phc_pUgZNXtjqSMmh6EKi3J83vo7Yo9s7ANEZSxahiSr7Qih",
+  },
   "observability": { "enabled": true },
 }

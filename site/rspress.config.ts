@@ -57,7 +57,7 @@ export default defineConfig({
   builderConfig: {
     server: {
       proxy: [
-        { pathFilter: ["/api", "/auth"], target: "http://localhost:8787" },
+        { pathFilter: ["/api", "/auth", "/t"], target: "http://localhost:8787" },
         // A shared list, /u/<login> or /fr/u/<login>, which the worker serves with its preview.
         {
           pathFilter: (path: string) => /^(?:\/fr)?\/u\/[^/?]+/u.test(path),
@@ -73,6 +73,7 @@ export default defineConfig({
       join(site, "theme", "Me.tsx"),
       join(site, "theme", "Profile.tsx"),
       join(site, "theme", "GridPlacement.tsx"),
+      join(site, "theme", "PracticeVote.tsx"),
     ],
   },
   themeConfig: {

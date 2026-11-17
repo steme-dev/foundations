@@ -3,11 +3,18 @@ import { useEffect, useRef, useState } from "react";
 import { type Me, profilePath, signIn } from "./api.ts";
 import { gridVisited, journeyDone, markJourneyDone } from "./journey-state.ts";
 import { useWords } from "./lang.ts";
+import { track } from "./track.ts";
 
 const toList = () =>
   document
-    .querySelector(".foundations-filters")
+    .querySelector(".foundations-search")
     ?.scrollIntoView({ behavior: "smooth", block: "start" });
+
+/** The first step: down to the practices. */
+const meet = () => {
+  track("journey_step", { step: 1 });
+  toList();
+};
 
 /**
  * The library's way in, in three steps: meet the giants, say what you use, build your harness. Its
@@ -49,8 +56,11 @@ export default function Journey({ me }: { me: Me }) {
   if (done) return null;
   const grid = me.user === null ? null : profilePath(me.user.login, link);
   const say = () => {
-    if (me.user === null) signIn(window.location.pathname);
-    else toList();
+    track("journey_step", { step: 2, signed_in: me.user !== null });
+    if (me.user === null) {
+      track("sign_in_started", { from: "journey" });
+      signIn(window.location.pathname);
+    } else toList();
   };
 
   return (
@@ -59,7 +69,7 @@ export default function Journey({ me }: { me: Me }) {
         <li data-step="1" data-done={past ? "" : undefined}>
           <b>{j.meet.title}</b>
           <span>{j.meet.text}</span>
-          <button type="button" className="foundations-journey-link" onClick={toList}>
+          <button type="button" className="foundations-journey-link" onClick={meet}>
             {j.meet.action}
           </button>
         </li>
@@ -81,7 +91,11 @@ export default function Journey({ me }: { me: Me }) {
         <li data-step="3" data-done={visited ? "" : undefined}>
           <b>{j.build.title}</b>
           <span>{j.build.text}</span>
-          {voted && grid !== null ? <a href={grid}>{j.build.action} →</a> : null}
+          {voted && grid !== null ? (
+            <a href={grid} onClick={() => track("journey_step", { step: 3 })}>
+              {j.build.action} →
+            </a>
+          ) : null}
         </li>
       </ol>
       <nav
@@ -89,7 +103,7 @@ export default function Journey({ me }: { me: Me }) {
         data-shown={past ? "" : undefined}
         aria-hidden={!past}
       >
-        <button type="button" data-step="1" data-done="" onClick={toList} tabIndex={past ? 0 : -1}>
+        <button type="button" data-step="1" data-done="" onClick={meet} tabIndex={past ? 0 : -1}>
           {j.meet.title}
         </button>
         <button

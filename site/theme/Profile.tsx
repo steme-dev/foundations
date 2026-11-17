@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { PRACTICES } from "../../data/practices.ts";
 import { type Profile as ProfileData, getMe, getProfile } from "./api.ts";
 import { markGridVisited } from "./journey-state.ts";
+import { track } from "./track.ts";
 import { type Filter, Filters, NO_FILTER, matches } from "./Filters.tsx";
 import { PracticeList } from "./PracticeList.tsx";
 import ProfileGrid from "./ProfileGrid.tsx";
@@ -24,8 +25,9 @@ export default function Profile() {
     else void getProfile(login).then(setProfile);
     // The reader's own grid, opened once, ticks the third step of the way in.
     void getMe().then((me) => {
-      if (me.user !== null && me.user.login.toLowerCase() === login.toLowerCase())
-        markGridVisited();
+      const own = me.user !== null && me.user.login.toLowerCase() === login.toLowerCase();
+      if (own) markGridVisited();
+      track("grid_viewed", { own });
     });
   }, []);
 
