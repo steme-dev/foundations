@@ -80,8 +80,9 @@ export default function Journey({ me }: { me: Me }) {
           ) : me.user === null ? (
             <>
               <span>{j.say.text}</span>
-              <button type="button" onClick={say}>
-                {t.signIn}
+              <button type="button" onClick={say} aria-label={t.signIn}>
+                <span className="foundations-wide-only">{t.signIn}</span>
+                <span className="foundations-phone-only">{t.signInShort}</span>
               </button>
             </>
           ) : (
