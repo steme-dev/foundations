@@ -25,6 +25,15 @@ export const PRACTICES = {
     sources: ["freeman-pryce-2009-goos", "agile-alliance-atdd", "agile-alliance-acceptance"],
     credited: [],
   },
+  "acid-transactions": {
+    name: "ACID transactions",
+    definition:
+      "A transaction is atomic, consistent, isolated and durable: it happens whole or not at all, and once committed it stays.",
+    cells: ["GI"],
+    themes: ["data"],
+    sources: ["haerder-reuter-1983-transaction-recovery"],
+    credited: ["theo-haerder", "andreas-reuter"],
+  },
   "approval-testing": {
     name: "Approval testing",
     definition:
@@ -34,14 +43,53 @@ export const PRACTICES = {
     sources: ["approvaltests"],
     credited: ["approvaltests"],
   },
+  arc42: {
+    name: "arc42",
+    definition:
+      "A template that gives an architecture's documentation fixed sections, from its goals and constraints to its building blocks, decisions and risks.",
+    cells: ["GI"],
+    themes: ["architecture", "modelling"],
+    sources: ["hruschka-starke-arc42"],
+    credited: ["peter-hruschka", "gernot-starke"],
+  },
   "architectural-fitness-function": {
     name: "Architectural fitness function",
     definition:
       "An automated check that gives an objective verdict on one characteristic of the architecture, run like a test.",
     cells: ["SC"],
     themes: ["architecture", "tests-and-verification"],
-    sources: ["thoughtworks-2017-fitness-function"],
-    credited: [],
+    sources: [
+      "ford-parsons-kua-2017-evolutionary-architectures",
+      "thoughtworks-2017-fitness-function",
+    ],
+    credited: ["neal-ford", "rebecca-parsons", "patrick-kua"],
+  },
+  "architecture-views": {
+    name: "Architecture views (Views and Beyond)",
+    definition:
+      "An architecture is documented as the views that matter to its readers, the relations between them, and what applies across views.",
+    cells: ["GI"],
+    themes: ["architecture", "modelling"],
+    sources: ["bachmann-2001-documenting-architectures", "clements-2010-views-and-beyond"],
+    credited: ["paul-clements"],
+  },
+  bpmn: {
+    name: "Business Process Model and Notation (BPMN)",
+    definition:
+      "A standard notation for business processes that business analysts, developers and the people who run the processes can all read.",
+    cells: ["GI"],
+    themes: ["modelling"],
+    sources: ["omg-2014-bpmn"],
+    credited: ["object-management-group"],
+  },
+  "c4-model": {
+    name: "C4 model",
+    definition:
+      "Software architecture drawn at four levels of zoom: the system in its context, its containers, their components, and the code.",
+    cells: ["GI"],
+    themes: ["modelling", "architecture"],
+    sources: ["brown-c4-model"],
+    credited: ["simon-brown"],
   },
   "characterization-test": {
     name: "Characterization test",
@@ -79,6 +127,15 @@ export const PRACTICES = {
     sources: ["rosenstein-codemod", "meta-jscodeshift", "openrewrite-recipes"],
     credited: ["justin-rosenstein"],
   },
+  "context-map": {
+    name: "Context map",
+    definition:
+      "Each model in play gets its bounded context and a name, and the points where they touch are drawn with how they translate and who depends on whom.",
+    cells: ["GI"],
+    themes: ["architecture", "modelling"],
+    sources: ["evans-2015-ddd-reference", "evans-2003-ddd"],
+    credited: ["eric-evans"],
+  },
   "contract-test": {
     name: "Contract test",
     definition:
@@ -87,6 +144,41 @@ export const PRACTICES = {
     themes: ["tests-and-verification"],
     sources: ["rainsberger-2021-abstract-test-cases", "fowler-2011-contract-test"],
     credited: ["j-b-rainsberger"],
+  },
+  cqrs: {
+    name: "Command query responsibility segregation (CQRS)",
+    definition: "Information is changed through one model and read through another.",
+    cells: ["GI"],
+    themes: ["architecture", "data"],
+    sources: ["young-2010-cqrs-documents", "fowler-2011-cqrs"],
+    credited: ["greg-young"],
+  },
+  "data-flow-diagram": {
+    name: "Data flow diagram",
+    definition:
+      "A system is drawn as a network of processes connected by flows of data and by stores where the data rest.",
+    cells: ["GI"],
+    themes: ["modelling"],
+    sources: ["demarco-2002-structured-analysis", "yourdon-2006-dataflow-diagrams"],
+    credited: ["tom-demarco", "ed-yourdon"],
+  },
+  "database-normalization": {
+    name: "Database normalization",
+    definition:
+      "Tables are split until every non-key field states a fact about the key, the whole key and nothing but the key, so that each fact is stored once.",
+    cells: ["GI"],
+    themes: ["data"],
+    sources: ["codd-1970-relational-model", "kent-1983-five-normal-forms"],
+    credited: ["e-f-codd"],
+  },
+  "database-refactoring": {
+    name: "Database refactoring",
+    definition:
+      "A small change to a database schema that improves its design while keeping both what it does and what it holds.",
+    cells: ["GI"],
+    themes: ["data", "refactoring-and-migration"],
+    sources: ["ambler-sadalage-2006-refactoring-databases", "ambler-database-refactoring"],
+    credited: ["scott-ambler", "pramod-sadalage"],
   },
   "decision-table-testing": {
     name: "Decision table testing",
@@ -97,6 +189,24 @@ export const PRACTICES = {
     sources: ["istqb-decision-table-testing"],
     credited: [],
   },
+  denormalization: {
+    name: "Denormalization",
+    definition:
+      "Redundancy is added back to a normalized schema on purpose, so that frequent reads need fewer joins.",
+    cells: ["GI"],
+    themes: ["data"],
+    sources: ["sanders-shin-2001-denormalization", "kent-1983-five-normal-forms"],
+    credited: [],
+  },
+  "dimensional-modeling": {
+    name: "Dimensional modeling (star schema)",
+    definition:
+      "Analytical data are arranged as fact tables of measurements linked to dimension tables that describe them.",
+    cells: ["GI"],
+    themes: ["data", "modelling"],
+    sources: ["kimball-ross-2013-data-warehouse-toolkit", "kimball-group-star-schemas"],
+    credited: ["ralph-kimball"],
+  },
   "domain-driven-design": {
     name: "Domain-driven design",
     definition:
@@ -105,6 +215,27 @@ export const PRACTICES = {
     themes: ["architecture"],
     sources: ["evans-2003-ddd", "evans-2015-ddd-reference"],
     credited: ["eric-evans"],
+  },
+  "domain-storytelling": {
+    name: "Domain Storytelling",
+    definition:
+      "People who know the business tell how they work together, and the story is drawn as it is told, in pictograms and arrows.",
+    cells: ["GI"],
+    themes: ["modelling"],
+    sources: [
+      "hofer-schwentner-2021-domain-storytelling",
+      "hofer-schwentner-domain-storytelling-site",
+    ],
+    credited: ["stefan-hofer", "henning-schwentner"],
+  },
+  "entity-relationship-model": {
+    name: "Entity-relationship model",
+    definition:
+      "Data are modelled as entities, things that can be told apart, and relationships, associations among them, drawn in an entity-relationship diagram.",
+    cells: ["GI"],
+    themes: ["modelling", "data"],
+    sources: ["chen-1976-entity-relationship"],
+    credited: ["peter-chen"],
   },
   "equivalence-partitioning-and-boundary-values": {
     name: "Equivalence partitioning and boundary value analysis",
@@ -119,6 +250,42 @@ export const PRACTICES = {
     ],
     credited: [],
   },
+  "event-sourcing": {
+    name: "Event sourcing",
+    definition:
+      "Every change to the application's state is stored as an event, in order, and the state is rebuilt from them.",
+    cells: ["GI"],
+    themes: ["data", "architecture"],
+    sources: ["fowler-2005-event-sourcing", "young-2010-cqrs-documents"],
+    credited: ["martin-fowler"],
+  },
+  "event-storming": {
+    name: "Event Storming",
+    definition:
+      "A workshop where the people who know the business lay out its events on a wall, in order, to explore a complex domain together.",
+    cells: ["GI"],
+    themes: ["modelling", "architecture"],
+    sources: ["brandolini-2013-event-storming"],
+    credited: ["alberto-brandolini"],
+  },
+  "evolutionary-architecture": {
+    name: "Evolutionary architecture",
+    definition:
+      "An architecture built to change in small increments, with automated checks that say what keeps it fit, across technical and domain changes.",
+    cells: ["GC"],
+    themes: ["architecture"],
+    sources: ["ford-parsons-kua-2017-evolutionary-architectures"],
+    credited: ["neal-ford", "rebecca-parsons", "patrick-kua"],
+  },
+  "evolutionary-database-design": {
+    name: "Evolutionary database design",
+    definition:
+      "The schema changes in small, versioned migrations, written and tested with the code, so that the database evolves as the application does.",
+    cells: ["GC"],
+    themes: ["data", "refactoring-and-migration"],
+    sources: ["sadalage-fowler-2016-evolutionary-database"],
+    credited: ["pramod-sadalage", "martin-fowler"],
+  },
   "formal-verification": {
     name: "Formal verification",
     definition:
@@ -132,6 +299,15 @@ export const PRACTICES = {
       "anthropic-2026-formal-verification",
     ],
     credited: ["robert-w-floyd", "tony-hoare"],
+  },
+  "four-plus-one-view-model": {
+    name: "4+1 view model",
+    definition:
+      "An architecture is described in four views, logical, process, development and physical, tied together by a few scenarios that form the fifth.",
+    cells: ["GI"],
+    themes: ["modelling", "architecture"],
+    sources: ["kruchten-1995-4plus1"],
+    credited: ["philippe-kruchten"],
   },
   fuzzing: {
     name: "Fuzzing",
@@ -160,6 +336,24 @@ export const PRACTICES = {
     sources: ["cockburn-2005-hexagonal"],
     credited: ["alistair-cockburn"],
   },
+  "integrity-constraints": {
+    name: "Integrity constraints",
+    definition:
+      "The database itself refuses data that break a rule of the schema, such as a foreign key that points to no row.",
+    cells: ["SC"],
+    themes: ["data", "types-and-contracts"],
+    sources: ["codd-1970-relational-model", "codd-1979-rm-t"],
+    credited: ["e-f-codd"],
+  },
+  "isolation-levels": {
+    name: "Transaction isolation levels",
+    definition:
+      "How much concurrent transactions may see of each other's work, chosen per transaction to trade throughput for correctness.",
+    cells: ["GI"],
+    themes: ["data"],
+    sources: ["berenson-1995-isolation-levels"],
+    credited: [],
+  },
   "language-server": {
     name: "Language server",
     definition:
@@ -177,6 +371,15 @@ export const PRACTICES = {
     themes: ["types-and-contracts"],
     sources: ["minsky-2011-effective-ml"],
     credited: ["yaron-minsky"],
+  },
+  merise: {
+    name: "Merise",
+    definition:
+      "A French method for designing information systems that models the data and the processing separately, from a conceptual level down to a physical one.",
+    cells: ["GI"],
+    themes: ["modelling", "data"],
+    sources: ["tardieu-1983-merise", "espinasse-merise"],
+    credited: ["hubert-tardieu", "arnold-rochfeld", "rene-colletti"],
   },
   "metamorphic-testing": {
     name: "Metamorphic testing",
@@ -204,6 +407,24 @@ export const PRACTICES = {
     themes: ["architecture"],
     sources: ["gossman-2005-mvvm"],
     credited: ["john-gossman"],
+  },
+  "optimistic-concurrency-control": {
+    name: "Optimistic concurrency control",
+    definition:
+      "Transactions run without locks and are checked for conflicts when they commit, and one that conflicts is rolled back and retried.",
+    cells: ["GI"],
+    themes: ["data"],
+    sources: ["kung-robinson-1981-optimistic"],
+    credited: ["h-t-kung", "john-t-robinson"],
+  },
+  "parallel-change": {
+    name: "Parallel change (expand and contract)",
+    definition:
+      "A backward-incompatible change is made in three steps, expand, migrate and contract, so that old and new run side by side until nothing uses the old.",
+    cells: ["GI"],
+    themes: ["refactoring-and-migration", "data"],
+    sources: ["sato-2014-parallel-change"],
+    credited: ["danilo-sato"],
   },
   "parse-dont-validate": {
     name: "Parse, don't validate",
@@ -271,6 +492,15 @@ export const PRACTICES = {
     sources: ["jest-snapshot-testing"],
     credited: ["meta"],
   },
+  statecharts: {
+    name: "Statecharts",
+    definition:
+      "State diagrams extended with hierarchy, concurrency and communication, so that complex behaviour stays readable.",
+    cells: ["GI"],
+    themes: ["modelling"],
+    sources: ["harel-1987-statecharts"],
+    credited: ["david-harel"],
+  },
   "stateful-testing": {
     name: "Stateful (model-based) testing",
     definition:
@@ -280,6 +510,15 @@ export const PRACTICES = {
     sources: ["hughes-2016-testing-the-hard-stuff", "hypothesis-stateful"],
     credited: ["john-hughes"],
   },
+  "surrogate-key": {
+    name: "Surrogate key",
+    definition:
+      "Each row is identified by a key the system assigns and that means nothing, rather than by a value from the business that may change.",
+    cells: ["GI"],
+    themes: ["data"],
+    sources: ["codd-1979-rm-t", "kimball-group-surrogate-keys"],
+    credited: [],
+  },
   "test-sizes": {
     name: "Test sizes",
     definition:
@@ -288,6 +527,24 @@ export const PRACTICES = {
     themes: ["tests-and-verification"],
     sources: ["stewart-2010-test-sizes", "winters-2020-swe-at-google"],
     credited: ["simon-stewart"],
+  },
+  "transactional-outbox": {
+    name: "Transactional outbox",
+    definition:
+      "A message to send is written to the database in the same transaction as the change it reports, and a separate process sends it on.",
+    cells: ["GI"],
+    themes: ["data", "architecture"],
+    sources: ["richardson-transactional-outbox"],
+    credited: ["chris-richardson"],
+  },
+  uml: {
+    name: "Unified Modeling Language (UML)",
+    definition:
+      "A standard graphical language for specifying, visualising and documenting a system's structure and behaviour in diagrams.",
+    cells: ["GI"],
+    themes: ["modelling", "architecture"],
+    sources: ["uml-partners-1997-uml-summary", "omg-2017-uml"],
+    credited: ["rational-software", "object-management-group"],
   },
   "unit-testing": {
     name: "Unit testing",

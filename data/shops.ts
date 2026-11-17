@@ -32,6 +32,7 @@ export const SHOPS = {
     kind: "publisher",
     host: "pragprog.com",
   },
+  wiley: { name: "Wiley", kind: "publisher", host: "www.wiley.com" },
 } as const satisfies Record<string, Shop>;
 
 export type ShopId = keyof typeof SHOPS;

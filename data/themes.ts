@@ -6,6 +6,8 @@ export const THEMES = {
   "plans-and-agents": "Plans and agents",
   tooling: "Tooling",
   observability: "Observability",
+  modelling: "Modelling",
+  data: "Data",
 } as const;
 
 export type Theme = keyof typeof THEMES;

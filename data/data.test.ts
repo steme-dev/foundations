@@ -46,8 +46,9 @@ describe("the sources", () => {
 describe("where a book is bought", () => {
   const books = sources.filter(([, source]) => source.kind === "book");
 
-  it.each(books)("%s can be bought, and names its ISBN", (_, book) => {
-    expect(book.buy?.length ?? 0).toBeGreaterThan(0);
+  it.each(books)("%s can be bought, or is out of print, and names its ISBN", (_, book) => {
+    if (book.outOfPrint === true) expect(book.buy ?? []).toEqual([]);
+    else expect(book.buy?.length ?? 0).toBeGreaterThan(0);
     expect(book.isbn).toMatch(/^97[89]\d{10}$/u);
   });
 

@@ -17,6 +17,8 @@ export type Source = {
   readonly isbn?: string;
   /** Where a book can be bought, in the order `shops.ts` says; only a book has it. */
   readonly buy?: readonly Purchase[];
+  /** A book no shop sells any more: its address is its record in a library's catalogue. */
+  readonly outOfPrint?: true;
 };
 
 export const SOURCES = {
@@ -36,6 +38,29 @@ export const SOURCES = {
     publisher: "Agile Alliance glossary",
     url: "https://www.agilealliance.org/glossary/atdd/",
   },
+  "ambler-database-refactoring": {
+    title: "Database Refactoring: Fix Production Data Quality Problems at the Source",
+    by: ["scott-ambler"],
+    year: null,
+    kind: "article",
+    publisher: "Agile Data",
+    url: "https://agiledata.org/essays/databaseRefactoring.html",
+  },
+  "ambler-sadalage-2006-refactoring-databases": {
+    title: "Refactoring Databases: Evolutionary Database Design",
+    by: ["scott-ambler", "pramod-sadalage"],
+    year: 2006,
+    kind: "book",
+    publisher: "Addison-Wesley",
+    url: "https://www.informit.com/store/refactoring-databases-evolutionary-database-design-9780321293534",
+    isbn: "9780321293534",
+    buy: [
+      {
+        shop: "informit",
+        url: "https://www.informit.com/store/refactoring-databases-evolutionary-database-design-9780321293534",
+      },
+    ],
+  },
   "anthropic-2026-formal-verification": {
     title: "LLMs are making formal software verification feasible at a much larger scale",
     by: ["anthropic", "theorem"],
@@ -52,6 +77,38 @@ export const SOURCES = {
     publisher: "approvaltests.com",
     url: "https://approvaltests.com/",
   },
+  "bachmann-2001-documenting-architectures": {
+    title: "Documenting Software Architectures: Organization of Documentation Package",
+    by: [
+      "felix-bachmann",
+      "len-bass",
+      "paul-clements",
+      "david-garlan",
+      "james-ivers",
+      "reed-little",
+      "robert-nord",
+      "judith-stafford",
+    ],
+    year: 2001,
+    kind: "paper",
+    publisher: "Software Engineering Institute, CMU/SEI-2001-TN-010",
+    url: "https://www.sei.cmu.edu/documents/1972/2001_004_001_13811.pdf",
+  },
+  "berenson-1995-isolation-levels": {
+    title: "A Critique of ANSI SQL Isolation Levels",
+    by: [
+      "hal-berenson",
+      "phil-bernstein",
+      "jim-gray",
+      "jim-melton",
+      "elizabeth-oneil",
+      "patrick-oneil",
+    ],
+    year: 1995,
+    kind: "paper",
+    publisher: "Proceedings of ACM SIGMOD 1995",
+    url: "https://arxiv.org/abs/cs/0701157",
+  },
   "betterer-introduction": {
     title: "Betterer: introduction",
     by: ["craig-spence"],
@@ -67,6 +124,30 @@ export const SOURCES = {
     kind: "article",
     publisher: "martinfowler.com",
     url: "https://martinfowler.com/articles/harness-engineering.html",
+  },
+  "brandolini-2013-event-storming": {
+    title: "Introducing Event Storming",
+    by: ["alberto-brandolini"],
+    year: 2013,
+    kind: "article",
+    publisher: "Ziobrando's Lair",
+    url: "https://ziobrando.blogspot.com/2013/11/introducing-event-storming.html",
+  },
+  "brown-c4-model": {
+    title: "The C4 model for visualising software architecture",
+    by: ["simon-brown"],
+    year: null,
+    kind: "documentation",
+    publisher: "c4model.com",
+    url: "https://c4model.com/",
+  },
+  "chen-1976-entity-relationship": {
+    title: "The Entity-Relationship Model—Toward a Unified View of Data",
+    by: ["peter-chen"],
+    year: 1976,
+    kind: "paper",
+    publisher: "ACM Transactions on Database Systems 1(1)",
+    url: "https://www.comp.nus.edu.sg/~lingtw/papers/tods76.chen.pdf",
   },
   "chen-1998-metamorphic": {
     title: "Metamorphic Testing: A New Approach for Generating Next Test Cases",
@@ -100,6 +181,35 @@ export const SOURCES = {
     publisher: "ICFP 2000, ACM",
     url: "https://www.cs.tufts.edu/comp/150FP/archive/john-hughes/quick.pdf",
   },
+  "clements-2010-views-and-beyond": {
+    title: "Documenting Software Architectures: Views and Beyond, 2nd Edition",
+    by: [
+      "paul-clements",
+      "felix-bachmann",
+      "len-bass",
+      "david-garlan",
+      "james-ivers",
+      "reed-little",
+      "paulo-merson",
+      "robert-nord",
+      "judith-stafford",
+    ],
+    year: 2010,
+    kind: "book",
+    publisher: "Addison-Wesley",
+    url: "https://www.informit.com/store/documenting-software-architectures-views-and-beyond-9780321552686",
+    isbn: "9780321552686",
+    buy: [
+      {
+        shop: "informit",
+        url: "https://www.informit.com/store/documenting-software-architectures-views-and-beyond-9780321552686",
+      },
+      {
+        shop: "eyrolles",
+        url: "https://www.eyrolles.com/Informatique/Livre/documenting-software-architectures-views-and-beyond-9780321552686/",
+      },
+    ],
+  },
   "cockburn-2005-hexagonal": {
     title: "Hexagonal (Ports & Adapters) Architecture",
     by: ["alistair-cockburn"],
@@ -108,6 +218,30 @@ export const SOURCES = {
     publisher: "HaT Technical Report 2005.02",
     url: "https://alistair.cockburn.us/hexagonal-architecture/",
   },
+  "codd-1970-relational-model": {
+    title: "A Relational Model of Data for Large Shared Data Banks",
+    by: ["e-f-codd"],
+    year: 1970,
+    kind: "paper",
+    publisher: "Communications of the ACM 13(6)",
+    url: "https://web.eecs.umich.edu/~michjc/eecs584/Papers/codd_1970.pdf",
+  },
+  "codd-1979-rm-t": {
+    title: "Extending the Database Relational Model to Capture More Meaning",
+    by: ["e-f-codd"],
+    year: 1979,
+    kind: "paper",
+    publisher: "ACM Transactions on Database Systems 4(4)",
+    url: "https://archive.computerhistory.org/resources/access/text/2023/06/102659281-05-08-acc.pdf",
+  },
+  "demarco-2002-structured-analysis": {
+    title: "Structured Analysis: Beginnings of a New Discipline",
+    by: ["tom-demarco"],
+    year: 2002,
+    kind: "paper",
+    publisher: "Software Pioneers, Springer",
+    url: "https://userweb.cs.txstate.edu/~rp31/papersSP/TDMSpringer2002.pdf",
+  },
   "eslint-bulk-suppressions": {
     title: "Bulk Suppressions",
     by: ["eslint"],
@@ -115,6 +249,14 @@ export const SOURCES = {
     kind: "documentation",
     publisher: "eslint.org",
     url: "https://eslint.org/docs/latest/use/suppressions",
+  },
+  "espinasse-merise": {
+    title: "Introduction à MERISE : une méthode systémique de conception de système d'information",
+    by: ["bernard-espinasse"],
+    year: null,
+    kind: "documentation",
+    publisher: "Course notes, Aix-Marseille Université",
+    url: "https://pageperso.lis-lab.fr/bernard.espinasse/wp-content/uploads/2021/12/2-IntroMerise-4p.pdf",
   },
   "evans-2003-ddd": {
     title: "Domain-Driven Design: Tackling Complexity in the Heart of Software",
@@ -179,6 +321,29 @@ export const SOURCES = {
       "Mathematical Aspects of Computer Science, Proceedings of Symposia in Applied Mathematics 19, American Mathematical Society",
     url: "https://people.eecs.berkeley.edu/~necula/Papers/FloydMeaning.pdf",
   },
+  "ford-parsons-kua-2017-evolutionary-architectures": {
+    title: "Building Evolutionary Architectures: Support Constant Change",
+    by: ["neal-ford", "rebecca-parsons", "patrick-kua"],
+    year: 2017,
+    kind: "book",
+    publisher: "O'Reilly",
+    url: "https://evolutionaryarchitecture.com/",
+    isbn: "9781491986363",
+    buy: [
+      {
+        shop: "eyrolles",
+        url: "https://www.eyrolles.com/Informatique/Livre/building-evolutionary-architectures-9781491986363/",
+      },
+    ],
+  },
+  "fowler-2005-event-sourcing": {
+    title: "Event Sourcing",
+    by: ["martin-fowler"],
+    year: 2005,
+    kind: "article",
+    publisher: "martinfowler.com",
+    url: "https://martinfowler.com/eaaDev/EventSourcing.html",
+  },
   "fowler-2011-contract-test": {
     title: "ContractTest",
     by: ["martin-fowler"],
@@ -186,6 +351,14 @@ export const SOURCES = {
     kind: "article",
     publisher: "martinfowler.com",
     url: "https://martinfowler.com/bliki/ContractTest.html",
+  },
+  "fowler-2011-cqrs": {
+    title: "CQRS",
+    by: ["martin-fowler"],
+    year: 2011,
+    kind: "article",
+    publisher: "martinfowler.com",
+    url: "https://martinfowler.com/bliki/CQRS.html",
   },
   "freeman-pryce-2009-goos": {
     title: "Growing Object-Oriented Software, Guided by Tests",
@@ -214,6 +387,22 @@ export const SOURCES = {
     publisher: "Microsoft (MSDN blogs, archived on Microsoft Learn)",
     url: "https://learn.microsoft.com/en-us/archive/blogs/johngossman/introduction-to-modelviewviewmodel-pattern-for-building-wpf-apps",
   },
+  "haerder-reuter-1983-transaction-recovery": {
+    title: "Principles of Transaction-Oriented Database Recovery",
+    by: ["theo-haerder", "andreas-reuter"],
+    year: 1983,
+    kind: "paper",
+    publisher: "ACM Computing Surveys 15(4)",
+    url: "https://www.cs.utexas.edu/~dsb/cs386d/Readings/Recovery/Principles-of-Recovery.pdf",
+  },
+  "harel-1987-statecharts": {
+    title: "Statecharts: A Visual Formalism for Complex Systems",
+    by: ["david-harel"],
+    year: 1987,
+    kind: "paper",
+    publisher: "Science of Computer Programming 8(3)",
+    url: "https://www.state-machine.com/doc/Harel87.pdf",
+  },
   "hoare-1969-axiomatic": {
     title: "An Axiomatic Basis for Computer Programming",
     by: ["tony-hoare"],
@@ -221,6 +410,38 @@ export const SOURCES = {
     kind: "paper",
     publisher: "Communications of the ACM 12(10)",
     url: "https://www.cs.cmu.edu/~crary/819-f09/Hoare69.pdf",
+  },
+  "hofer-schwentner-2021-domain-storytelling": {
+    title:
+      "Domain Storytelling: A Collaborative, Visual, and Agile Way to Build Domain-Driven Software",
+    by: ["stefan-hofer", "henning-schwentner"],
+    year: 2021,
+    kind: "book",
+    publisher: "Addison-Wesley",
+    url: "https://www.informit.com/store/domain-storytelling-a-collaborative-visual-and-agile-9780137458912",
+    isbn: "9780137458912",
+    buy: [
+      {
+        shop: "informit",
+        url: "https://www.informit.com/store/domain-storytelling-a-collaborative-visual-and-agile-9780137458912",
+      },
+    ],
+  },
+  "hofer-schwentner-domain-storytelling-site": {
+    title: "Domain Storytelling",
+    by: ["stefan-hofer", "henning-schwentner"],
+    year: null,
+    kind: "documentation",
+    publisher: "domainstorytelling.org",
+    url: "https://domainstorytelling.org/",
+  },
+  "hruschka-starke-arc42": {
+    title: "arc42",
+    by: ["peter-hruschka", "gernot-starke"],
+    year: null,
+    kind: "documentation",
+    publisher: "arc42.org",
+    url: "https://arc42.org/",
   },
   "hughes-2016-testing-the-hard-stuff": {
     title: "Experiences with QuickCheck: Testing the Hard Stuff and Staying Sane",
@@ -294,6 +515,49 @@ export const SOURCES = {
     publisher: "Anthropic Engineering",
     url: "https://www.anthropic.com/engineering/code-execution-with-mcp",
   },
+  "kent-1983-five-normal-forms": {
+    title: "A Simple Guide to Five Normal Forms in Relational Database Theory",
+    by: ["william-kent"],
+    year: 1983,
+    kind: "paper",
+    publisher: "Communications of the ACM 26(2)",
+    url: "https://www.bkent.net/Doc/simple5.htm",
+  },
+  "kimball-group-star-schemas": {
+    title: "Star Schemas and OLAP Cubes",
+    by: ["kimball-group"],
+    year: null,
+    kind: "documentation",
+    publisher: "Kimball Dimensional Modeling Techniques",
+    url: "https://www.kimballgroup.com/data-warehouse-business-intelligence-resources/kimball-techniques/dimensional-modeling-techniques/star-schema-olap-cube/",
+  },
+  "kimball-group-surrogate-keys": {
+    title: "Dimension Surrogate Keys",
+    by: ["kimball-group"],
+    year: null,
+    kind: "documentation",
+    publisher: "Kimball Dimensional Modeling Techniques",
+    url: "https://www.kimballgroup.com/data-warehouse-business-intelligence-resources/kimball-techniques/dimensional-modeling-techniques/dimension-surrogate-key/",
+  },
+  "kimball-ross-2013-data-warehouse-toolkit": {
+    title: "The Data Warehouse Toolkit: The Definitive Guide to Dimensional Modeling, 3rd Edition",
+    by: ["ralph-kimball", "margy-ross"],
+    year: 2013,
+    kind: "book",
+    publisher: "Wiley",
+    url: "https://www.wiley.com/en-us/The+Data+Warehouse+Toolkit%3A+The+Definitive+Guide+to+Dimensional+Modeling%2C+3rd+Edition-p-9781118530801",
+    isbn: "9781118530801",
+    buy: [
+      {
+        shop: "wiley",
+        url: "https://www.wiley.com/en-us/The+Data+Warehouse+Toolkit%3A+The+Definitive+Guide+to+Dimensional+Modeling%2C+3rd+Edition-p-9781118530801",
+      },
+      {
+        shop: "eyrolles",
+        url: "https://www.eyrolles.com/Informatique/Livre/the-data-warehouse-toolkit-3e-ed-the-definitive-guide-to-dimensional-modeling-9781118530801/",
+      },
+    ],
+  },
   "king-2019-parse-dont-validate": {
     title: "Parse, don't validate",
     by: ["alexis-king"],
@@ -301,6 +565,22 @@ export const SOURCES = {
     kind: "article",
     publisher: "lexi-lambda.github.io",
     url: "https://lexi-lambda.github.io/blog/2019/11/05/parse-don-t-validate/",
+  },
+  "kruchten-1995-4plus1": {
+    title: "Architectural Blueprints—The “4+1” View Model of Software Architecture",
+    by: ["philippe-kruchten"],
+    year: 1995,
+    kind: "paper",
+    publisher: "IEEE Software 12(6)",
+    url: "https://www.cs.ubc.ca/~gregor/teaching/papers/4+1view-architecture.pdf",
+  },
+  "kung-robinson-1981-optimistic": {
+    title: "On Optimistic Methods for Concurrency Control",
+    by: ["h-t-kung", "john-t-robinson"],
+    year: 1981,
+    kind: "paper",
+    publisher: "ACM Transactions on Database Systems 6(2)",
+    url: "https://www.eecs.harvard.edu/~htk/publication/1981-tods-kung-robinson.pdf",
   },
   "leroy-2009-compcert": {
     title: "Formal verification of a realistic compiler",
@@ -381,6 +661,22 @@ export const SOURCES = {
     publisher: "NIST glossary",
     url: "https://csrc.nist.gov/glossary/term/separation_of_duty",
   },
+  "omg-2014-bpmn": {
+    title: "Business Process Model and Notation (BPMN), Version 2.0.2",
+    by: ["object-management-group"],
+    year: 2014,
+    kind: "documentation",
+    publisher: "Object Management Group, formal/2013-12-09",
+    url: "https://www.omg.org/spec/BPMN/2.0.2/",
+  },
+  "omg-2017-uml": {
+    title: "OMG Unified Modeling Language (OMG UML), Version 2.5.1",
+    by: ["object-management-group"],
+    year: 2017,
+    kind: "documentation",
+    publisher: "Object Management Group, formal/2017-12-05",
+    url: "https://www.omg.org/spec/UML/2.5.1/About-UML/",
+  },
   "openrewrite-recipes": {
     title: "Recipes",
     by: ["openrewrite"],
@@ -421,6 +717,14 @@ export const SOURCES = {
     publisher: "The Code Whisperer",
     url: "https://blog.thecodewhisperer.com/permalink/abstract-test-cases-20-years-later",
   },
+  "richardson-transactional-outbox": {
+    title: "Pattern: Transactional outbox",
+    by: ["chris-richardson"],
+    year: null,
+    kind: "documentation",
+    publisher: "microservices.io",
+    url: "https://microservices.io/patterns/data/transactional-outbox.html",
+  },
   "rosenstein-codemod": {
     title: "codemod (README)",
     by: ["justin-rosenstein"],
@@ -429,6 +733,14 @@ export const SOURCES = {
     publisher: "Facebook, on GitHub",
     url: "https://github.com/facebookarchive/codemod",
   },
+  "sadalage-fowler-2016-evolutionary-database": {
+    title: "Evolutionary Database Design",
+    by: ["pramod-sadalage", "martin-fowler"],
+    year: 2016,
+    kind: "article",
+    publisher: "martinfowler.com",
+    url: "https://martinfowler.com/articles/evodb.html",
+  },
   "saltzer-schroeder-1975-protection": {
     title: "The Protection of Information in Computer Systems",
     by: ["jerome-saltzer", "michael-schroeder"],
@@ -436,6 +748,22 @@ export const SOURCES = {
     kind: "paper",
     publisher: "IEEE",
     url: "https://www.cs.virginia.edu/~evans/cs551/saltzer/",
+  },
+  "sanders-shin-2001-denormalization": {
+    title: "Denormalization Effects on Performance of RDBMS",
+    by: ["g-lawrence-sanders", "seungkyoon-shin"],
+    year: 2001,
+    kind: "paper",
+    publisher: "Proceedings of the 34th Hawaii International Conference on System Sciences",
+    url: "https://web.archive.org/web/20171201030308id_/https://pdfs.semanticscholar.org/2c79/069c01ba8d598f32e61fe367ef6d261a0cb4.pdf",
+  },
+  "sato-2014-parallel-change": {
+    title: "Parallel Change",
+    by: ["danilo-sato"],
+    year: 2014,
+    kind: "article",
+    publisher: "martinfowler.com",
+    url: "https://martinfowler.com/bliki/ParallelChange.html",
   },
   "slsa-source-requirements": {
     title: "Source: Requirements for producing source (SLSA v1.2)",
@@ -469,6 +797,16 @@ export const SOURCES = {
     publisher: "European Review",
     url: "https://www.cambridge.org/core/journals/european-review/article/improving-ratings-audit-in-the-british-university-system/FC2EE640C0C44E3DB87C29FB666E9AAB",
   },
+  "tardieu-1983-merise": {
+    title: "La méthode MERISE, tome 1 : Principes et outils",
+    by: ["hubert-tardieu", "arnold-rochfeld", "rene-colletti"],
+    year: 1983,
+    kind: "book",
+    publisher: "Les Éditions d'Organisation",
+    url: "https://www.sudoc.fr/021911444",
+    isbn: "9782708105515",
+    outOfPrint: true,
+  },
   "thoughtworks-2017-fitness-function": {
     title: "Architectural fitness function",
     by: ["thoughtworks"],
@@ -476,6 +814,14 @@ export const SOURCES = {
     kind: "article",
     publisher: "Technology Radar",
     url: "https://www.thoughtworks.com/radar/techniques/architectural-fitness-function",
+  },
+  "uml-partners-1997-uml-summary": {
+    title: "UML Summary, version 1.1",
+    by: ["rational-software"],
+    year: 1997,
+    kind: "documentation",
+    publisher: "Rational Software and the UML Partners, OMG document ad/97-08-03",
+    url: "https://www.omg.org/cgi-bin/doc?ad/97-08-03.pdf",
   },
   "varda-pai-2025-code-mode": {
     title: "Code Mode: the better way to use MCP",
@@ -694,6 +1040,22 @@ export const SOURCES = {
     kind: "article",
     publisher: "martinfowler.com",
     url: "https://martinfowler.com/bliki/SyntheticMonitoring.html",
+  },
+  "young-2010-cqrs-documents": {
+    title: "CQRS Documents",
+    by: ["greg-young"],
+    year: 2010,
+    kind: "paper",
+    publisher: "cqrsinfo.com",
+    url: "https://cqrs.wordpress.com/wp-content/uploads/2010/11/cqrs_documents.pdf",
+  },
+  "yourdon-2006-dataflow-diagrams": {
+    title: "Just Enough Structured Analysis, Chapter 9: Dataflow Diagrams",
+    by: ["ed-yourdon"],
+    year: 2006,
+    kind: "article",
+    publisher: "yourdon.com, kept by the Internet Archive",
+    url: "https://web.archive.org/web/20061120034028id_/http://www.yourdon.com/PDF/JESA/JESAchpt9.pdf",
   },
 } as const satisfies Record<string, Source>;
 

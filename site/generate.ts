@@ -32,6 +32,7 @@ const cells = Object.keys(CELLS) as Cell[];
 const W = {
   en: {
     buy: (shops: string) => `Buy it from ${shops}.`,
+    outOfPrint: "Out of print.",
     joiner: ", then ",
     namedBy: "Named by",
     categories: "Categories",
@@ -57,6 +58,7 @@ const W = {
   },
   fr: {
     buy: (shops: string) => `Disponible chez ${shops}.`,
+    outOfPrint: "Épuisé.",
     joiner: ", ou chez ",
     namedBy: "Nommée par",
     categories: "Catégories",
@@ -131,6 +133,7 @@ function pagesIn(lang: Lang): [string, string][] {
     const source: Source = SOURCES[id];
     const line = `- [*${source.title}*](${source.url}), ${source.by.map(personLink).join(", ")}${year(source)}, ${source.publisher}.`;
     const buy = (source.buy ?? []).map(({ shop, url }) => `[${SHOPS[shop].name}](${url})`);
+    if (source.outOfPrint === true) return `${line} ${w.outOfPrint}`;
     return buy.length === 0 ? line : `${line} ${w.buy(buy.join(w.joiner))}`;
   };
 

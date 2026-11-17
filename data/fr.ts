@@ -11,10 +11,19 @@ import type { Theme } from "./themes.ts";
 export const DEFINITIONS_FR = {
   "acceptance-test":
     "Un test qui vérifie un critère d'acceptation, écrit avant le code à partir de ce que l'utilisateur doit voir ; le code doit ensuite le faire passer.",
+  "acid-transactions":
+    "Une transaction est atomique, cohérente, isolée et durable : elle a lieu entièrement ou pas du tout, et une fois validée elle demeure.",
   "approval-testing":
     "Une personne valide une sortie une fois pour toutes, et chaque exécution suivante doit la reproduire tant qu'aucune autre n'a été validée.",
+  arc42:
+    "Un gabarit qui donne à la documentation d'une architecture des sections fixes, de ses objectifs et contraintes à ses briques, ses décisions et ses risques.",
   "architectural-fitness-function":
     "Une vérification automatique qui juge objectivement une caractéristique de l'architecture et s'exécute comme un test.",
+  "architecture-views":
+    "Une architecture se documente par les vues utiles à ses lecteurs, leurs relations, et ce qui vaut pour plusieurs vues à la fois.",
+  bpmn: "Une notation standard des processus métier, lisible à la fois par les analystes, les développeurs et les personnes qui pilotent ces processus.",
+  "c4-model":
+    "L'architecture logicielle se dessine à quatre niveaux de zoom : le système dans son contexte, ses conteneurs, leurs composants, puis le code.",
   "characterization-test":
     "Un test fige ce que fait le code aujourd'hui, à tort ou à raison, pour qu'aucun changement ne passe inaperçu.",
   "code-generator":
@@ -23,31 +32,68 @@ export const DEFINITIONS_FR = {
     "L'agent écrit un programme qui appelle ses outils et l'exécute d'un coup, au lieu d'appeler chaque outil lui-même et d'en lire chaque résultat.",
   codemod:
     "Un programme réécrit le code de façon mécanique, en appliquant la même modification partout où un motif apparaît, au lieu de laisser une personne ou un agent faire chaque retouche.",
+  "context-map":
+    "Chaque modèle en jeu reçoit son contexte délimité et un nom, et l'on dessine leurs points de contact, avec la manière dont ils se traduisent et qui dépend de qui.",
   "contract-test":
     "Une même suite de tests tourne sur un faux et sur l'implémentation réelle, ce qui garantit que le faux utilisé par les autres tests se comporte comme le vrai.",
+  cqrs: "On modifie l'information à travers un modèle et on la lit à travers un autre.",
+  "data-flow-diagram":
+    "Un système se dessine comme un réseau de traitements reliés par des flux de données et par des stocks où ces données reposent.",
+  "database-normalization":
+    "On découpe les tables jusqu'à ce que chaque champ hors clé dise un fait sur la clé, toute la clé et rien que la clé, pour que chaque fait ne soit stocké qu'une fois.",
+  "database-refactoring":
+    "Une petite modification d'un schéma de base de données qui en améliore la conception sans changer ni ce qu'il fait ni ce qu'il contient.",
   "decision-table-testing":
     "Chaque combinaison d'un ensemble fini de conditions est listée avec le résultat attendu, et chaque ligne du tableau devient un test.",
+  denormalization:
+    "On réintroduit volontairement de la redondance dans un schéma normalisé, pour que les lectures fréquentes demandent moins de jointures.",
+  "dimensional-modeling":
+    "Les données d'analyse s'organisent en tables de faits, qui portent les mesures, reliées à des tables de dimensions qui les décrivent.",
   "domain-driven-design":
     "Le code épouse un modèle du métier, exprimé dans le vocabulaire de ses experts et isolé des questions techniques qui l'entourent.",
+  "domain-storytelling":
+    "Les personnes du métier racontent comment elles travaillent ensemble, et l'histoire se dessine au fil du récit, en pictogrammes et en flèches.",
+  "entity-relationship-model":
+    "Les données se modélisent en entités, des choses qu'on sait distinguer, et en associations entre elles, dessinées dans un diagramme entité-association.",
   "equivalence-partitioning-and-boundary-values":
     "Les entrées sont réparties en classes que le code doit traiter de la même manière, et chaque classe est testée une fois en son milieu et une fois à chacune de ses bornes.",
+  "event-sourcing":
+    "Chaque changement de l'état de l'application est stocké comme un événement, dans l'ordre, et l'état se reconstruit à partir d'eux.",
+  "event-storming":
+    "Un atelier où les personnes qui connaissent le métier posent ses événements au mur, dans l'ordre, pour explorer ensemble un domaine complexe.",
+  "evolutionary-architecture":
+    "Une architecture conçue pour changer par petits incréments, avec des vérifications automatiques qui disent ce qui la garde en forme, face aux changements techniques comme métier.",
+  "evolutionary-database-design":
+    "Le schéma évolue par petites migrations versionnées, écrites et testées avec le code, pour que la base change au rythme de l'application.",
   "formal-verification":
     "Une preuve, vérifiée par un programme, que le code respecte une spécification formelle pour toutes les entrées, et pas seulement pour celles qu'un test essaie.",
+  "four-plus-one-view-model":
+    "Une architecture se décrit en quatre vues, logique, processus, développement et physique, reliées par quelques scénarios qui forment la cinquième.",
   fuzzing:
     "On bombarde un programme d'entrées aléatoires ou malformées pour débusquer celles qui le font planter ou se figer.",
   "golden-master":
     "On conserve la sortie d'une exécution de référence et on y compare chaque exécution suivante, pour repérer le moindre changement de comportement.",
   "hexagonal-architecture":
     "L'application ne communique avec l'extérieur que par des ports, chacun branché sur un adaptateur, de sorte que son cœur ne dépend de rien d'extérieur.",
+  "integrity-constraints":
+    "La base elle-même refuse les données qui enfreignent une règle du schéma, comme une clé étrangère qui ne désigne aucune ligne.",
+  "isolation-levels":
+    "Ce que des transactions concurrentes peuvent voir du travail des autres, choisi transaction par transaction pour arbitrer entre débit et exactitude.",
   "language-server":
     "Un serveur par langage renseigne l'éditeur ou l'agent sur le code (définitions, références, erreurs) au moyen d'un protocole commun.",
   "make-illegal-states-unrepresentable":
     "On conçoit les types de sorte qu'un état interdit ne puisse tout simplement pas s'écrire : le compilateur le refuse.",
+  merise:
+    "Une méthode française de conception des systèmes d'information qui modélise séparément les données et les traitements, du niveau conceptuel jusqu'au niveau physique.",
   "metamorphic-testing":
     "Faute de connaître la bonne sortie, on vérifie que deux exécutions aux entrées liées produisent des sorties liées de la même façon.",
   "mutation-testing":
     "On introduit de petites erreurs dans le code : si la suite de tests passe malgré l'une d'elles, c'est qu'il lui manque un test.",
   mvvm: "La vue se lie à un view model qui porte son état et ses commandes, si bien que la logique de l'interface se teste sans l'interface.",
+  "optimistic-concurrency-control":
+    "Les transactions s'exécutent sans verrou et sont vérifiées au moment de valider ; celle qui entre en conflit est annulée puis relancée.",
+  "parallel-change":
+    "Un changement incompatible se fait en trois temps, étendre, migrer, contracter, pour que l'ancien et le nouveau cohabitent tant que l'ancien sert encore.",
   "parse-dont-validate":
     "On vérifie l'entrée une seule fois, à la frontière, en la convertissant dans un type qui garde la trace de cette vérification : le reste du programme ne voit jamais de valeur invalide.",
   "property-based-testing":
@@ -60,10 +106,17 @@ export const DEFINITIONS_FR = {
     "Un passage rapide sur les parcours principaux du système, de bout en bout, pour s'assurer qu'il fonctionne avant de tester plus en profondeur.",
   "snapshot-testing":
     "Le framework de test enregistre une sortie à la première exécution, puis échoue dès qu'une exécution suivante en produit une différente.",
+  statecharts:
+    "Des diagrammes d'états enrichis de hiérarchie, de concurrence et de communication, pour qu'un comportement complexe reste lisible.",
   "stateful-testing":
     "On rejoue des séquences de commandes générées à la fois sur le système et sur un modèle simplifié de celui-ci, et les deux doivent concorder à chaque étape.",
+  "surrogate-key":
+    "Chaque ligne est identifiée par une clé attribuée par le système et dénuée de sens, plutôt que par une valeur métier susceptible de changer.",
   "test-sizes":
     "On classe un test comme petit, moyen ou grand selon ce qu'il sollicite (un processus, une machine ou davantage), ce qui renseigne mieux sur sa vitesse et sa fiabilité que « unitaire » ou « d'intégration ».",
+  "transactional-outbox":
+    "Un message à envoyer est écrit en base dans la même transaction que le changement qu'il annonce, et un processus séparé se charge de l'envoyer.",
+  uml: "Un langage graphique standard pour spécifier, visualiser et documenter la structure et le comportement d'un système en diagrammes.",
   "unit-testing":
     "Un test porte sur une petite partie du code, une fonction ou une classe, assez rapide pour tourner à chaque modification, avec des collaborateurs réels ou remplacés.",
   observability:
@@ -98,6 +151,8 @@ export const THEMES_FR = {
   "plans-and-agents": "Plans et agents",
   tooling: "Outillage",
   observability: "Observabilité",
+  modelling: "Modélisation",
+  data: "Données",
 } as const satisfies Record<Theme, string>;
 
 export const HINTS_FR = {
