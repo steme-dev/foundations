@@ -31,6 +31,8 @@ export const DEFINITIONS_FR = {
     "Le code épouse un modèle du métier, exprimé dans le vocabulaire de ses experts et isolé des questions techniques qui l'entourent.",
   "equivalence-partitioning-and-boundary-values":
     "Les entrées sont réparties en classes que le code doit traiter de la même manière, et chaque classe est testée une fois en son milieu et une fois à chacune de ses bornes.",
+  "formal-verification":
+    "Une preuve, vérifiée par un programme, que le code respecte une spécification formelle pour toutes les entrées, et pas seulement pour celles qu'un test essaie.",
   fuzzing:
     "On bombarde un programme d'entrées aléatoires ou malformées pour débusquer celles qui le font planter ou se figer.",
   "golden-master":

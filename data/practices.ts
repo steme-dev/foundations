@@ -119,6 +119,20 @@ export const PRACTICES = {
     ],
     credited: [],
   },
+  "formal-verification": {
+    name: "Formal verification",
+    definition:
+      "A proof, checked by a program, that the code meets a formal specification for every input, not only for the inputs a test tries.",
+    cells: ["SC"],
+    themes: ["tests-and-verification"],
+    sources: [
+      "floyd-1967-meanings",
+      "hoare-1969-axiomatic",
+      "leroy-2009-compcert",
+      "anthropic-2026-formal-verification",
+    ],
+    credited: ["robert-w-floyd", "tony-hoare"],
+  },
   fuzzing: {
     name: "Fuzzing",
     definition:

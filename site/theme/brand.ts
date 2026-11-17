@@ -21,5 +21,11 @@ export function brandFiles(): { path: string; content: string }[] {
     { path: `public${LOGO_DARK}`, content: svg(`<path fill="${fill(dark)}" d="${MARK_PATH}"/>`) },
     { path: `public${LOGO_LIGHT}`, content: svg(`<path fill="${fill(light)}" d="${MARK_PATH}"/>`) },
     { path: `public${FAVICON}`, content: favicon },
+    // Where crawlers may go, and the sitemap Rspress builds.
+    {
+      path: "public/robots.txt",
+      content:
+        "User-agent: *\nDisallow: /api/\nDisallow: /auth/\nDisallow: /t/\nDisallow: /me\nDisallow: /fr/me\n\nSitemap: https://foundations.steme.dev/sitemap.xml\n",
+    },
   ];
 }

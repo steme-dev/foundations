@@ -17,7 +17,9 @@ const navigation = JSON.parse(
 export default defineConfig({
   root: join(site, "..", ".generated", "docs"),
   outDir: join(site, "..", "dist"),
-  title: "Foundations",
+  title: "steme foundations",
+  // Absolute addresses in sitemap.xml and llms.txt.
+  siteOrigin: "https://foundations.steme.dev",
   // English at the root, French under /fr/: the pages under .generated/docs/<lang>/, each language's
   // top navigation in its _nav.json.
   lang: "en",
@@ -26,14 +28,14 @@ export default defineConfig({
     {
       lang: "en",
       label: "English",
-      title: "Foundations",
+      title: "steme foundations",
       description:
         "The software engineering we stand on: practices named in the literature's own words, each backed by its sources.",
     },
     {
       lang: "fr",
       label: "Français",
-      title: "Foundations",
+      title: "steme foundations",
       description:
         "Le génie logiciel sur lequel nous nous appuyons : des pratiques désignées par les mots de la littérature, chacune adossée à ses sources.",
     },

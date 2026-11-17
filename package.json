@@ -11,7 +11,7 @@
     "check": "pnpm typecheck && pnpm lint && pnpm format:check && pnpm test && pnpm build",
     "generate": "node site/generate.ts",
     "dev": "pnpm generate && rspress dev --config site/rspress.config.ts",
-    "build": "pnpm generate && rspress build --config site/rspress.config.ts",
+    "build": "pnpm generate && rspress build --config site/rspress.config.ts && node scripts/seo.mjs",
     "preview": "rspress preview --config site/rspress.config.ts",
     "typecheck": "tsc -b && tsc -b worker",
     "lint": "oxlint --deny-warnings data site worker vitest.config.ts",

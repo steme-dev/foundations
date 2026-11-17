@@ -92,9 +92,13 @@ const index = (path: string, title: string, lines: string[]): [string, string] =
   `${frontmatter(title)}\n# ${title}\n\n${lines.join("\n")}\n`,
 ];
 
+/**
+ * A page that is no part of the library: a reader's account, a person's list. Never indexed, and left out
+ * of the sitemap and llms.txt (scripts/seo.mjs).
+ */
 const bare = (path: string, title: string, body: string): [string, string] => [
   path,
-  `---\npageType: doc\nsidebar: false\noutline: false\ntitle: ${JSON.stringify(title)}\n---\n\n${body}\n`,
+  `---\npageType: doc\nsidebar: false\noutline: false\ntitle: ${JSON.stringify(title)}\nhead:\n  - - meta\n    - name: robots\n      content: noindex\n---\n\n${body}\n`,
 ];
 
 /** How many entries two lists share. */
@@ -286,7 +290,7 @@ ${list}
 pageType: doc
 sidebar: false
 outline: false
-title: Foundations
+title: We stand on the shoulders of giants
 ---
 
 # We stand on the shoulders of giants.<br />Let's build on their work.
@@ -301,7 +305,7 @@ title: Foundations
 pageType: doc
 sidebar: false
 outline: false
-title: Foundations
+title: Nous nous tenons sur les épaules de géants
 ---
 
 # Nous nous tenons sur les épaules de géants.<br />Appuyons-nous sur leur travail.

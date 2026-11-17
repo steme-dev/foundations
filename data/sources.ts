@@ -36,6 +36,14 @@ export const SOURCES = {
     publisher: "Agile Alliance glossary",
     url: "https://www.agilealliance.org/glossary/atdd/",
   },
+  "anthropic-2026-formal-verification": {
+    title: "LLMs are making formal software verification feasible at a much larger scale",
+    by: ["anthropic", "theorem"],
+    year: 2026,
+    kind: "article",
+    publisher: "Anthropic Research, Frontier Red Team, with Theorem",
+    url: "https://www.anthropic.com/research/formal-verification",
+  },
   approvaltests: {
     title: "ApprovalTests",
     by: ["approvaltests"],
@@ -162,6 +170,15 @@ export const SOURCES = {
     publisher: "Michael Feathers' blog",
     url: "https://michaelfeathers.silvrback.com/characterization-testing",
   },
+  "floyd-1967-meanings": {
+    title: "Assigning Meanings to Programs",
+    by: ["robert-w-floyd"],
+    year: 1967,
+    kind: "paper",
+    publisher:
+      "Mathematical Aspects of Computer Science, Proceedings of Symposia in Applied Mathematics 19, American Mathematical Society",
+    url: "https://people.eecs.berkeley.edu/~necula/Papers/FloydMeaning.pdf",
+  },
   "fowler-2011-contract-test": {
     title: "ContractTest",
     by: ["martin-fowler"],
@@ -196,6 +213,14 @@ export const SOURCES = {
     kind: "article",
     publisher: "Microsoft (MSDN blogs, archived on Microsoft Learn)",
     url: "https://learn.microsoft.com/en-us/archive/blogs/johngossman/introduction-to-modelviewviewmodel-pattern-for-building-wpf-apps",
+  },
+  "hoare-1969-axiomatic": {
+    title: "An Axiomatic Basis for Computer Programming",
+    by: ["tony-hoare"],
+    year: 1969,
+    kind: "paper",
+    publisher: "Communications of the ACM 12(10)",
+    url: "https://www.cs.cmu.edu/~crary/819-f09/Hoare69.pdf",
   },
   "hughes-2016-testing-the-hard-stuff": {
     title: "Experiences with QuickCheck: Testing the Hard Stuff and Staying Sane",
@@ -276,6 +301,14 @@ export const SOURCES = {
     kind: "article",
     publisher: "lexi-lambda.github.io",
     url: "https://lexi-lambda.github.io/blog/2019/11/05/parse-don-t-validate/",
+  },
+  "leroy-2009-compcert": {
+    title: "Formal verification of a realistic compiler",
+    by: ["xavier-leroy"],
+    year: 2009,
+    kind: "paper",
+    publisher: "Communications of the ACM 52(7)",
+    url: "https://xavierleroy.org/publi/compcert-CACM.pdf",
   },
   "meta-jscodeshift": {
     title: "jscodeshift (README)",
