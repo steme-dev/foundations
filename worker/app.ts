@@ -54,9 +54,22 @@ export async function handle(request: Request, deps: Deps): Promise<Response> {
   const secure = config.publicOrigin.startsWith("https:");
   const now = deps.now();
 
+  // A session counts only while its person still exists: one who deleted their account on another
+  // device is signed out here too, and their cookie cleared.
+  let ended = false;
   const session = async () => {
     const value = readCookie(request, SESSION_COOKIE);
-    return value === null ? null : verify(value, config.sessionSecret, now.getTime());
+    const signed = value === null ? null : await verify(value, config.sessionSecret, now.getTime());
+    if (signed === null) return null;
+    if ((await store.userById(signed.githubId)) === null) {
+      ended = true;
+      return null;
+    }
+    return signed;
+  };
+  const clearIfEnded = (response: Response): Response => {
+    if (ended) response.headers.append("Set-Cookie", cookie(SESSION_COOKIE, "", 0, secure));
+    return response;
   };
 
   // A request that changes something must come from the site itself.
@@ -116,10 +129,10 @@ export async function handle(request: Request, deps: Deps): Promise<Response> {
   if (url.pathname === "/api/me") {
     const me = await session();
     if (request.method === "GET") {
-      if (me === null) return json({ user: null, votes: [] });
-      const user = await store.userByLogin(me.login);
+      if (me === null) return clearIfEnded(json({ user: null, votes: [] }));
+      const user = await store.userById(me.githubId);
       return json({
-        user: { login: me.login, avatarUrl: user?.avatarUrl ?? null },
+        user: { login: user?.login ?? me.login, avatarUrl: user?.avatarUrl ?? null },
         votes: await store.votesOf(me.githubId),
       });
     }
@@ -137,7 +150,7 @@ export async function handle(request: Request, deps: Deps): Promise<Response> {
     if (!sameOrigin()) return json({ error: "cross-origin" }, 403);
     if (!PRACTICE_IDS.has(practice)) return json({ error: "unknown-practice" }, 404);
     const me = await session();
-    if (me === null) return json({ error: "signed-out" }, 401);
+    if (me === null) return clearIfEnded(json({ error: "signed-out" }, 401));
     if (request.method === "PUT") await store.addVote(me.githubId, practice, now.toISOString());
     else await store.removeVote(me.githubId, practice);
     return json({ votes: await store.votesOf(me.githubId) });

@@ -9,6 +9,7 @@ export interface Store {
   /** Records a GitHub user, or updates their login and avatar; a login another id held is freed. */
   upsertUser(user: User, now: string): Promise<void>;
   userByLogin(login: string): Promise<User | null>;
+  userById(githubId: number): Promise<User | null>;
   votesOf(githubId: number): Promise<string[]>;
   addVote(githubId: number, practice: string, now: string): Promise<void>;
   removeVote(githubId: number, practice: string): Promise<void>;
@@ -40,6 +41,15 @@ export function d1Store(db: D1Database): Store {
       const row = await db
         .prepare("SELECT github_id, login, avatar_url FROM users WHERE login = ?")
         .bind(login)
+        .first<{ github_id: number; login: string; avatar_url: string | null }>();
+      return row === null
+        ? null
+        : { githubId: row.github_id, login: row.login, avatarUrl: row.avatar_url };
+    },
+    async userById(githubId) {
+      const row = await db
+        .prepare("SELECT github_id, login, avatar_url FROM users WHERE github_id = ?")
+        .bind(githubId)
         .first<{ github_id: number; login: string; avatar_url: string | null }>();
       return row === null
         ? null
@@ -92,6 +102,9 @@ export function memoryStore(): Store {
     },
     async userByLogin(login) {
       return [...users.values()].find((user) => user.login === login) ?? null;
+    },
+    async userById(githubId) {
+      return users.get(githubId) ?? null;
     },
     async votesOf(githubId) {
       return [...(votes.get(githubId)?.keys() ?? [])];

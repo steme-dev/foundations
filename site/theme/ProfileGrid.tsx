@@ -14,6 +14,7 @@ const cellsOf = (id: PracticeId): readonly Cell[] => PRACTICES[id].cells;
 /**
  * A person's practices falling into Böckeler's grid one by one, in the order they said they use them:
  * it plays once when the page opens, then waits for "Replay". Below, how much of the grid they cover.
+ * A cell's title leads to the cell's page, each practice in it to its own.
  */
 export default function ProfileGrid({
   login,
@@ -74,28 +75,28 @@ export default function ProfileGrid({
                 .map((id, order) => ({ id, order }))
                 .filter(({ id, order }) => order < shown && cellsOf(id).includes(cell));
               return (
-                <a
+                <div
                   key={cell}
-                  href={`/grid/${CELLS[cell].slug}`}
                   className="foundations-pgrid-cell"
                   data-on={here.length > 0 ? "" : undefined}
                 >
-                  <span className="foundations-pgrid-label">
+                  <a className="foundations-pgrid-label" href={`/grid/${CELLS[cell].slug}`}>
                     {CELLS[cell].label}
                     <b>{here.length}</b>
-                  </span>
+                  </a>
                   <span className="foundations-pgrid-chips">
                     {here.map(({ id, order }) => (
-                      <span
+                      <a
                         key={id}
+                        href={`/practices/${id}`}
                         className="foundations-pgrid-chip"
                         data-new={order === shown - 1 && playing ? "" : undefined}
                       >
                         {PRACTICES[id].name}
-                      </span>
+                      </a>
                     ))}
                   </span>
-                </a>
+                </div>
               );
             })}
           </div>

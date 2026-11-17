@@ -97,6 +97,7 @@ describe("saying which practices you use", () => {
 
   it("counts one vote per person, however often they press", async () => {
     const deps = setup();
+    await deps.store.upsertUser(ADA, NOW.toISOString());
     await call(deps, "/api/votes/fuzzing", await write("PUT"));
     await call(deps, "/api/votes/fuzzing", await write("PUT"));
     expect(await (await call(deps, "/api/counts")).json()).toEqual({ fuzzing: 1 });
@@ -115,6 +116,7 @@ describe("saying which practices you use", () => {
       await write("PUT", { Origin: "https://evil.example" }),
     );
     expect(crossSite.status).toBe(403);
+    await deps.store.upsertUser(ADA, NOW.toISOString());
     const unknown = await call(deps, "/api/votes/not-a-practice", await write("PUT"));
     expect(unknown.status).toBe(404);
   });
@@ -132,6 +134,18 @@ describe("who is signed in", () => {
       votes: ["fuzzing"],
     });
     expect(await (await call(deps, "/api/me")).json()).toEqual({ user: null, votes: [] });
+  });
+});
+
+describe("a session whose person is gone", () => {
+  it("counts as signed out, clears its cookie, and records no vote", async () => {
+    const deps = setup();
+    const me = await call(deps, "/api/me", { headers: { Cookie: await sessionOf() } });
+    expect(await me.json()).toEqual({ user: null, votes: [] });
+    expect(me.headers.get("Set-Cookie")).toContain("Max-Age=0");
+    const vote = await call(deps, "/api/votes/fuzzing", await write("PUT"));
+    expect(vote.status).toBe(401);
+    expect(await (await call(deps, "/api/counts")).json()).toEqual({});
   });
 });
 

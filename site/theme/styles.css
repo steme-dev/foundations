@@ -652,7 +652,7 @@ body {
   padding: 2px 8px;
   border-radius: 6px;
   background: var(--raised);
-  color: var(--fg);
+  color: var(--fg) !important;
   font-size: 12px;
   animation: foundations-drop 0.35s ease-out both;
 }
@@ -708,11 +708,13 @@ body {
   }
 }
 
-/* The reader's grid while they vote: bottom left, out of the list's way, across from "Propose". */
+/* The reader's grid while they vote: at the right edge, halfway down the screen, in the library's
+   empty margin; on a phone, small at the bottom left, across from "Propose". */
 .foundations-tally {
   position: fixed;
-  left: 24px;
-  bottom: 24px;
+  right: 24px;
+  top: 50%;
+  transform: translateY(-50%);
   z-index: 50;
   width: 236px;
   padding: 10px;
@@ -721,7 +723,13 @@ body {
   background: color-mix(in srgb, var(--surface) 92%, transparent);
   backdrop-filter: blur(8px);
   box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
-  animation: foundations-rise 0.35s ease-out both;
+  animation: foundations-appear 0.35s ease-out both;
+}
+
+@keyframes foundations-appear {
+  from {
+    opacity: 0;
+  }
 }
 
 .foundations-tally-grid {
@@ -779,6 +787,16 @@ body {
   text-decoration: none !important;
 }
 
+@media (max-width: 1280px) {
+  .foundations-tally {
+    top: auto;
+    right: auto;
+    left: 16px;
+    bottom: 16px;
+    transform: none;
+  }
+}
+
 @media (max-width: 640px) {
   .foundations-tally {
     left: 12px;
@@ -815,4 +833,25 @@ body {
   font-size: 12px;
   font-weight: 600;
   color: var(--muted);
+}
+
+.foundations-pgrid-label {
+  color: inherit !important;
+  text-decoration: none !important;
+}
+
+.foundations-pgrid-label:hover {
+  color: var(--accent) !important;
+}
+
+.foundations-pgrid-chip {
+  text-decoration: none !important;
+  transition:
+    background 0.15s,
+    color 0.15s;
+}
+
+.foundations-pgrid-chip:hover {
+  background: var(--accent-strong);
+  color: #fff !important;
 }
