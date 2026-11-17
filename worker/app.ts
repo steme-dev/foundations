@@ -70,6 +70,7 @@ const EVENTS = new Set([
   "propose_clicked",
   "filter_used",
   "search_used",
+  "view_switched",
 ]);
 
 const STATE_COOKIE = "foundations_oauth_state";

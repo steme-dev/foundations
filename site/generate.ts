@@ -52,7 +52,7 @@ const W = {
       `Where a practice acts when an agent writes the code: ${h}. One cell of [Böckeler's grid]`,
     marked: (title: string) =>
       `The ones marked Böckeler are from ${title}; the others are added by this library.`,
-    yourPractices: "Your practices",
+    yourPractices: "Your account",
     someone: "Practices someone builds on",
   },
   fr: {
@@ -77,7 +77,7 @@ const W = {
       `Là où une pratique intervient quand un agent écrit le code : ${h}. C'est l'une des quatre cases de [la grille de Böckeler]`,
     marked: (title: string) =>
       `Les exemples marqués Böckeler viennent de ${title} ; les autres ont été ajoutés par cette bibliothèque.`,
-    yourPractices: "Mes pratiques",
+    yourPractices: "Ton compte",
     someone: "Les pratiques de quelqu'un",
   },
 } as const;

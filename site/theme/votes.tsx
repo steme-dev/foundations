@@ -1,7 +1,8 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { PRACTICES, type PracticeId } from "../../data/practices.ts";
 import { type Me, getCounts, getMe, setVote, signIn } from "./api.ts";
+import { Dialog } from "./Dialog.tsx";
 import { useWords } from "./lang.ts";
 import { track } from "./track.ts";
 
@@ -92,10 +93,7 @@ export function useVoting(where: "home" | "practice") {
   return { me, counts, firstVote, toggle, dialog };
 }
 
-/**
- * The dialog of a signed-out "I use it": why to sign in, and the way to. It keeps the keyboard's focus
- * inside while open, closes on Escape or a click beside it, and gives the focus back to what opened it.
- */
+/** The dialog of a signed-out "I use it": why to sign in, and the way to. */
 function StartDialog({
   practice,
   onClose,
@@ -106,53 +104,22 @@ function StartDialog({
   onSignIn: () => void;
 }) {
   const { t } = useWords();
-  const box = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const opener = document.activeElement as HTMLElement | null;
-    box.current?.querySelector<HTMLElement>("button")?.focus();
-    const keys = (event: KeyboardEvent) => {
-      if (event.key === "Escape") onClose();
-      if (event.key !== "Tab" || box.current === null) return;
-      const focusable = [...box.current.querySelectorAll<HTMLElement>("button")];
-      const first = focusable[0];
-      const last = focusable.at(-1);
-      if (event.shiftKey && document.activeElement === first) {
-        event.preventDefault();
-        last?.focus();
-      } else if (!event.shiftKey && document.activeElement === last) {
-        event.preventDefault();
-        first?.focus();
-      }
-    };
-    window.addEventListener("keydown", keys);
-    return () => {
-      window.removeEventListener("keydown", keys);
-      opener?.focus();
-    };
-  }, [onClose]);
-
   return (
-    <div className="foundations-modal" onClick={onClose}>
-      <div
-        ref={box}
-        className="foundations-modal-box"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="foundations-start-title"
-        onClick={(event) => event.stopPropagation()}
-      >
-        <h3 id="foundations-start-title">{t.start.title}</h3>
-        <p>{t.start.text(PRACTICES[practice].name)}</p>
-        <div className="foundations-modal-actions">
+    <Dialog
+      title={t.start.title}
+      onClose={onClose}
+      actions={
+        <>
           <button type="button" className="foundations-modal-primary" onClick={onSignIn}>
             {t.signIn}
           </button>
           <button type="button" onClick={onClose}>
             {t.start.later}
           </button>
-        </div>
-      </div>
-    </div>
+        </>
+      }
+    >
+      <p>{t.start.text(PRACTICES[practice].name)}</p>
+    </Dialog>
   );
 }

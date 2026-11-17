@@ -14,11 +14,30 @@ const loginOf = (location: Location): string =>
   decodeURIComponent(location.pathname.replace(/^(?:\/fr)?\/u\/?/u, "").replace(/\/$/u, "")) ||
   (new URLSearchParams(location.search).get("login") ?? "");
 
-/** A person's public list of the practices they use. */
+type View = "grid" | "list";
+
+/** The view a page opens on: the grid, unless its address asks for the list. */
+const viewOf = (location: Location): View =>
+  new URLSearchParams(location.search).get("view") === "list" ? "list" : "grid";
+
+/**
+ * A person's public page: the practices they use, seen as their grid or as a list with its filters,
+ * one at a time. The view chosen is kept in the address, so a link opens on it.
+ */
 export default function Profile() {
   const { t, link } = useWords();
   const [profile, setProfile] = useState<ProfileData | null | undefined>(undefined);
   const [filter, setFilter] = useState<Filter>(NO_FILTER);
+  const [view, setView] = useState<View>("grid");
+  useEffect(() => setView(viewOf(window.location)), []);
+  const show = (next: View) => {
+    setView(next);
+    const url = new URL(window.location.href);
+    if (next === "list") url.searchParams.set("view", "list");
+    else url.searchParams.delete("view");
+    window.history.replaceState(null, "", url);
+    track("view_switched", { view: next });
+  };
   useEffect(() => {
     const login = loginOf(window.location);
     if (login === "") setProfile(null);
@@ -58,9 +77,27 @@ export default function Profile() {
           <p>{t.buildsOn(profile.votes.length)}</p>
         </div>
       </div>
-      <ProfileGrid login={profile.login} votes={profile.votes} />
-      <Filters filter={filter} onChange={setFilter} shown={shown.length} />
-      <PracticeList ids={shown} />
+      <div className="foundations-views" role="tablist" aria-label={t.views.label}>
+        {(["grid", "list"] as const).map((v) => (
+          <button
+            key={v}
+            type="button"
+            role="tab"
+            aria-selected={view === v}
+            onClick={() => show(v)}
+          >
+            {t.views[v]}
+          </button>
+        ))}
+      </div>
+      {view === "grid" ? (
+        <ProfileGrid login={profile.login} votes={profile.votes} />
+      ) : (
+        <>
+          <Filters filter={filter} onChange={setFilter} shown={shown.length} />
+          <PracticeList ids={shown} />
+        </>
+      )}
       <a className="foundations-cta" href={link("/")}>
         {t.sayWhich}
       </a>

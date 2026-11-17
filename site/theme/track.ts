@@ -13,7 +13,8 @@ export type Event =
   | "share_copied"
   | "propose_clicked"
   | "filter_used"
-  | "search_used";
+  | "search_used"
+  | "view_switched";
 
 export function track(
   event: Event,
