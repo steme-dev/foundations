@@ -1,0 +1,43 @@
+# The security pass: on every pull request and push to main, and daily, since a new advisory can flag a
+# dependency that has not changed. mise brings the tools at the versions mise.toml pins, each checked
+# against mise.lock. Nothing is installed from the lockfile and no dependency's code runs.
+name: Security
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: "41 5 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    name: Security audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # gitleaks reads the whole history.
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: jdx/mise-action@b44d12e7d0d8ee7461bb893e1b1993500433185b # v5.2.7
+        with:
+          version: "2026.11.1"
+          install_args: osv-scanner gitleaks zizmor
+          cache: false
+
+      # Every known advisory in the dependency tree, development tools included, fails.
+      - name: Advisories
+        run: osv-scanner scan source --lockfile pnpm-lock.yaml
+
+      - name: Secrets in the history
+        run: gitleaks git . --no-banner --redact --config .gitleaks.toml
+
+      - name: Workflows
+        run: zizmor --offline --min-severity medium .github/workflows

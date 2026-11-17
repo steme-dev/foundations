@@ -1,0 +1,10 @@
+# A version is installed seven days after its release, so that a compromised one is caught and pulled
+# first; an urgent fix is let through by name in minimumReleaseAgeExclude, with why.
+minimumReleaseAge: 10080
+# A package whose new version was published with less trust than its earlier ones (provenance, then
+# none) is refused, as is a dependency of a dependency from git or a tarball URL.
+trustPolicy: no-downgrade
+blockExoticSubdeps: true
+# No dependency's install script runs.
+allowBuilds:
+  esbuild: false

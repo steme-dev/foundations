@@ -1,0 +1,26 @@
+{
+  "name": "foundations",
+  "private": true,
+  "license": "MIT OR Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/steme-dev/foundations.git"
+  },
+  "type": "module",
+  "scripts": {
+    "check": "pnpm typecheck && pnpm lint && pnpm format:check && pnpm test",
+    "typecheck": "tsc -b",
+    "lint": "oxlint --deny-warnings data vitest.config.ts",
+    "format": "oxfmt .",
+    "format:check": "oxfmt --check .",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "oxfmt": "^0.77.0",
+    "oxlint": "^1.92.0",
+    "typescript": "^7",
+    "vitest": "^4.1.12"
+  },
+  "packageManager": "pnpm@12.18.0"
+}

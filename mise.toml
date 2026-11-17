@@ -1,0 +1,12 @@
+# The tools the library is checked and audited with, pinned for every machine and every CI job;
+# mise.lock holds each one's checksum per platform (`mise install --locked`). pnpm is here at the
+# version package.json's packageManager names. A version is taken a week after its release; a
+# security release is taken at once.
+min_version = "2026.11.1"
+
+[tools]
+node = "24.22.3"
+pnpm = "12.18.0"
+gitleaks = "8.30.1"
+osv-scanner = "2.7.0"
+zizmor = "1.32.0"

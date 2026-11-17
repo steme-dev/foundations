@@ -1,0 +1,3 @@
+# gitleaks' default rules; a value reviewed as not secret is allowed here by its file and its rule, with why.
+[extend]
+useDefault = true
