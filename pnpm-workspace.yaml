@@ -8,3 +8,4 @@ blockExoticSubdeps: true
 # No dependency's install script runs.
 allowBuilds:
   esbuild: false
+  workerd: false

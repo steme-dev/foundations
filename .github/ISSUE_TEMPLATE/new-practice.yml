@@ -1,0 +1,74 @@
+name: Propose a practice
+description: A practice of software engineering this library should hold, with the sources that name it.
+title: "Practice: "
+labels: ["new practice"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        A practice is named in the literature's own words and stands on sources someone can read. Fill in what
+        you know; a maintainer turns it into a pull request, and checks every source at its address.
+  - type: input
+    id: name
+    attributes:
+      label: Name
+      description: The name its sources give it, not a new one.
+      placeholder: Characterization test
+    validations:
+      required: true
+  - type: textarea
+    id: definition
+    attributes:
+      label: Definition
+      description: One sentence, in plain words, saying what the practice does, not why it is good.
+      placeholder: A test records what the code does today, right or not, so that a change to it cannot go unseen.
+    validations:
+      required: true
+  - type: checkboxes
+    id: cells
+    attributes:
+      label: With an agent, where does it act?
+      description: Its cells of Birgitta Böckeler's grid. A guide acts before the agent writes, a sensor after; inferential means a model or a person judges, computational means a program decides.
+      options:
+        - label: Inferential guide
+        - label: Computational guide
+        - label: Inferential sensor
+        - label: Computational sensor
+  - type: checkboxes
+    id: themes
+    attributes:
+      label: Themes
+      options:
+        - label: Architecture
+        - label: Types and contracts
+        - label: Tests and verification
+        - label: Refactoring and migration
+        - label: Plans and agents
+        - label: Tooling
+  - type: textarea
+    id: sources
+    attributes:
+      label: Sources
+      description: |
+        One per line or block: title, authors, year (or none for a page kept up to date), kind (book, paper,
+        article or documentation), publisher, and its address. For a book, its ISBN-13 and where to buy it: the
+        publisher's own shop first, then specialised or independent bookshops; Amazon only if no one else sells it.
+      placeholder: |
+        Working Effectively with Legacy Code, Michael Feathers, 2004, book, Prentice Hall,
+        https://www.informit.com/store/working-effectively-with-legacy-code-9780131177055
+        ISBN 9780131177055; buy: InformIT, Librairie Eyrolles
+    validations:
+      required: true
+  - type: input
+    id: credited
+    attributes:
+      label: Who named it
+      description: Only people among the authors of its sources, and only when a source shows they named it. Leave empty if no one did.
+      placeholder: Michael Feathers
+  - type: checkboxes
+    id: read
+    attributes:
+      label: Read at its address
+      options:
+        - label: I have read each source at the address I give.
+          required: true

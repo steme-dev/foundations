@@ -1,0 +1,469 @@
+/* Every colour and font comes from the tokens in tokens.css, which site/generate.ts draws from
+   site/theme/tokens.ts; this file holds layout. */
+@import "../../.generated/theme/tokens.css";
+@import "@fontsource/instrument-sans/latin-400.css";
+@import "@fontsource/instrument-sans/latin-500.css";
+@import "@fontsource/instrument-sans/latin-600.css";
+@import "@fontsource/jetbrains-mono/latin-400.css";
+@import "@fontsource/jetbrains-mono/latin-500.css";
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+}
+
+/* The wordmark in the nav: the mark at 0.74em of the text, 0.07em before "teme", as steme's
+   documentation sets it; then Foundations, small and muted, a sub-brand. */
+.rp-nav .rp-nav__title__link {
+  gap: 0;
+  font-size: 1.375rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.rp-nav .rp-nav__title__logo {
+  display: flex;
+  min-width: 0;
+  margin-right: 0.07em;
+}
+
+.rp-nav .rp-nav__title__link .rspress-logo {
+  width: auto;
+  height: 0.74em;
+}
+
+.rp-nav .rp-nav__title__link::after {
+  content: "foundations";
+  margin-left: 0.6em;
+  padding-left: 0.6em;
+  border-left: 1px solid var(--line);
+  font-size: 0.68em;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+}
+
+/* The filters: two small selects and the count, on one line above the list. */
+.foundations-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+  margin: 8px 0 0;
+  font-size: 14px;
+}
+
+.foundations-filters label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--muted);
+}
+
+.foundations-filters select {
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 3px 8px;
+  background: var(--surface);
+  color: var(--fg);
+  font: inherit;
+  cursor: pointer;
+}
+
+.foundations-count {
+  margin-left: auto;
+  color: var(--muted);
+}
+
+/* One practice per row, its "I use it" on the right. */
+.foundations-rows {
+  list-style: none !important;
+  padding: 0 !important;
+  margin: 20px 0 0 !important;
+  border-top: 1px solid var(--rp-c-divider);
+}
+
+.foundations-row {
+  list-style: none !important;
+  margin: 0 !important;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 16px 4px;
+  border-bottom: 1px solid var(--rp-c-divider);
+}
+
+.foundations-row::marker {
+  content: none;
+}
+
+.foundations-row-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.foundations-row-name {
+  font-weight: 600;
+  font-size: 17px;
+  text-decoration: none;
+}
+
+.foundations-row-definition {
+  margin: 2px 0 6px !important;
+  line-height: 1.5;
+}
+
+.foundations-row-meta {
+  margin: 0 !important;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+  font-size: 13px;
+  opacity: 0.75;
+}
+
+.foundations-tag {
+  border: none;
+  background: var(--raised);
+  border-radius: 6px;
+  padding: 1px 8px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.foundations-tag:hover {
+  color: var(--rp-c-brand);
+}
+
+/* The vote: a square that says how many use it, Product Hunt's shape. */
+.foundations-use {
+  flex: none;
+  width: 72px;
+  height: 64px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  border: 1px solid var(--rp-c-divider);
+  border-radius: 10px;
+  background: transparent;
+  cursor: pointer;
+  transition:
+    border-color 0.15s,
+    color 0.15s;
+}
+
+.foundations-use:hover {
+  border-color: var(--rp-c-brand);
+}
+
+.foundations-use[aria-pressed="true"] {
+  border-color: var(--rp-c-brand);
+  color: var(--rp-c-brand);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+}
+
+.foundations-use-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.foundations-use-count {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.foundations-tags {
+  font-size: 13px;
+  opacity: 0.7;
+}
+
+/* The home's opening: the catchphrase, then what the library is. */
+/* The home's heading, the one page that holds the library. */
+.rp-doc:has(.foundations-library) h1 {
+  font-size: clamp(2rem, 4.5vw, 3rem) !important;
+  line-height: 1.1 !important;
+  letter-spacing: -0.03em;
+  margin: 8px 0 16px !important;
+}
+
+.foundations-lede {
+  font-size: 1.125rem;
+  color: var(--muted);
+  max-width: 44rem;
+  margin-bottom: 28px !important;
+}
+
+.foundations-credit {
+  font-size: 13px;
+  color: var(--muted);
+  font-style: italic;
+  margin: -8px 0 20px !important;
+}
+
+.foundations-credit a {
+  color: inherit;
+  text-decoration: underline;
+}
+
+/* Böckeler's own examples, marked on a cell's page. */
+.foundations-hers {
+  margin-left: 6px;
+  padding: 0 6px;
+  border-radius: 4px;
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+  border: 1px solid var(--line);
+}
+
+/* The account line above the library, and the notice of the first vote. */
+.foundations-account {
+  margin: 0 0 12px;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.foundations-signin {
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  background: transparent;
+  border-radius: 8px;
+  padding: 6px 14px;
+  font: inherit;
+  cursor: pointer;
+}
+
+.foundations-notice {
+  border: 1px solid var(--line);
+  background: var(--surface);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 14px;
+}
+
+/* A list of practices: on the reader's page and on a public profile. */
+.foundations-list {
+  list-style: none !important;
+  padding: 0 !important;
+}
+
+.foundations-list li {
+  list-style: none !important;
+  margin: 0 !important;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+}
+
+.foundations-list li span {
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.foundations-share {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.foundations-share button,
+.foundations-account-actions button {
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--fg);
+  border-radius: 6px;
+  padding: 4px 12px;
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.foundations-account-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 32px;
+}
+
+.foundations-account-actions .foundations-danger {
+  color: var(--kw);
+  border-color: var(--kw);
+}
+
+.foundations-hint {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.foundations-profile-head {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.foundations-profile-head img {
+  border-radius: 50%;
+}
+
+.foundations-profile-head h2 {
+  margin: 0 !important;
+  border: none !important;
+  padding: 0 !important;
+}
+
+/* A public list names its person itself: the page's static title gives way to it. */
+.rp-doc:has(.foundations-profile) > h1,
+.rp-doc:has(.foundations-profile) h1:first-of-type {
+  display: none;
+}
+
+.foundations-profile-head h2::before,
+.foundations-profile-head h2::after {
+  display: none !important;
+}
+
+.foundations-list a,
+.foundations-profile a {
+  color: var(--accent);
+}
+
+/* The call to act at the foot of a public list. */
+.foundations-cta {
+  display: inline-block;
+  margin-top: 24px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  background: var(--accent-strong);
+  color: #fff !important;
+  font-weight: 600;
+  text-decoration: none !important;
+}
+
+.foundations-cta:hover {
+  background: var(--accent);
+}
+
+.foundations-profile-head h2 a {
+  color: var(--fg) !important;
+  text-decoration: none;
+}
+
+.foundations-profile-head h2 a:hover {
+  color: var(--accent) !important;
+}
+
+/* Below the library: propose what it lacks. */
+.foundations-propose {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 24px;
+  color: var(--muted);
+}
+
+.foundations-propose .foundations-cta {
+  margin-top: 0;
+}
+
+/* The reader's account in the top navigation. */
+.foundations-nav-signin {
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  background: transparent;
+  border-radius: 999px;
+  padding: 4px 14px;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.foundations-nav-signin:hover {
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+}
+
+.foundations-nav-account {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.foundations-nav-list {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 3px 10px 3px 4px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--accent) 16%, transparent);
+  border: 1px solid var(--accent);
+  color: var(--fg) !important;
+  font-weight: 500;
+  text-decoration: none !important;
+}
+
+.foundations-nav-list img {
+  border-radius: 50%;
+}
+
+.foundations-nav-count {
+  min-width: 20px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: var(--accent-strong);
+  color: #fff;
+  font-size: 12px;
+  text-align: center;
+}
+
+.foundations-nav-me {
+  color: var(--muted) !important;
+  text-decoration: none !important;
+}
+
+.foundations-nav-me:hover {
+  color: var(--accent) !important;
+}
+
+@media (max-width: 640px) {
+  .foundations-nav-list span:not(.foundations-nav-count),
+  .foundations-nav-me {
+    display: none;
+  }
+}
+
+/* Proposing a practice, on screen wherever the reader is: a pill, bottom right, out of the way of the list. */
+.foundations-fab {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 50;
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: var(--accent-strong);
+  color: #fff !important;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none !important;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+}
+
+.foundations-fab:hover {
+  background: var(--accent);
+}
+
+@media (max-width: 640px) {
+  .foundations-fab {
+    right: 16px;
+    bottom: 16px;
+    padding: 8px 14px;
+  }
+}

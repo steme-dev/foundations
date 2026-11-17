@@ -2,3 +2,6 @@ node_modules/
 .tsbuild/
 *.tsbuildinfo
 dist/
+.generated/
+.wrangler/
+.dev.vars

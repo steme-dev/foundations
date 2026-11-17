@@ -1,7 +1,11 @@
 # Contributing
 
-A practice, a source, or a better place to buy a book: open a pull request that changes `data/`.
-`pnpm check` must pass, and CI runs it again.
+A practice, a source, or a better place to buy a book.
+
+- **Without code**: [propose a practice](https://github.com/steme-dev/foundations/issues/new?template=new-practice.yml).
+  The form asks for what the data holds; a maintainer turns it into a pull request and checks each source.
+- **With code**: open a pull request that changes `data/`. Its template lists the rules below; `pnpm check` must
+  pass, and CI runs it again.
 
 ## A practice
 

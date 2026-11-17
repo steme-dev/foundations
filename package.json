@@ -8,19 +8,34 @@
   },
   "type": "module",
   "scripts": {
-    "check": "pnpm typecheck && pnpm lint && pnpm format:check && pnpm test",
-    "typecheck": "tsc -b",
-    "lint": "oxlint --deny-warnings data vitest.config.ts",
+    "check": "pnpm typecheck && pnpm lint && pnpm format:check && pnpm test && pnpm build",
+    "generate": "node site/generate.ts",
+    "dev": "pnpm generate && rspress dev --config site/rspress.config.ts",
+    "build": "pnpm generate && rspress build --config site/rspress.config.ts",
+    "preview": "rspress preview --config site/rspress.config.ts",
+    "typecheck": "tsc -b && tsc -b worker",
+    "lint": "oxlint --deny-warnings data site worker vitest.config.ts",
     "format": "oxfmt .",
     "format:check": "oxfmt --check .",
-    "test": "vitest run"
+    "test": "vitest run",
+    "db:migrate:local": "wrangler d1 migrations apply foundations --local",
+    "worker:dev": "pnpm build && wrangler dev --port 8787"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "^5.20261110.1",
+    "@fontsource/instrument-sans": "^5.3.0",
+    "@fontsource/jetbrains-mono": "^5.3.0",
+    "@rspress/core": "^2.1.1",
     "@types/node": "^26.6.6",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
     "oxfmt": "^0.77.0",
     "oxlint": "^1.92.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
     "typescript": "^7",
-    "vitest": "^4.1.12"
+    "vitest": "^4.1.12",
+    "wrangler": "^4.159.0"
   },
   "packageManager": "pnpm@12.18.0"
 }

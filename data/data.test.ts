@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 
+import { GRID_SOURCE } from "./grid.ts";
 import { PEOPLE } from "./people.ts";
 import { PRACTICES, type Practice } from "./practices.ts";
 import { SHOP_ORDER, SHOPS } from "./shops.ts";
@@ -33,8 +34,8 @@ describe("the sources", () => {
     expect(new URL(source.url).protocol).toBe("https:");
   });
 
-  it("each backs at least one practice", () => {
-    const cited = new Set(practices.flatMap(([, practice]) => practice.sources));
+  it("each backs at least one practice, or the grid", () => {
+    const cited = new Set([GRID_SOURCE, ...practices.flatMap(([, practice]) => practice.sources)]);
     expect(
       sources.map(([id]) => id).filter((id) => !cited.has(id as keyof typeof SOURCES)),
     ).toEqual([]);

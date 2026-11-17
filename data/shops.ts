@@ -22,6 +22,11 @@ export const SHOPS = {
     kind: "bookshop",
     host: "www.eyrolles.com",
   },
+  informit: {
+    name: "InformIT",
+    kind: "publisher",
+    host: "www.informit.com",
+  },
   "pragmatic-bookshelf": {
     name: "Pragmatic Bookshelf",
     kind: "publisher",
