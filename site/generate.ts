@@ -293,7 +293,7 @@ title: Foundations
 
 <p className="foundations-credit">“If I have seen further, it is by standing on ye shoulders of giants.” Isaac Newton, in a <a href="https://digitallibrary.hsp.org/Detail/objects/9792">letter to Robert Hooke</a>, 5 February 1675/76.</p>
 
-<p className="foundations-lede">The practices of software engineering, each named in the literature's own words and backed by the books, papers and articles that name it. <span className="foundations-steps-intro">Three steps to build on them:</span></p>
+<p className="foundations-lede">Software engineering has long known how to keep code under control: a property for every function, a mutant for every test, a rule for every boundary. It cost too much to do, so we kept the code base in our heads instead. Agents now write the code and pay that cost, so we can change our approach and rely on the practices rather than on memory. Each one is here in the literature's own words, with its sources. <span className="foundations-steps-intro">Three steps to build on them:</span></p>
 
 <Library />
 `
@@ -308,7 +308,7 @@ title: Foundations
 
 <p className="foundations-credit">“If I have seen further, it is by standing on ye shoulders of giants.” (« Si j'ai vu plus loin, c'est en me tenant sur les épaules de géants », notre traduction.) Isaac Newton, dans une <a href="https://digitallibrary.hsp.org/Detail/objects/9792">lettre à Robert Hooke</a> du 5 février 1675/76.</p>
 
-<p className="foundations-lede">Les pratiques du génie logiciel, chacune sous le nom que lui donne la littérature et adossée aux livres, articles et publications qui l'ont nommée. <span className="foundations-steps-intro">Trois étapes pour t'appuyer sur leur travail :</span></p>
+<p className="foundations-lede">Le génie logiciel sait depuis longtemps garder un code sous contrôle : une propriété par fonction, un mutant par test, une règle par frontière. C'était trop cher à faire, alors on gardait plutôt toute la base de code en tête. Les agents écrivent désormais le code et en paient le prix : on peut changer d'approche et s'appuyer sur les pratiques plutôt que sur sa mémoire. Chacune est ici dans les mots de la littérature, avec ses sources. <span className="foundations-steps-intro">Trois étapes pour t'appuyer sur leur travail :</span></p>
 
 <Library />
 `,
