@@ -11,6 +11,7 @@ const config: Config = {
   sessionSecret: "a session secret for the tests",
   publicOrigin: ORIGIN,
   posthogKey: "",
+  uncounted: [],
 };
 const NOW = new Date("2026-11-17T10:00:00Z");
 const ADA = { githubId: 1, login: "ada", avatarUrl: "https://avatars.example/ada" };
@@ -277,5 +278,32 @@ describe("counting what readers do", () => {
       headers: { Cookie: stateCookie },
     });
     expect(sent.map((e) => e.event)).toEqual(["signed_in"]);
+  });
+});
+
+describe("the site's own people", () => {
+  it("are not counted while signed in, from the page or at their sign-in", async () => {
+    const sent: Captured[] = [];
+    const deps: Deps = {
+      ...setup(),
+      config: { ...config, posthogKey: "phc_test", uncounted: [ADA.githubId] },
+      capture: (e) => sent.push(e),
+    };
+    await deps.store.upsertUser(ADA, NOW.toISOString());
+    const signedIn = await call(deps, "/t/e", {
+      method: "POST",
+      body: JSON.stringify({ event: "vote" }),
+      headers: { Cookie: await sessionOf() },
+    });
+    expect(signedIn.status).toBe(204);
+    const start = await call(deps, "/auth/github?return=/");
+    const state = new URL(start.headers.get("Location") ?? "").searchParams.get("state") ?? "";
+    const stateCookie = (start.headers.get("Set-Cookie") ?? "").split(";")[0] ?? "";
+    await call(deps, `/auth/callback?code=good&state=${state}`, {
+      headers: { Cookie: stateCookie },
+    });
+    expect(sent).toHaveLength(0);
+    await call(deps, "/t/e", { method: "POST", body: JSON.stringify({ event: "vote" }) });
+    expect(sent.map((e) => e.event)).toEqual(["vote"]);
   });
 });

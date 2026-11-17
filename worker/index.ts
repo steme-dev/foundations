@@ -16,6 +16,7 @@ type Env = {
   readonly SESSION_SECRET: string;
   readonly PUBLIC_ORIGIN: string;
   readonly POSTHOG_KEY?: string;
+  readonly UNCOUNTED_GITHUB_IDS?: string;
 };
 
 const USER_AGENT = "foundations.steme.dev";
@@ -94,6 +95,10 @@ export default {
         sessionSecret: env.SESSION_SECRET,
         publicOrigin: env.PUBLIC_ORIGIN,
         posthogKey: env.POSTHOG_KEY ?? "",
+        uncounted: (env.UNCOUNTED_GITHUB_IDS ?? "")
+          .split(",")
+          .map((id) => Number(id.trim()))
+          .filter((id) => Number.isSafeInteger(id) && id > 0),
       },
       capture: (event) =>
         ctx.waitUntil(

@@ -25,6 +25,8 @@ export type Config = {
   readonly publicOrigin: string;
   /** PostHog's project key; empty, nothing is counted. Public: PostHog's keys are sent by any page. */
   readonly posthogKey: string;
+  /** GitHub ids whose doings are never counted: the site's own people, signed in. */
+  readonly uncounted: readonly number[];
 };
 
 /** An event as PostHog's capture endpoint takes it. */
@@ -107,6 +109,12 @@ export async function handle(request: Request, deps: Deps): Promise<Response> {
   };
 
   if (url.pathname === "/t/e" && request.method === "POST") {
+    // One of the site's own people, signed in, is not counted: their session says who they are.
+    const cookieValue = readCookie(request, SESSION_COOKIE);
+    const signed =
+      cookieValue === null ? null : await verify(cookieValue, config.sessionSecret, now.getTime());
+    if (signed !== null && config.uncounted.includes(signed.githubId))
+      return new Response(null, { status: 204 });
     const text = await request.text();
     if (text.length > 8192) return new Response(null, { status: 413 });
     let body: { event?: unknown; properties?: unknown } = {};
@@ -178,7 +186,8 @@ export async function handle(request: Request, deps: Deps): Promise<Response> {
     if (user === null)
       return new Response("Sign-in failed: GitHub did not answer.", { status: 502 });
     await store.upsertUser(user, now.toISOString());
-    capture("signed_in", { $current_url: url.toString() });
+    if (!config.uncounted.includes(user.githubId))
+      capture("signed_in", { $current_url: url.toString() });
     const value = await sign(
       {
         githubId: user.githubId,

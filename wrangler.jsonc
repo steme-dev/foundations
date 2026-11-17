@@ -28,6 +28,8 @@
   "vars": {
     "PUBLIC_ORIGIN": "https://foundations.steme.dev",
     "POSTHOG_KEY": "phc_pUgZNXtjqSMmh6EKi3J83vo7Yo9s7ANEZSxahiSr7Qih",
+    // The GitHub ids of the site's own people, never counted while signed in.
+    "UNCOUNTED_GITHUB_IDS": "360101",
   },
   "observability": { "enabled": true },
 }
