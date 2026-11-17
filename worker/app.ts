@@ -8,9 +8,11 @@
  * - `GET /api/counts`: how many people use each practice.
  * - `GET /api/users/<login>`: a person's public list.
  * - `DELETE /api/me`: forget the user and every vote of theirs.
- * - `/u/<login>` redirects to the profile page, `/u/?login=<login>`; everything else is the static site.
+ * - `/u/<login>` serves the profile page with the tags a shared link's preview reads, its image
+ *   `/u/<login>/card.png`, the person's grid drawn by the worker; everything else is the static site.
  */
 import { PRACTICES } from "../data/practices.ts";
+import { CARD, cardSvg, votesDigest } from "./card.ts";
 import { SESSION_COOKIE, SESSION_DAYS, cookie, readCookie, sign, verify } from "./session.ts";
 import type { Store, User } from "./store.ts";
 
@@ -35,6 +37,8 @@ export type Deps = {
   readonly config: Config;
   readonly assets: { fetch(request: Request): Promise<Response> };
   readonly now: () => Date;
+  /** Rasterises a card's SVG to PNG. */
+  readonly renderPng: (svg: string) => Promise<Uint8Array>;
 };
 
 const STATE_COOKIE = "foundations_oauth_state";
@@ -173,17 +177,78 @@ export async function handle(request: Request, deps: Deps): Promise<Response> {
     });
   }
 
-  // A person's list is shared as /u/<login>; the site has one page for every list, /u/, which reads
-  // the login from the query.
-  const shared = /^\/u\/([^/]+)\/?$/u.exec(url.pathname);
-  if (shared !== null && request.method === "GET")
-    return new Response(null, {
-      status: 302,
-      headers: { Location: `/u/?login=${encodeURIComponent(decodeURIComponent(shared[1] ?? ""))}` },
+  // A person's card: their grid as an image, for the preview of their shared link.
+  const card = /^\/u\/([^/]+)\/card\.png$/u.exec(url.pathname);
+  if (card !== null && request.method === "GET") {
+    const login = decodeURIComponent(card[1] ?? "");
+    const user = LOGIN.test(login) ? await store.userByLogin(login) : null;
+    if (user === null) return new Response("No one here.", { status: 404 });
+    const votes = await store.votesOf(user.githubId);
+    const png = await deps.renderPng(
+      cardSvg({ login: user.login, votes, origin: config.publicOrigin }),
+    );
+    return new Response(png, {
+      headers: { "Content-Type": "image/png", "Cache-Control": "public, max-age=3600" },
     });
+  }
+
+  // A person's list is shared as /u/<login>. The site has one page for every list, /u/, which reads
+  // the login from the query: the worker serves it with the preview's tags, which no crawler would
+  // find in the page's script, and puts the query back in the address before the page starts.
+  const shared = /^\/u\/([^/]+)\/?$/u.exec(url.pathname);
+  if (shared !== null && request.method === "GET") {
+    const login = decodeURIComponent(shared[1] ?? "");
+    const back = `/u/?login=${encodeURIComponent(login)}`;
+    const user = LOGIN.test(login) ? await store.userByLogin(login) : null;
+    if (user === null) return new Response(null, { status: 302, headers: { Location: back } });
+    const page = await deps.assets.fetch(new Request(new URL("/u/", url), request));
+    if (!page.ok) return page;
+    const votes = await store.votesOf(user.githubId);
+    const html = withPreview(await page.text(), {
+      title: `@${user.login}'s harness, built on the literature`,
+      description: `${votes.length} practice${votes.length === 1 ? "" : "s"} of software engineering, each placed where it acts when an agent writes the code.`,
+      image: `${config.publicOrigin}/u/${user.login}/card.png?v=${await votesDigest(votes)}`,
+      url: `${config.publicOrigin}/u/${user.login}`,
+      back,
+    });
+    return new Response(html, {
+      headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store" },
+    });
+  }
 
   if (url.pathname.startsWith("/api/") || url.pathname.startsWith("/auth/"))
     return json({ error: "not-found" }, 404);
 
   return deps.assets.fetch(request);
+}
+
+const attribute = (value: string): string =>
+  value
+    .replaceAll("&", "&amp;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;");
+
+/** A page with the tags a link's preview reads, and the address set back to the page's own. */
+export function withPreview(
+  html: string,
+  preview: { title: string; description: string; image: string; url: string; back: string },
+): string {
+  const tags = [
+    `<meta property="og:type" content="profile">`,
+    `<meta property="og:title" content="${attribute(preview.title)}">`,
+    `<meta property="og:description" content="${attribute(preview.description)}">`,
+    `<meta property="og:url" content="${attribute(preview.url)}">`,
+    `<meta property="og:image" content="${attribute(preview.image)}">`,
+    `<meta property="og:image:width" content="${CARD.width}">`,
+    `<meta property="og:image:height" content="${CARD.height}">`,
+    `<meta name="twitter:card" content="summary_large_image">`,
+    `<meta name="twitter:image" content="${attribute(preview.image)}">`,
+    `<script>history.replaceState(null, "", ${JSON.stringify(preview.back)});</script>`,
+  ].join("");
+  // The page's own preview tags, generic, go: a crawler reads the first it finds.
+  const bare = html
+    .replace(/<meta\s+(?:property="og:[^"]*"|name="twitter:[^"]*")[^>]*>/gu, "")
+    .replace(/<title>[^<]*<\/title>/u, `<title>${attribute(preview.title)}</title>`);
+  return bare.replace("</head>", `${tags}</head>`);
 }

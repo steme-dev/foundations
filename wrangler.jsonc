@@ -2,6 +2,8 @@
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "foundations",
   "main": "worker/index.ts",
+  // The card's fonts, bundled as bytes (resvg's WebAssembly is compiled by default).
+  "rules": [{ "type": "Data", "globs": ["**/*.ttf"], "fallthrough": true }],
   "compatibility_date": "2026-11-01",
   // Served only at its own domain, which `wrangler deploy` attaches.
   "workers_dev": false,

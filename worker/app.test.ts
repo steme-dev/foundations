@@ -22,7 +22,13 @@ const setup = (): Deps => ({
     exchange: async (code) => (code === "good" ? "token" : null),
     user: async (token) => (token === "token" ? ADA : null),
   },
-  assets: { fetch: async (request) => new Response(`asset ${new URL(request.url).pathname}`) },
+  assets: {
+    fetch: async (request) =>
+      new Response(
+        `<html><head><title>Practices someone builds on</title><meta property="og:title" content="Generic"><meta name="twitter:card" content="summary"></head><body>asset ${new URL(request.url).pathname}</body></html>`,
+      ),
+  },
+  renderPng: async (svg) => new TextEncoder().encode(svg),
 });
 
 const sessionOf = async (login = "ada", githubId = 1) =>
@@ -162,11 +168,41 @@ describe("forgetting a user", () => {
 });
 
 describe("the pages", () => {
-  it("sends /u/<login> to the profile page, and serves the site otherwise", async () => {
+  it("serves a shared /u/<login> with its preview, and the site otherwise", async () => {
     const deps = setup();
+    await deps.store.upsertUser(ADA, NOW.toISOString());
+    await call(deps, "/api/votes/fuzzing", await write("PUT"));
     const shared = await call(deps, "/u/ada");
-    expect([shared.status, shared.headers.get("Location")]).toEqual([302, "/u/?login=ada"]);
-    expect(await (await call(deps, "/u/")).text()).toBe("asset /u/");
-    expect(await (await call(deps, "/practices/fuzzing")).text()).toBe("asset /practices/fuzzing");
+    const html = await shared.text();
+    expect(html).toContain("<title>@ada's harness, built on the literature</title>");
+    expect(html).toMatch(
+      /og:image" content="http:\/\/localhost:4410\/u\/ada\/card\.png\?v=[0-9a-f]{12}"/u,
+    );
+    expect(html).toContain('history.replaceState(null, "", "/u/?login=ada")');
+    expect(html.match(/og:title/gu)).toHaveLength(1);
+    expect(html).not.toContain("Generic");
+    expect(html.match(/twitter:card/gu)).toHaveLength(1);
+    expect(html).toContain("asset /u/");
+    expect(await (await call(deps, "/practices/fuzzing")).text()).toContain(
+      "asset /practices/fuzzing",
+    );
+  });
+
+  it("sends a /u/<login> no one holds to the page that says so", async () => {
+    const shared = await call(setup(), "/u/nobody");
+    expect([shared.status, shared.headers.get("Location")]).toEqual([302, "/u/?login=nobody"]);
+  });
+
+  it("draws a person's card from their votes, and no one else's", async () => {
+    const deps = setup();
+    await deps.store.upsertUser(ADA, NOW.toISOString());
+    await call(deps, "/api/votes/fuzzing", await write("PUT"));
+    const card = await call(deps, "/u/ada/card.png");
+    expect(card.headers.get("Content-Type")).toBe("image/png");
+    const svg = await card.text();
+    expect(svg).toContain("@ada");
+    expect(svg).toContain("Fuzzing");
+    expect(svg).toContain("1 of 4 cells");
+    expect((await call(deps, "/u/nobody/card.png")).status).toBe(404);
   });
 });

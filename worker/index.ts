@@ -1,5 +1,11 @@
 /** The worker: the static site, and the routes of `app.ts` on D1 and GitHub's OAuth. */
+import { Resvg, initWasm } from "@resvg/resvg-wasm";
+import resvgWasm from "@resvg/resvg-wasm/index_bg.wasm";
+
 import { type Config, type GitHub, handle } from "./app.ts";
+import { CARD } from "./card.ts";
+import regular from "./fonts/instrument-sans-400.ttf";
+import semibold from "./fonts/instrument-sans-600.ttf";
 import { d1Store } from "./store.ts";
 
 type Env = {
@@ -49,9 +55,34 @@ const github: GitHub = {
   },
 };
 
+let ready: Promise<void> | null = null;
+
+/** A card's SVG as PNG, with the site's font; resvg's module is set up once per isolate. */
+async function renderPng(svg: string): Promise<Uint8Array> {
+  ready ??= initWasm(resvgWasm);
+  await ready;
+  const resvg = new Resvg(svg, {
+    fitTo: { mode: "width", value: CARD.width },
+    font: {
+      fontBuffers: [new Uint8Array(regular), new Uint8Array(semibold)],
+      defaultFontFamily: "Instrument Sans",
+      loadSystemFonts: false,
+    },
+  });
+  return resvg.render().asPng();
+}
+
 export default {
-  fetch(request: Request, env: Env): Promise<Response> {
-    return handle(request, {
+  async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
+    // A card is the same until its person's votes change, which its address carries: kept in the cache.
+    const isCard =
+      request.method === "GET" && /^\/u\/[^/]+\/card\.png$/u.test(new URL(request.url).pathname);
+    if (isCard) {
+      const hit = await caches.default.match(request);
+      if (hit !== undefined) return hit;
+    }
+    const response = await handle(request, {
+      renderPng,
       store: d1Store(env.DB),
       github,
       assets: env.ASSETS,
@@ -63,5 +94,7 @@ export default {
         publicOrigin: env.PUBLIC_ORIGIN,
       },
     });
+    if (isCard && response.ok) ctx.waitUntil(caches.default.put(request, response.clone()));
+    return response;
   },
 } satisfies ExportedHandler<Env>;
