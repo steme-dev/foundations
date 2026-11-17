@@ -7,6 +7,7 @@ import { definition, themeLabel } from "../i18n.ts";
 import { type Me, PROPOSE_URL, getCounts, getMe, profilePath, setVote, signIn } from "./api.ts";
 import { type Filter, Filters, NO_FILTER, type Sort, matches } from "./Filters.tsx";
 import GridTally from "./GridTally.tsx";
+import Journey from "./Journey.tsx";
 import { useWords } from "./lang.ts";
 
 const practices = Object.entries(PRACTICES) as [PracticeId, Practice][];
@@ -53,6 +54,7 @@ export default function Library() {
 
   return (
     <section className="foundations-library">
+      <Journey me={me} />
       {firstVote && me.user !== null ? (
         <p className="foundations-notice">
           {t.firstVote.before}

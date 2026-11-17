@@ -269,7 +269,7 @@ title: Foundations
 
 <p className="foundations-credit">“If I have seen further, it is by standing on ye shoulders of giants.” Isaac Newton, in a <a href="https://digitallibrary.hsp.org/Detail/objects/9792">letter to Robert Hooke</a>, 5 February 1675/76.</p>
 
-<p className="foundations-lede">The practices of software engineering, named in the literature's own words, each backed by the books, papers and articles that name it. Say which ones you use.</p>
+<p className="foundations-lede">The practices of software engineering, each named in the literature's own words and backed by the books, papers and articles that name it. Three steps to build on them:</p>
 
 <Library />
 `
@@ -284,7 +284,7 @@ title: Foundations
 
 <p className="foundations-credit">“If I have seen further, it is by standing on ye shoulders of giants.” (« Si j'ai vu plus loin, c'est en me tenant sur les épaules de géants », notre traduction.) Isaac Newton, dans une <a href="https://digitallibrary.hsp.org/Detail/objects/9792">lettre à Robert Hooke</a> du 5 février 1675/76.</p>
 
-<p className="foundations-lede">Les pratiques du génie logiciel, chacune sous le nom que lui donne la littérature et adossée aux livres, articles et publications qui l'ont nommée. Et toi, lesquelles utilises-tu ?</p>
+<p className="foundations-lede">Les pratiques du génie logiciel, chacune sous le nom que lui donne la littérature et adossée aux livres, articles et publications qui l'ont nommée. Trois étapes pour t'appuyer sur leur travail :</p>
 
 <Library />
 `,

@@ -34,6 +34,25 @@ const plural = (n: number, one: string, many: string): string => `${n} ${n === 1
 /** The interface's words. */
 export const UI = {
   en: {
+    journey: {
+      meet: {
+        title: "Meet the giants",
+        text: "The practices, and the people who named them.",
+        action: "Browse the practices",
+      },
+      say: {
+        title: "Say what you use",
+        text: "Sign in with GitHub, then press “I use it”.",
+        signedIn: "Press “I use it” on the practices you use.",
+        done: (n: number) => `Done: ${plural(n, "practice", "practices")}.`,
+      },
+      build: {
+        title: "Build your harness",
+        text: "See your grid fill, and what each empty cell could hold.",
+        action: "See my grid",
+      },
+    },
+    emptyCell: "Nothing here yet. Practices that act here:",
     signIn: "Sign in with GitHub",
     yourList: "Your list",
     yourAccount: "Your account",
@@ -90,6 +109,25 @@ export const UI = {
       "Delete your account and every practice you said you use? This cannot be undone.",
   },
   fr: {
+    journey: {
+      meet: {
+        title: "Découvre les géants",
+        text: "Les pratiques, et celles et ceux qui les ont nommées.",
+        action: "Parcourir les pratiques",
+      },
+      say: {
+        title: "Dis ce que tu utilises",
+        text: "Connecte-toi avec GitHub, puis clique sur « J'utilise ».",
+        signedIn: "Clique sur « J'utilise » pour chaque pratique que tu utilises.",
+        done: (n: number) => `C'est fait : ${plural(n, "pratique", "pratiques")}.`,
+      },
+      build: {
+        title: "Construis ton harness",
+        text: "Regarde ta grille se remplir, et ce que chaque case vide pourrait accueillir.",
+        action: "Voir ma grille",
+      },
+    },
+    emptyCell: "Rien ici pour l'instant. Pratiques qui interviennent ici :",
     signIn: "Se connecter avec GitHub",
     yourList: "Ma liste",
     yourAccount: "Mon compte",

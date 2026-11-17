@@ -12,6 +12,12 @@ const STEP_MS = 260;
 
 const cellsOf = (id: PracticeId): readonly Cell[] => PRACTICES[id].cells;
 
+/** A few practices that act in a cell, none of them already used: what an empty cell could hold. */
+const suggestions = (cell: Cell, used: readonly PracticeId[]): PracticeId[] =>
+  (Object.keys(PRACTICES) as PracticeId[])
+    .filter((id) => cellsOf(id).includes(cell) && !used.includes(id))
+    .slice(0, 3);
+
 /**
  * A person's practices falling into Böckeler's grid one by one, in the order they said they use them:
  * it plays once when the page opens, then waits for "Replay". Below, how much of the grid they cover.
@@ -85,6 +91,17 @@ export default function ProfileGrid({
                     {CELLS[cell].label}
                     <b>{here.length}</b>
                   </a>
+                  {here.length === 0 && !playing ? (
+                    <span className="foundations-pgrid-empty">
+                      {t.emptyCell}{" "}
+                      {suggestions(cell, ids).map((id, k) => (
+                        <span key={id}>
+                          {k > 0 ? ", " : ""}
+                          <a href={link(`/practices/${id}`)}>{PRACTICES[id].name}</a>
+                        </span>
+                      ))}
+                    </span>
+                  ) : null}
                   <span className="foundations-pgrid-chips">
                     {here.map(({ id, order }) => (
                       <a

@@ -856,3 +856,92 @@ body {
   background: var(--accent-strong);
   color: #fff !important;
 }
+
+/* The way in: three numbered steps under the home's lede, the second ticked once the reader votes. */
+.foundations-journey {
+  list-style: none !important;
+  padding: 0 !important;
+  margin: 8px 0 28px !important;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  counter-reset: step;
+}
+
+.foundations-journey li {
+  list-style: none !important;
+  margin: 0 !important;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px 14px 14px 52px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.foundations-journey li::before {
+  content: attr(data-step);
+  position: absolute;
+  left: 14px;
+  top: 14px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  color: #fff;
+  background: var(--accent-strong);
+}
+
+.foundations-journey li[data-done]::before {
+  content: "✓";
+}
+
+.foundations-journey li[data-done] {
+  border-color: var(--accent);
+}
+
+.foundations-journey b {
+  font-size: 15px;
+  color: var(--fg);
+}
+
+.foundations-journey a {
+  color: var(--accent) !important;
+  font-weight: 600;
+  text-decoration: none !important;
+}
+
+.foundations-journey button {
+  align-self: flex-start;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  background: transparent;
+  border-radius: 999px;
+  padding: 3px 12px;
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+@media (max-width: 760px) {
+  .foundations-journey {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* What an empty cell of a person's grid could hold. */
+.foundations-pgrid-empty {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.foundations-pgrid-empty a {
+  color: var(--accent) !important;
+}
