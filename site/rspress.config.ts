@@ -46,6 +46,7 @@ export default defineConfig({
       join(site, "theme", "Library.tsx"),
       join(site, "theme", "Me.tsx"),
       join(site, "theme", "Profile.tsx"),
+      join(site, "theme", "GridPlacement.tsx"),
     ],
   },
   themeConfig: {

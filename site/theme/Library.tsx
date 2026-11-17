@@ -6,6 +6,7 @@ import { PRACTICES, type Practice, type PracticeId } from "../../data/practices.
 import { THEMES } from "../../data/themes.ts";
 import { type Me, PROPOSE_URL, getCounts, getMe, profilePath, setVote, signIn } from "./api.ts";
 import { type Filter, Filters, NO_FILTER, type Sort, matches } from "./Filters.tsx";
+import GridTally from "./GridTally.tsx";
 
 const practices = Object.entries(PRACTICES) as [PracticeId, Practice][];
 
@@ -120,6 +121,7 @@ export default function Library() {
         })}
       </ol>
       {shown.length === 0 ? <p>No practice acts there in this theme yet.</p> : null}
+      {me.user === null ? null : <GridTally login={me.user.login} votes={me.votes} />}
       <div className="foundations-propose">
         <span>A practice missing?</span>
         <a className="foundations-cta" href={PROPOSE_URL} target="_blank" rel="noopener noreferrer">

@@ -56,7 +56,7 @@ const practicePage = ([id, practice]: [PracticeId, Practice]): [string, string] 
     .join(", ");
   const themes = practice.themes.map((theme) => THEMES[theme]).join(" · ");
   return [
-    `practices/${id}.md`,
+    `practices/${id}.mdx`,
     `${frontmatter(practice.name, practice.definition)}
 # ${practice.name}
 
@@ -65,6 +65,8 @@ ${named}
 **Themes:** ${themes}
 
 **With an agent:** ${withAgent}, in [Böckeler's grid](/grid/).
+
+<GridPlacement cells={${JSON.stringify(practice.cells)}} />
 
 ## Sources
 

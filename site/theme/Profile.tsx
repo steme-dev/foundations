@@ -4,6 +4,7 @@ import { PRACTICES } from "../../data/practices.ts";
 import { type Profile as ProfileData, getProfile } from "./api.ts";
 import { type Filter, Filters, NO_FILTER, matches } from "./Filters.tsx";
 import { PracticeList } from "./PracticeList.tsx";
+import ProfileGrid from "./ProfileGrid.tsx";
 
 /** The login a profile page is for: `/u/<login>`, or `/u/?login=<login>` where no worker rewrites the path. */
 const loginOf = (location: Location): string =>
@@ -50,6 +51,7 @@ export default function Profile() {
           </p>
         </div>
       </div>
+      <ProfileGrid login={profile.login} votes={profile.votes} />
       <Filters filter={filter} onChange={setFilter} shown={shown.length} />
       <PracticeList ids={shown} />
       <a className="foundations-cta" href="/">

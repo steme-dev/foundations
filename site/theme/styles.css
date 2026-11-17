@@ -467,3 +467,352 @@ body {
     padding: 8px 14px;
   }
 }
+
+/* A practice's place in the grid, on its page: the four cells, its own lit in turn. */
+.foundations-placement {
+  margin: 20px 0 8px;
+}
+
+.foundations-placement-grid {
+  display: grid;
+  grid-template-columns: 7.5rem 1fr 1fr;
+  gap: 8px;
+  max-width: 34rem;
+}
+
+.foundations-placement-row {
+  display: contents;
+}
+
+.foundations-placement-axis {
+  align-self: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--fg);
+  display: flex;
+  flex-direction: column;
+}
+
+.foundations-placement-axis small {
+  font-weight: 400;
+  color: var(--muted);
+}
+
+.foundations-placement-cell {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+  min-height: 64px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--muted) !important;
+  font-size: 13px;
+  text-decoration: none !important;
+  opacity: 0.55;
+  transition:
+    opacity 0.2s,
+    border-color 0.2s;
+}
+
+.foundations-placement-cell:hover {
+  opacity: 1;
+  border-color: var(--accent);
+}
+
+.foundations-placement-cell[data-on] {
+  opacity: 1;
+  color: var(--fg) !important;
+  font-weight: 600;
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 18%, var(--surface));
+  animation: foundations-light 0.6s ease-out both;
+}
+
+.foundations-placement-cell small {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+@keyframes foundations-light {
+  from {
+    opacity: 0.4;
+    transform: scale(0.96);
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 60%, transparent);
+  }
+  60% {
+    box-shadow: 0 0 0 8px color-mix(in srgb, var(--accent) 0%, transparent);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* The library comes in row by row, and an "I use it" answers the press. */
+.foundations-row {
+  animation: foundations-rise 0.35s ease-out both;
+}
+
+@keyframes foundations-rise {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+.foundations-use:active {
+  transform: scale(0.94);
+}
+
+.foundations-use[aria-pressed="true"] .foundations-use-count {
+  animation: foundations-pop 0.3s ease-out;
+}
+
+@keyframes foundations-pop {
+  50% {
+    transform: scale(1.25);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .foundations-row,
+  .foundations-placement-cell[data-on],
+  .foundations-use[aria-pressed="true"] .foundations-use-count {
+    animation: none;
+  }
+}
+
+/* A person's grid, filling as the page opens. */
+.foundations-pgrid {
+  margin: 24px 0 28px;
+}
+
+.foundations-pgrid-grid {
+  display: grid;
+  grid-template-columns: 7.5rem 1fr 1fr;
+  gap: 10px;
+}
+
+.foundations-pgrid-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 120px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--muted) !important;
+  text-decoration: none !important;
+  transition:
+    border-color 0.3s,
+    background 0.3s;
+}
+
+.foundations-pgrid-cell[data-on] {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 12%, var(--surface));
+  color: var(--fg) !important;
+}
+
+.foundations-pgrid-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.foundations-pgrid-label b {
+  min-width: 22px;
+  padding: 0 7px;
+  border-radius: 999px;
+  background: var(--raised);
+  text-align: center;
+  font-size: 12px;
+}
+
+.foundations-pgrid-cell[data-on] .foundations-pgrid-label b {
+  background: var(--accent-strong);
+  color: #fff;
+}
+
+.foundations-pgrid-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.foundations-pgrid-chip {
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: var(--raised);
+  color: var(--fg);
+  font-size: 12px;
+  animation: foundations-drop 0.35s ease-out both;
+}
+
+.foundations-pgrid-chip[data-new] {
+  background: var(--accent-strong);
+  color: #fff;
+}
+
+@keyframes foundations-drop {
+  from {
+    opacity: 0;
+    transform: translateY(-14px) scale(0.9);
+  }
+}
+
+.foundations-pgrid-caption {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-top: 12px;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.foundations-pgrid-caption button {
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  background: transparent;
+  border-radius: 999px;
+  padding: 4px 14px;
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.foundations-pgrid-caption button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .foundations-pgrid-chip {
+    animation: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .foundations-pgrid-grid,
+  .foundations-placement-grid {
+    grid-template-columns: 5rem 1fr 1fr;
+  }
+}
+
+/* The reader's grid while they vote: bottom left, out of the list's way, across from "Propose". */
+.foundations-tally {
+  position: fixed;
+  left: 24px;
+  bottom: 24px;
+  z-index: 50;
+  width: 236px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+  animation: foundations-rise 0.35s ease-out both;
+}
+
+.foundations-tally-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.foundations-tally-cell {
+  display: flex;
+  flex-direction: column;
+  padding: 6px 8px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--muted) !important;
+  text-decoration: none !important;
+  line-height: 1.2;
+}
+
+.foundations-tally-cell b {
+  font-size: 20px;
+  color: var(--fg);
+}
+
+.foundations-tally-cell span {
+  font-size: 10px;
+}
+
+.foundations-tally-cell[data-on] {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+}
+
+.foundations-tally-cell[data-bump] {
+  animation: foundations-bump 0.7s ease-out;
+}
+
+@keyframes foundations-bump {
+  30% {
+    transform: scale(1.08);
+    background: color-mix(in srgb, var(--accent) 45%, transparent);
+  }
+}
+
+.foundations-tally-cta {
+  display: block;
+  margin-top: 8px;
+  padding: 6px;
+  border-radius: 8px;
+  background: var(--accent-strong);
+  color: #fff !important;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none !important;
+}
+
+@media (max-width: 640px) {
+  .foundations-tally {
+    left: 12px;
+    bottom: 12px;
+    width: 168px;
+    padding: 6px;
+  }
+
+  .foundations-tally-cell span {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .foundations-tally,
+  .foundations-tally-cell[data-bump] {
+    animation: none;
+  }
+}
+
+.foundations-pgrid-head h3 {
+  margin: 0 0 4px !important;
+  font-size: 18px;
+}
+
+.foundations-pgrid-head p {
+  margin: 0 0 14px !important;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.foundations-tally-title {
+  margin: 0 0 6px !important;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+}
