@@ -64,6 +64,28 @@ export const DEFINITIONS_FR = {
     "On classe un test comme petit, moyen ou grand selon ce qu'il sollicite (un processus, une machine ou davantage), ce qui renseigne mieux sur sa vitesse et sa fiabilité que « unitaire » ou « d'intégration ».",
   "unit-testing":
     "Un test porte sur une petite partie du code, une fonction ou une classe, assez rapide pour tourner à chaque modification, avec des collaborateurs réels ou remplacés.",
+  observability:
+    "Le système émet assez de télémétrie pour qu'on puisse, personne ou agent, lui poser de nouvelles questions pendant qu'il tourne, sans livrer de nouveau code pour y répondre.",
+  "distributed-tracing":
+    "Chaque requête porte un identifiant à travers tous les services qu'elle traverse, et chaque étape enregistre un span daté, si bien qu'on peut relire tout son trajet après coup.",
+  "structured-logging":
+    "Chaque ligne de log est un événement aux champs nommés, et non du texte libre, si bien qu'un programme peut interroger, compter et croiser les logs.",
+  "service-level-objectives":
+    "Un objectif chiffré du niveau de service attendu, par exemple la part des requêtes servies assez vite, mesuré en continu au regard de ce dont les utilisateurs ont besoin.",
+  "error-budget":
+    "La part d'échec qu'un objectif tolère encore, consommée par les changements et les pannes ; une fois épuisée, l'équipe cesse de prendre des risques et rétablit d'abord la fiabilité.",
+  "four-golden-signals":
+    "Latence, trafic, erreurs et saturation : les quatre mesures à surveiller en premier sur un système qui sert des utilisateurs.",
+  "use-method":
+    "Pour chaque ressource, on regarde son utilisation, sa saturation et ses erreurs, pour trouver méthodiquement un goulot d'étranglement.",
+  "red-method":
+    "Pour chaque service, on mesure le débit de ses requêtes, leurs erreurs et leur durée.",
+  opentelemetry:
+    "Un standard ouvert, et les bibliothèques qui vont avec, pour produire traces, métriques et logs sans lier la base de code à un outil en particulier.",
+  "canary-release":
+    "Un changement n'atteint d'abord qu'une petite part des utilisateurs, le temps d'en surveiller les signaux, et ne va plus loin que s'ils tiennent.",
+  "synthetic-monitoring":
+    "Des sondes scriptées sollicitent le système en continu, comme le ferait un utilisateur, et donnent l'alerte quand un comportement attendu fait défaut.",
 } as const satisfies Record<PracticeId, string>;
 
 export const THEMES_FR = {
@@ -73,6 +95,7 @@ export const THEMES_FR = {
   "refactoring-and-migration": "Refactoring et migration",
   "plans-and-agents": "Plans et agents",
   tooling: "Outillage",
+  observability: "Observabilité",
 } as const satisfies Record<Theme, string>;
 
 export const HINTS_FR = {

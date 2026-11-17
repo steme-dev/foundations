@@ -34,11 +34,17 @@ const plural = (n: number, one: string, many: string): string => `${n} ${n === 1
 /** The interface's words. */
 export const UI = {
   en: {
+    start: {
+      title: "Start your grid",
+      text: (name: string) =>
+        `Sign in with GitHub to say you use ${name}. It starts your list, and your harness grid fills as you go.`,
+      later: "Not now",
+    },
     journey: {
       meet: {
         title: "Meet the giants",
         text: "The practices, and the people who named them.",
-        action: "Browse the practices",
+        action: "Scroll to see the practices ↓",
       },
       say: {
         title: "Say what you use",
@@ -109,11 +115,17 @@ export const UI = {
       "Delete your account and every practice you said you use? This cannot be undone.",
   },
   fr: {
+    start: {
+      title: "Commence ta grille",
+      text: (name: string) =>
+        `Connecte-toi avec GitHub pour dire que tu utilises ${name}. Ça démarre ta liste, et ta grille de harness se remplit au fil de tes votes.`,
+      later: "Plus tard",
+    },
     journey: {
       meet: {
         title: "Découvre les géants",
         text: "Les pratiques, et celles et ceux qui les ont nommées.",
-        action: "Parcourir les pratiques",
+        action: "Fais défiler pour voir les pratiques ↓",
       },
       say: {
         title: "Dis ce que tu utilises",

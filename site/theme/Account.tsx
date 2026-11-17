@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 
 import type { PracticeId } from "../../data/practices.ts";
-import { type Me, VOTES_EVENT, getMe, profilePath, signIn } from "./api.ts";
+import { type Me, VOTES_EVENT, getMe, profilePath } from "./api.ts";
 import { useWords } from "./lang.ts";
 
 /**
- * The reader's place in the top navigation, which stays on screen: "Sign in with GitHub", or their
- * avatar and their list, its count kept up to date by every vote, and their page.
+ * The signed-in reader's place in the top navigation, which stays on screen: their avatar and their
+ * list, its count kept up to date by every vote, and their page.
  */
 export function Account() {
   const { t, link } = useWords();
@@ -24,16 +24,8 @@ export function Account() {
   }, []);
 
   if (me === null) return null;
-  if (me.user === null)
-    return (
-      <button
-        type="button"
-        className="foundations-nav-signin"
-        onClick={() => signIn(window.location.pathname + window.location.search)}
-      >
-        {t.signIn}
-      </button>
-    );
+  // Signed out, the navigation says nothing: the home's second step and the first "I use it" ask.
+  if (me.user === null) return null;
   return (
     <div className="foundations-nav-account">
       <a className="foundations-nav-list" href={profilePath(me.user.login, link)}>

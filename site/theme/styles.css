@@ -945,3 +945,152 @@ body {
 .foundations-pgrid-empty a {
   color: var(--accent) !important;
 }
+
+/* The first step's way forward reads as a link. */
+.foundations-journey .foundations-journey-link {
+  border: none;
+  padding: 0;
+  color: var(--accent);
+  font-weight: 600;
+  background: transparent;
+  text-align: left;
+}
+
+/* Once the cards scroll away, the three titles stay under the navigation. */
+.foundations-journey-bar {
+  position: fixed;
+  top: var(--rp-nav-height, 64px);
+  left: 0;
+  right: 0;
+  z-index: 40;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--line);
+  background: color-mix(in srgb, var(--bg) 90%, transparent);
+  backdrop-filter: blur(8px);
+  transform: translateY(-120%);
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    transform 0.25s ease,
+    opacity 0.25s ease;
+}
+
+.foundations-journey-bar[data-shown] {
+  transform: none;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.foundations-journey-bar > * {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 12px 4px 4px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--fg) !important;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none !important;
+  cursor: pointer;
+}
+
+.foundations-journey-bar > span {
+  cursor: default;
+  color: var(--muted) !important;
+}
+
+.foundations-journey-bar > *::before {
+  content: attr(data-step);
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 11px;
+  color: #fff;
+  background: var(--accent-strong);
+}
+
+.foundations-journey-bar > [data-done]::before {
+  content: "✓";
+}
+
+.foundations-journey-bar > [data-step="2"]:not([data-done]) {
+  border-color: var(--accent);
+  color: var(--accent) !important;
+}
+
+/* With the three steps behind the reader, the lede no longer announces them. */
+html[data-journey="done"] .foundations-steps-intro,
+html[data-journey="done"] .foundations-journey,
+html[data-journey="done"] .foundations-journey-bar {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  .foundations-journey-bar > * {
+    font-size: 11px;
+  }
+}
+
+/* Asking a signed-out reader to sign in before their first "I use it". */
+.foundations-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: color-mix(in srgb, #000 55%, transparent);
+  animation: foundations-appear 0.15s ease-out both;
+}
+
+.foundations-modal-box {
+  width: min(440px, 100%);
+  padding: 22px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--surface);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.foundations-modal-box h3 {
+  margin: 0 0 8px !important;
+  font-size: 19px;
+}
+
+.foundations-modal-box p {
+  margin: 0 0 18px !important;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.foundations-modal-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.foundations-modal-actions button {
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--fg);
+  border-radius: 999px;
+  padding: 7px 16px;
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.foundations-modal-actions .foundations-modal-primary {
+  border-color: var(--accent-strong);
+  background: var(--accent-strong);
+  color: #fff;
+  font-weight: 600;
+}

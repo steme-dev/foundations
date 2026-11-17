@@ -284,6 +284,109 @@ export const PRACTICES = {
     sources: ["fowler-2014-unit-test"],
     credited: [],
   },
+  observability: {
+    name: "Observability",
+    definition:
+      "The system emits enough telemetry that anyone, a person or an agent, can ask it new questions while it runs, without shipping new code to answer them.",
+    cells: ["SI", "SC"],
+    themes: ["observability"],
+    sources: ["majors-observability-manifesto"],
+    credited: [],
+  },
+  "distributed-tracing": {
+    name: "Distributed tracing",
+    definition:
+      "Each request carries an identifier through every service it crosses, and each step records a timed span, so its whole path can be read afterwards.",
+    cells: ["SC"],
+    themes: ["observability"],
+    sources: ["sigelman-2010-dapper", "fonseca-2007-xtrace"],
+    credited: [],
+  },
+  "structured-logging": {
+    name: "Structured logging",
+    definition:
+      "Each log line is an event with named fields, not free text, so a program can query, count and join the logs.",
+    cells: ["SC"],
+    themes: ["observability"],
+    sources: [
+      "otel-logs-data-model",
+      "majors-2019-structured-events",
+      "leach-2019-canonical-log-lines",
+    ],
+    credited: [],
+  },
+  "service-level-objectives": {
+    name: "Service level objectives (SLOs)",
+    definition:
+      "A target for how well a service must behave, such as the share of requests answered fast enough, measured continuously against what its users need.",
+    cells: ["SC"],
+    themes: ["observability"],
+    sources: ["sre-2016-service-level-objectives"],
+    credited: [],
+  },
+  "error-budget": {
+    name: "Error budget",
+    definition:
+      "The failure an objective still allows, spent by changes and outages; once it runs out, the team stops shipping risk and restores reliability first.",
+    cells: ["SC"],
+    themes: ["observability"],
+    sources: ["sre-2016-embracing-risk"],
+    credited: [],
+  },
+  "four-golden-signals": {
+    name: "The four golden signals",
+    definition:
+      "Latency, traffic, errors and saturation: the four measures to watch first on a system that serves users.",
+    cells: ["SC"],
+    themes: ["observability"],
+    sources: ["sre-2016-monitoring"],
+    credited: ["rob-ewaschuk"],
+  },
+  "use-method": {
+    name: "USE method",
+    definition:
+      "For every resource, check its utilisation, its saturation and its errors, to find a performance bottleneck methodically.",
+    cells: ["SC"],
+    themes: ["observability"],
+    sources: ["gregg-use-method"],
+    credited: ["brendan-gregg"],
+  },
+  "red-method": {
+    name: "RED method",
+    definition:
+      "For every service, measure the rate of its requests, their errors and their duration.",
+    cells: ["SC"],
+    themes: ["observability"],
+    sources: ["wilkie-2018-red", "dam-2018-red"],
+    credited: ["tom-wilkie"],
+  },
+  opentelemetry: {
+    name: "OpenTelemetry",
+    definition:
+      "A vendor-neutral standard, with its libraries, for producing traces, metrics and logs, so that instrumenting a code base does not tie it to one tool.",
+    cells: ["SC"],
+    themes: ["observability", "tooling"],
+    sources: ["otel-what-is", "otel-spec-overview"],
+    credited: ["opentelemetry"],
+  },
+  "canary-release": {
+    name: "Canary release",
+    definition:
+      "A change first reaches a small share of users while its signals are watched, and goes further only if they hold.",
+    cells: ["SC"],
+    themes: ["observability"],
+    sources: ["sato-2014-canary"],
+    credited: [],
+  },
+  "synthetic-monitoring": {
+    name: "Synthetic monitoring",
+    definition:
+      "Scripted probes exercise the running system continuously, as a user would, and raise an alert when an expected behaviour fails.",
+    cells: ["SC"],
+    themes: ["observability"],
+    sources: ["fale-gebhardt-2017-synthetic", "sre-2016-monitoring"],
+    credited: [],
+  },
 } as const satisfies Record<string, Practice>;
 
 export type PracticeId = keyof typeof PRACTICES;

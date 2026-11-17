@@ -4,6 +4,7 @@ import { join } from "node:path";
 import { defineConfig } from "@rspress/core";
 
 import { i18nSourceFr } from "./rspress-fr.ts";
+import { JOURNEY_HEAD } from "./theme/journey-state.ts";
 import { FAVICON, LOGO_DARK, LOGO_LIGHT } from "./theme/brand.ts";
 
 const site = import.meta.dirname;
@@ -49,6 +50,8 @@ export default defineConfig({
   // Clean URLs; a reader whose browser prefers French, landing on the English home, goes to /fr/ once,
   // and an address in a language always stays in it.
   route: { cleanUrls: true, localeRedirect: "only-default-lang" },
+  // A reader past the home's three steps does not see them flash before the page knows it.
+  head: [`<script>${JOURNEY_HEAD}</script>`],
   // In development the worker runs beside Rspress (`pnpm worker:dev`, port 8787): its routes are
   // proxied, so the session cookie and the votes work on Rspress's own origin.
   builderConfig: {

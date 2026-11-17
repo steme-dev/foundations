@@ -5,6 +5,7 @@ export const THEMES = {
   "refactoring-and-migration": "Refactoring and migration",
   "plans-and-agents": "Plans and agents",
   tooling: "Tooling",
+  observability: "Observability",
 } as const;
 
 export type Theme = keyof typeof THEMES;
