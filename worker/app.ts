@@ -76,6 +76,7 @@ const EVENTS = new Set([
   "search_used",
   "view_switched",
   "build_own_clicked",
+  "outbound_clicked",
   "grid_shared",
 ]);
 
@@ -352,7 +353,7 @@ export async function handle(request: Request, deps: Deps): Promise<Response> {
     if (practices.length === 0) return json({ error: "no-practice" }, 400);
     const id = newGridId();
     await store.saveGrid(id, practices, now.toISOString());
-    capture("grid_shared", { practices: practices.length });
+    capture("grid_shared", { practices: practices.length, grid: id });
     return json({ id }, 201);
   }
 

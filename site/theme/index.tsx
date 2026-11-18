@@ -8,6 +8,7 @@ import { useEffect } from "react";
 import { Account } from "./Account.tsx";
 import { PROPOSE_URL } from "./api.ts";
 import { useWords } from "./lang.ts";
+import { SHOPS } from "../../data/shops.ts";
 import { track } from "./track.ts";
 
 export * from "@rspress/core/theme-original";
@@ -49,7 +50,13 @@ const openOutside = (root: ParentNode): void => {
   }
 };
 
-/** Holds the rule for the whole page, and for what the page renders later (a list, a dialog). */
+/** The hosts of the shops a book is bought from (data/shops.ts): a click there is a purchase's start. */
+const SHOP_HOSTS: ReadonlySet<string> = new Set(Object.values(SHOPS).map((shop) => shop.host));
+
+/**
+ * Holds the rule for the whole page, and for what the page renders later (a list, a dialog); and counts
+ * each click out, by the site it leads to and whether it is a shop or a source.
+ */
 function ExternalLinks() {
   const { pathname } = useLocation();
   useEffect(() => {
@@ -58,6 +65,20 @@ function ExternalLinks() {
     observer.observe(document.body, { childList: true, subtree: true });
     return () => observer.disconnect();
   }, [pathname]);
+  useEffect(() => {
+    const count = (event: MouseEvent) => {
+      const anchor = (event.target as Element | null)?.closest?.("a[href]");
+      if (!(anchor instanceof HTMLAnchorElement) || anchor.host === window.location.host) return;
+      if (!anchor.protocol.startsWith("http")) return;
+      track("outbound_clicked", {
+        host: anchor.host,
+        kind: SHOP_HOSTS.has(anchor.host) ? "shop" : "link",
+        url: anchor.href,
+      });
+    };
+    document.addEventListener("click", count, true);
+    return () => document.removeEventListener("click", count, true);
+  }, []);
   return null;
 }
 

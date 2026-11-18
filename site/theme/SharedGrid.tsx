@@ -25,7 +25,7 @@ export default function SharedGrid() {
     else
       void getGrid(id).then((found) => {
         setPractices(found);
-        if (found !== null) track("grid_viewed", { own: false, shared: true });
+        if (found !== null) track("grid_viewed", { own: false, shared: true, grid: id });
       });
   }, []);
 

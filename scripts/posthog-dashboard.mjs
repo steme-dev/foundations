@@ -45,22 +45,45 @@ const sql = (query) => ({ kind: "DataVisualizationNode", source: { kind: "HogQLQ
 const INSIGHTS = {
   journey: [
     "From a visit to a shared grid",
-    "The way in, step by step, within a week: a page seen, the sign-in asked or started, signed in, a first practice said used, one's own grid opened, its link copied. Cookieless visits; only this site's events.",
+    "The way in as it is now, within a week: a page seen, a practice picked (with or without an account), the grid shared (a link copied, from the home, the account or one's own page). Cookieless visits; only this site's events.",
     {
       kind: "InsightVizNode",
       source: {
         kind: "FunnelsQuery",
         series: [
           step("$pageview", "A page seen"),
-          step("sign_in_started", "Sign-in started"),
-          step("signed_in", "Signed in"),
-          step("vote", "A practice said used", [
+          step("vote", "A practice picked", [
             { key: "on", type: "event", value: true, operator: "exact" },
           ]),
-          step("grid_viewed", "Their grid opened", [
-            { key: "own", type: "event", value: true, operator: "exact" },
-          ]),
           step("share_copied", "Its link copied"),
+        ],
+        properties: SITE,
+        dateRange: { date_from: "-30d" },
+        funnelsFilter: {
+          funnelOrderType: "ordered",
+          funnelVizType: "steps",
+          funnelWindowInterval: 7,
+          funnelWindowIntervalUnit: "day",
+          layout: "vertical",
+        },
+        filterTestAccounts: false,
+      },
+    },
+  ],
+  "journey-saved": [
+    "From a visit to a saved grid",
+    "The other way out, within a week: a page seen, a practice picked, the sign-in started, signed in. Saving is optional now: a grid can be shared without it.",
+    {
+      kind: "InsightVizNode",
+      source: {
+        kind: "FunnelsQuery",
+        series: [
+          step("$pageview", "A page seen"),
+          step("vote", "A practice picked", [
+            { key: "on", type: "event", value: true, operator: "exact" },
+          ]),
+          step("sign_in_started", "Sign-in started"),
+          step("signed_in", "Signed in"),
         ],
         properties: SITE,
         dateRange: { date_from: "-30d" },
@@ -183,15 +206,55 @@ GROUP BY page, how
 ORDER BY votes DESC`),
   ],
   steps: [
-    "The way in, used",
-    "Clicks on the home's three steps, the sign-in dialog shown, and 'Propose a practice' pressed.",
+    "Picks and shares",
+    "What readers do with the grid: practices picked without and with an account, grids shared without one, links copied by where from, 'Build your own' pressed on someone's page, switches between grid and list.",
     sql(`SELECT
-  multiIf(event = 'journey_step', concat('step ', toString(properties.step)), event = 'start_dialog_shown', 'sign-in dialog shown', event = 'propose_clicked', concat('propose (', toString(properties.from), ')'), event) AS what,
+  multiIf(
+    event = 'vote' AND properties.saved = false, if(properties.on = true, 'picked, no account', 'unpicked, no account'),
+    event = 'vote', if(properties.on = true, 'picked, signed in', 'unpicked, signed in'),
+    event = 'grid_shared', 'grid shared without an account',
+    event = 'share_copied', concat('link copied from ', toString(properties.from)),
+    event = 'build_own_clicked', 'build your own, from a profile',
+    event = 'view_switched', concat('switched to ', toString(properties.view)),
+    event) AS what,
   count() AS times
 FROM events
-WHERE event IN ('journey_step', 'start_dialog_shown', 'propose_clicked') AND ${WHERE}
+WHERE event IN ('vote', 'grid_shared', 'share_copied', 'build_own_clicked', 'view_switched') AND ${WHERE}
 GROUP BY what
 ORDER BY times DESC`),
+  ],
+  "shared-grids": [
+    "Most opened shared grids",
+    "Grids shared without an account: each one's link, how many practices it holds, and how many times it was opened.",
+    sql(`SELECT
+  grid,
+  concat('https://foundations.steme.dev/g/', grid) AS link,
+  max(practices) AS practices,
+  sum(opened) AS opened
+FROM (
+  SELECT toString(properties.grid) AS grid, toInt(properties.practices) AS practices, 0 AS opened
+  FROM events WHERE event = 'grid_shared' AND notEmpty(toString(properties.grid)) AND ${WHERE}
+  UNION ALL
+  SELECT toString(properties.grid) AS grid, 0 AS practices, 1 AS opened
+  FROM events WHERE event = 'grid_viewed' AND properties.shared = true AND notEmpty(toString(properties.grid)) AND ${WHERE}
+)
+GROUP BY grid
+ORDER BY opened DESC, practices DESC
+LIMIT 25`),
+  ],
+  outbound: [
+    "Sources and shops opened",
+    "Each click out of the site: to a source (a book's page, a paper, an article) or to a shop, by the site it leads to, then the exact links most opened.",
+    sql(`SELECT
+  toString(properties.kind) AS kind,
+  toString(properties.host) AS site,
+  toString(properties.url) AS link,
+  count() AS clicks
+FROM events
+WHERE event = 'outbound_clicked' AND ${WHERE}
+GROUP BY kind, site, link
+ORDER BY clicks DESC
+LIMIT 40`),
   ],
   finding: [
     "Searching and filtering",
