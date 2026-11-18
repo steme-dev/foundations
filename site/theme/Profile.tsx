@@ -136,11 +136,7 @@ export default function Profile() {
         <a className="foundations-profile-more" href={link("/")}>
           {t.addMore}
         </a>
-      ) : (
-        <a className="foundations-cta" href={link("/")}>
-          {t.sayWhich}
-        </a>
-      )}
+      ) : null}
     </section>
   );
 }

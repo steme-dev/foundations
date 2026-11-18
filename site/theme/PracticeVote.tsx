@@ -40,7 +40,7 @@ export default function PracticeVote({ id }: { id: PracticeId }) {
         </span>
       ) : (
         <span className="foundations-practice-count">
-          {n >= COUNT_FROM ? t.peopleUse(n) : t.beFirst}
+          {n >= COUNT_FROM ? t.peopleUse(n) : mine ? t.amongFirst : t.beFirst}
         </span>
       )}
     </div>

@@ -76,6 +76,7 @@ export const UI = {
     saveIt: "Save it with GitHub",
     peopleUse: (n: number) => `${plural(n, "reader uses", "readers use")} it`,
     beFirst: "Be among the first to say you use it.",
+    amongFirst: "You are among the first to say you use it.",
     emptyCell: "Nothing here yet. Practices that act here:",
     signIn: "Sign in with GitHub",
     signInShort: "Sign in",
@@ -110,7 +111,6 @@ export const UI = {
     backToLibrary: "Back to the library",
     buildsOn: (n: number) =>
       `Builds on ${plural(n, "practice", "practices")} of software engineering.`,
-    sayWhich: "Say which ones you use",
     harnessTitle: (login: string) => `@${login}'s harness, built on the literature`,
     harnessLede: (login: string) =>
       `The practices ${login} uses, each placed where it acts when an agent writes the code: before it or after, judged by a model or decided by a program. The grid is `,
@@ -175,6 +175,7 @@ export const UI = {
     saveIt: "Le garder avec GitHub",
     peopleUse: (n: number) => `${n} ${n === 1 ? "personne l'utilise" : "personnes l'utilisent"}`,
     beFirst: "Sois parmi les premiers à dire que tu l'utilises.",
+    amongFirst: "Tu es parmi les premiers à dire que tu l'utilises.",
     emptyCell: "Rien ici pour l'instant. Pratiques qui interviennent ici :",
     signIn: "Se connecter avec GitHub",
     signInShort: "Se connecter",
@@ -213,7 +214,6 @@ export const UI = {
     backToLibrary: "Retour à la bibliothèque",
     buildsOn: (n: number) =>
       `S'appuie sur ${plural(n, "pratique", "pratiques")} du génie logiciel.`,
-    sayWhich: "Et toi, lesquelles utilises-tu ?",
     harnessTitle: (login: string) => `Le harness de @${login}, fondé sur la littérature`,
     harnessLede: (login: string) =>
       `Les pratiques qu'utilise ${login}, chacune placée là où elle intervient quand un agent écrit le code : avant ou après, jugée par un modèle ou tranchée par un programme. La grille est celle de `,
