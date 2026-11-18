@@ -277,7 +277,30 @@ describe("counting what readers do", () => {
     await call(deps, `/auth/callback?code=good&state=${state}`, {
       headers: { Cookie: stateCookie },
     });
-    expect(sent.map((e) => e.event)).toEqual(["signed_in"]);
+    expect(sent.map((e) => e.event)).toEqual(["signed_in", "account_created"]);
+    expect(sent[1]?.properties).toMatchObject({ login: "ada" });
+  });
+
+  it("counts a new account once: a second sign-in is only a sign-in", async () => {
+    const { deps, sent } = counting();
+    const signIn = async () => {
+      const start = await call(deps, "/auth/github?return=/");
+      const state = new URL(start.headers.get("Location") ?? "").searchParams.get("state") ?? "";
+      const stateCookie = (start.headers.get("Set-Cookie") ?? "").split(";")[0] ?? "";
+      await call(deps, `/auth/callback?code=good&state=${state}`, {
+        headers: { Cookie: stateCookie },
+      });
+    };
+    await signIn();
+    await signIn();
+    expect(sent.map((e) => e.event)).toEqual(["signed_in", "account_created", "signed_in"]);
+    expect(sent[2]?.properties).toMatchObject({ new_account: false });
+  });
+
+  it("refuses an account_created a page sends", async () => {
+    const { deps, sent } = counting();
+    expect((await post(deps, { event: "account_created" })).status).toBe(400);
+    expect(sent).toHaveLength(0);
   });
 });
 
@@ -305,5 +328,34 @@ describe("the site's own people", () => {
     expect(sent).toHaveLength(0);
     await call(deps, "/t/e", { method: "POST", body: JSON.stringify({ event: "vote" }) });
     expect(sent.map((e) => e.event)).toEqual(["vote"]);
+  });
+});
+
+describe("who a counted reader is", () => {
+  it("names a signed-in reader by their session, with how many practices they use", async () => {
+    const { deps, sent } = counting();
+    await deps.store.upsertUser(ADA, NOW.toISOString());
+    await deps.store.addVote(ADA.githubId, "fuzzing", NOW.toISOString());
+    await call(deps, "/t/e", {
+      method: "POST",
+      body: JSON.stringify({ event: "share_copied", properties: { from: "me" } }),
+      headers: { Cookie: await sessionOf() },
+    });
+    expect(sent[0]?.properties).toMatchObject({
+      from: "me",
+      login: "ada",
+      github_id: 1,
+      practices_used: 1,
+    });
+  });
+
+  it("never takes a name from the page", async () => {
+    const { deps, sent } = counting();
+    await post(deps, {
+      event: "share_copied",
+      properties: { login: "someone", practices_used: 99 },
+    });
+    expect(sent[0]?.properties).not.toHaveProperty("login");
+    expect(sent[0]?.properties).not.toHaveProperty("practices_used");
   });
 });

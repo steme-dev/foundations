@@ -21,6 +21,8 @@ const STATE = join(ROOT, "posthog.json");
 const DASHBOARD = "Foundations — the library";
 const SITE = [{ key: "site", type: "event", value: "foundations", operator: "exact" }];
 const WHERE = "properties.site = 'foundations' AND timestamp > now() - INTERVAL 90 DAY";
+/** How many practices a reader uses, at least, to count as a power user. */
+const POWER_PRACTICES = 15;
 
 const cli = (tool, payload) => {
   const out = spawnSync("posthog-cli", ["api", "call", "--json", tool, JSON.stringify(payload)], {
@@ -93,6 +95,67 @@ const INSIGHTS = {
         filterTestAccounts: false,
       },
     },
+  ],
+  accounts: [
+    "Accounts created, day by day",
+    "New accounts per day: a GitHub account's first sign-in, sent by the worker (the site's own people left out).",
+    {
+      kind: "InsightVizNode",
+      source: {
+        kind: "TrendsQuery",
+        series: [step("account_created", "Accounts created")],
+        properties: SITE,
+        interval: "day",
+        dateRange: { date_from: "-30d" },
+        filterTestAccounts: false,
+      },
+    },
+  ],
+  "new-accounts": [
+    "Who joined",
+    "Each new account, newest first: its GitHub login, a link to its list here, and when. Logins are public, on GitHub and on each person's list.",
+    sql(`SELECT
+  properties.login AS login,
+  concat('https://foundations.steme.dev/u/', toString(properties.login)) AS list,
+  min(timestamp) AS joined
+FROM events
+WHERE event = 'account_created' AND ${WHERE}
+GROUP BY login
+ORDER BY joined DESC`),
+  ],
+  "power-users": [
+    "Power users",
+    `Signed-in readers who went the whole way: ${POWER_PRACTICES} practices or more, their own grid opened, its link copied. Most practices first.`,
+    sql(`SELECT
+  toString(properties.login) AS login,
+  max(toInt(properties.practices_used)) AS practices,
+  countIf(event = 'grid_viewed' AND properties.own = true) AS own_grid_opened,
+  countIf(event = 'share_copied') AS links_copied,
+  min(timestamp) AS first_seen,
+  max(timestamp) AS last_seen
+FROM events
+WHERE notEmpty(toString(properties.login)) AND ${WHERE}
+GROUP BY login
+HAVING practices >= ${POWER_PRACTICES} AND own_grid_opened > 0 AND links_copied > 0
+ORDER BY practices DESC, last_seen DESC`),
+  ],
+  influencers: [
+    "Top influencers",
+    "Who spreads the library: per person, how often they copied their list's link, and how many times others opened their list. Most opened first.",
+    sql(`SELECT
+  login,
+  sum(copied) AS links_copied,
+  sum(opened) AS opened_by_others
+FROM (
+  SELECT toString(properties.login) AS login, 1 AS copied, 0 AS opened
+  FROM events WHERE event = 'share_copied' AND notEmpty(toString(properties.login)) AND ${WHERE}
+  UNION ALL
+  SELECT toString(properties.list) AS login, 0 AS copied, 1 AS opened
+  FROM events WHERE event = 'grid_viewed' AND properties.own = false AND notEmpty(toString(properties.list)) AND ${WHERE}
+)
+GROUP BY login
+ORDER BY opened_by_others DESC, links_copied DESC
+LIMIT 25`),
   ],
   practices: [
     "What readers say they use",

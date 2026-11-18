@@ -46,7 +46,7 @@ export default function Profile() {
     void getMe().then((me) => {
       const own = me.user !== null && me.user.login.toLowerCase() === login.toLowerCase();
       if (own) markGridVisited();
-      track("grid_viewed", { own });
+      track("grid_viewed", { own, list: login });
     });
   }, []);
 

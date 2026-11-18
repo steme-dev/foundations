@@ -58,12 +58,16 @@ export type Deps = {
 };
 
 /** The events the site sends (site/theme/track.ts), and the one the worker adds on a sign-in. */
+/** The events only the worker sends: a page may not claim them. */
+const WORKER_ONLY = new Set(["signed_in", "account_created"]);
+
 const EVENTS = new Set([
   "$pageview",
   "journey_step",
   "start_dialog_shown",
   "sign_in_started",
   "signed_in",
+  "account_created",
   "vote",
   "grid_viewed",
   "share_copied",
@@ -125,12 +129,24 @@ export async function handle(request: Request, deps: Deps): Promise<Response> {
       return new Response(null, { status: 400 });
     }
     const event = typeof body.event === "string" ? body.event : "";
-    if (!EVENTS.has(event) || event === "signed_in") return new Response(null, { status: 400 });
-    const properties =
+    if (!EVENTS.has(event) || WORKER_ONLY.has(event)) return new Response(null, { status: 400 });
+    const sent =
       body.properties !== null && typeof body.properties === "object"
         ? (body.properties as Record<string, unknown>)
         : {};
-    capture(event, properties);
+    // Who a signed-in reader is, said by their session, never by the page: their GitHub login, public
+    // on GitHub and on their list here, and how many practices they use.
+    const { login: _login, github_id: _id, practices_used: _used, ...properties } = sent;
+    const user = signed === null ? null : await store.userById(signed.githubId);
+    const who =
+      user === null
+        ? {}
+        : {
+            login: user.login,
+            github_id: user.githubId,
+            practices_used: (await store.votesOf(user.githubId)).length,
+          };
+    capture(event, { ...properties, ...who });
     return new Response(null, { status: 204 });
   }
 
@@ -186,9 +202,13 @@ export async function handle(request: Request, deps: Deps): Promise<Response> {
     const user = token === null ? null : await deps.github.user(token);
     if (user === null)
       return new Response("Sign-in failed: GitHub did not answer.", { status: 502 });
+    const isNew = (await store.userById(user.githubId)) === null;
     await store.upsertUser(user, now.toISOString());
-    if (!config.uncounted.includes(user.githubId))
-      capture("signed_in", { $current_url: url.toString() });
+    if (!config.uncounted.includes(user.githubId)) {
+      capture("signed_in", { $current_url: url.toString(), new_account: isNew });
+      // A new account names its GitHub login, public on GitHub and on the person's list here.
+      if (isNew) capture("account_created", { login: user.login, github_id: user.githubId });
+    }
     const value = await sign(
       {
         githubId: user.githubId,
