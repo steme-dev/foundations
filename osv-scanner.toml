@@ -1,0 +1,14 @@
+# The advisories accepted, each with its reason and the day the acceptance ends: from that day
+# osv-scanner reports the advisory again and the security audit fails, until the dependency is
+# raised or the acceptance is renewed knowingly. Read by osv-scanner beside the lockfile it covers
+# (.github/workflows/security.yml).
+
+# picomatch, a regular expression that backtracks without bound on a glob an attacker supplies.
+# Every published version is affected (through 4.0.7, the latest) and no fixed one exists yet. It
+# reaches the repository through the test tooling alone (vitest, its vite, tinyglobby), which match
+# globs the repository writes itself; neither the site nor the worker ships any of it. Accepted by
+# the author on 2026-11-18, as steme accepted it the same day.
+[[IgnoredVulns]]
+id = "GHSA-fc5q-39xc-vjpf"
+ignoreUntil = 2026-12-18
+reason = "No fixed version exists; reached only through the test tooling, with globs the repository writes itself."
