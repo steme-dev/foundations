@@ -43,7 +43,7 @@ const W = {
     related: "Related practices",
     practices: "Practices",
     people: "People",
-    grid: "The grid",
+    grid: "Harness grid",
     guidesAndSensors: "Guides and sensors",
     missing: `A practice missing? [Propose a practice](${PROPOSE}).`,
     examples: "Examples",
@@ -69,7 +69,7 @@ const W = {
     related: "Pratiques voisines",
     practices: "Pratiques",
     people: "Personnes",
-    grid: "La grille",
+    grid: "Grille du harness",
     guidesAndSensors: "Guides et sensors",
     missing: `Il manque une pratique ? [Propose-la](${PROPOSE}).`,
     examples: "Exemples",
@@ -300,7 +300,9 @@ title: We stand on the shoulders of giants
 
 <p className="foundations-credit">“If I have seen further, it is by standing on ye shoulders of giants.” Isaac Newton, in a <a href="https://digitallibrary.hsp.org/Detail/objects/9792">letter to Robert Hooke</a>, 5 February 1675/76.</p>
 
-<p className="foundations-lede">Software engineering has long known how to keep code under control: a property for every function, a mutant for every test, a rule for every boundary. It cost too much to do, so we kept the code base in our heads instead. Agents now write the code and pay that cost, so we can change our approach and rely on the practices rather than on memory. Each one is here in the literature's own words, with its sources. <span className="foundations-steps-intro">Three steps to build on them:</span></p>
+<p className="foundations-lede">Software engineering has long known how to keep code under control: a property for every function, a mutant for every test, a rule for every boundary. It cost too much to do, so we kept the code base in our heads instead. Agents now write the code and pay that cost, so we can change our approach and rely on the practices rather than on memory.</p>
+
+<p className="foundations-lede foundations-lede-what">Each practice is here in the literature's own words, with its sources, and placed in the grid where it acts on your agent's harness, what guides and checks the code it writes. Press <span className="foundations-plus" role="img" aria-label="+">+</span> on the ones you use: they light up, and you see what your harness covers, and what it could add.</p>
 
 <Library />
 `
@@ -315,7 +317,9 @@ title: Nous nous tenons sur les épaules de géants
 
 <p className="foundations-credit">“If I have seen further, it is by standing on ye shoulders of giants.” (« Si j'ai vu plus loin, c'est en me tenant sur les épaules de géants », notre traduction.) Isaac Newton, dans une <a href="https://digitallibrary.hsp.org/Detail/objects/9792">lettre à Robert Hooke</a> du 5 février 1675/76.</p>
 
-<p className="foundations-lede">Le génie logiciel sait depuis longtemps garder un code sous contrôle : une propriété par fonction, un mutant par test, une règle par frontière. C'était trop cher à faire, alors on gardait plutôt toute la base de code en tête. Les agents écrivent désormais le code et en paient le prix : on peut changer d'approche et s'appuyer sur les pratiques plutôt que sur sa mémoire. Chacune est ici dans les mots de la littérature, avec ses sources. <span className="foundations-steps-intro">Trois étapes pour t'appuyer sur leur travail :</span></p>
+<p className="foundations-lede">Le génie logiciel sait depuis longtemps garder un code sous contrôle : une propriété par fonction, un mutant par test, une règle par frontière. C'était trop cher à faire, alors on gardait plutôt toute la base de code en tête. Les agents écrivent désormais le code et en paient le prix : on peut changer d'approche et s'appuyer sur les pratiques plutôt que sur sa mémoire.</p>
+
+<p className="foundations-lede foundations-lede-what">Chaque pratique est ici dans les mots de la littérature, avec ses sources, et placée dans la grille là où elle agit sur le harness de ton agent, ce qui guide et vérifie le code qu'il écrit. Appuie sur <span className="foundations-plus" role="img" aria-label="+">+</span> pour celles que tu utilises : elles s'allument, et tu vois ce que ton harness couvre, et ce qu'il pourrait ajouter.</p>
 
 <Library />
 `,

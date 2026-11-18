@@ -199,6 +199,12 @@ body {
   margin-bottom: 28px !important;
 }
 
+/* What the library is for, said apart from why: the practices, and the map onto a harness. */
+.foundations-lede-what {
+  color: var(--fg);
+  margin-top: -12px !important;
+}
+
 .foundations-credit {
   font-size: 13px;
   color: var(--muted);
@@ -709,112 +715,16 @@ body {
   }
 }
 
-/* The reader's grid while they vote: at the right edge, halfway down the screen, in the library's
-   empty margin; on a phone, small at the bottom left, across from "Propose". */
-.foundations-tally {
-  position: fixed;
-  right: 24px;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 50;
-  width: 236px;
-  padding: 10px;
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  background: color-mix(in srgb, var(--surface) 92%, transparent);
-  backdrop-filter: blur(8px);
-  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
-  animation: foundations-appear 0.35s ease-out both;
-}
-
 @keyframes foundations-appear {
   from {
     opacity: 0;
   }
 }
 
-.foundations-tally-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 6px;
-}
-
-.foundations-tally-cell {
-  display: flex;
-  flex-direction: column;
-  padding: 6px 8px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  color: var(--muted) !important;
-  text-decoration: none !important;
-  line-height: 1.2;
-}
-
-.foundations-tally-cell b {
-  font-size: 20px;
-  color: var(--fg);
-}
-
-.foundations-tally-cell span {
-  font-size: 10px;
-}
-
-.foundations-tally-cell[data-on] {
-  border-color: var(--accent);
-  background: color-mix(in srgb, var(--accent) 14%, transparent);
-}
-
-.foundations-tally-cell[data-bump] {
-  animation: foundations-bump 0.7s ease-out;
-}
-
 @keyframes foundations-bump {
   30% {
     transform: scale(1.08);
     background: color-mix(in srgb, var(--accent) 45%, transparent);
-  }
-}
-
-.foundations-tally-cta {
-  display: block;
-  margin-top: 8px;
-  padding: 6px;
-  border-radius: 8px;
-  background: var(--accent-strong);
-  color: #fff !important;
-  font-size: 13px;
-  font-weight: 600;
-  text-align: center;
-  text-decoration: none !important;
-}
-
-@media (max-width: 1280px) {
-  .foundations-tally {
-    top: auto;
-    right: auto;
-    left: 16px;
-    bottom: 16px;
-    transform: none;
-  }
-}
-
-@media (max-width: 640px) {
-  .foundations-tally {
-    left: 12px;
-    bottom: 12px;
-    width: 168px;
-    padding: 6px;
-  }
-
-  .foundations-tally-cell span {
-    display: none;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .foundations-tally,
-  .foundations-tally-cell[data-bump] {
-    animation: none;
   }
 }
 
@@ -826,13 +736,6 @@ body {
 .foundations-pgrid-head p {
   margin: 0 0 14px !important;
   font-size: 14px;
-  color: var(--muted);
-}
-
-.foundations-tally-title {
-  margin: 0 0 6px !important;
-  font-size: 12px;
-  font-weight: 600;
   color: var(--muted);
 }
 
@@ -857,84 +760,6 @@ body {
   color: #fff !important;
 }
 
-/* The way in: three numbered steps under the home's lede, the second ticked once the reader votes. */
-.foundations-journey {
-  list-style: none !important;
-  padding: 0 !important;
-  margin: 8px 0 28px !important;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-  counter-reset: step;
-}
-
-.foundations-journey li {
-  list-style: none !important;
-  margin: 0 !important;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  padding: 14px 14px 14px 52px;
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  background: var(--surface);
-  font-size: 14px;
-  color: var(--muted);
-}
-
-.foundations-journey li::before {
-  content: attr(data-step);
-  position: absolute;
-  left: 14px;
-  top: 14px;
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  font-weight: 700;
-  color: #fff;
-  background: var(--accent-strong);
-}
-
-.foundations-journey li[data-done]::before {
-  content: "✓";
-}
-
-.foundations-journey li[data-done] {
-  border-color: var(--accent);
-}
-
-.foundations-journey b {
-  font-size: 15px;
-  color: var(--fg);
-}
-
-.foundations-journey a {
-  color: var(--accent) !important;
-  font-weight: 600;
-  text-decoration: none !important;
-}
-
-.foundations-journey button {
-  align-self: flex-start;
-  border: 1px solid var(--accent);
-  color: var(--accent);
-  background: transparent;
-  border-radius: 999px;
-  padding: 3px 12px;
-  font: inherit;
-  font-size: 13px;
-  cursor: pointer;
-}
-
-@media (min-width: 641px) and (max-width: 760px) {
-  .foundations-journey {
-    grid-template-columns: 1fr;
-  }
-}
-
 /* What an empty cell of a person's grid could hold. */
 .foundations-pgrid-empty {
   font-size: 12px;
@@ -944,99 +769,6 @@ body {
 
 .foundations-pgrid-empty a {
   color: var(--accent) !important;
-}
-
-/* The first step's way forward reads as a link. */
-.foundations-journey .foundations-journey-link {
-  border: none;
-  padding: 0;
-  color: var(--accent);
-  font-weight: 600;
-  background: transparent;
-  text-align: left;
-}
-
-/* Once the cards scroll away, the three titles stay under the navigation. */
-.foundations-journey-bar {
-  position: fixed;
-  top: var(--rp-nav-height, 64px);
-  left: 0;
-  right: 0;
-  z-index: 40;
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-  padding: 8px 12px;
-  border-bottom: 1px solid var(--line);
-  background: color-mix(in srgb, var(--bg) 90%, transparent);
-  backdrop-filter: blur(8px);
-  transform: translateY(-120%);
-  opacity: 0;
-  pointer-events: none;
-  transition:
-    transform 0.25s ease,
-    opacity 0.25s ease;
-}
-
-.foundations-journey-bar[data-shown] {
-  transform: none;
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.foundations-journey-bar > * {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 4px 12px 4px 4px;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  background: var(--surface);
-  color: var(--fg) !important;
-  font: inherit;
-  font-size: 13px;
-  font-weight: 600;
-  text-decoration: none !important;
-  cursor: pointer;
-}
-
-.foundations-journey-bar > span {
-  cursor: default;
-  color: var(--muted) !important;
-}
-
-.foundations-journey-bar > *::before {
-  content: attr(data-step);
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  font-size: 11px;
-  color: #fff;
-  background: var(--accent-strong);
-}
-
-.foundations-journey-bar > [data-done]::before {
-  content: "✓";
-}
-
-.foundations-journey-bar > [data-step="2"]:not([data-done]) {
-  border-color: var(--accent);
-  color: var(--accent) !important;
-}
-
-/* With the three steps behind the reader, the lede no longer announces them. */
-html[data-journey="done"] .foundations-steps-intro,
-html[data-journey="done"] .foundations-journey,
-html[data-journey="done"] .foundations-journey-bar {
-  display: none;
-}
-
-@media (max-width: 640px) {
-  .foundations-journey-bar > * {
-    font-size: 11px;
-  }
 }
 
 /* Asking a signed-out reader to sign in before their first "I use it". */
@@ -1138,52 +870,9 @@ html[data-journey="done"] .foundations-journey-bar {
   color: var(--muted);
 }
 
-/* The keyboard's place, visible on everything that can be pressed. */
-.foundations-tag:focus-visible,
-.foundations-use:focus-visible,
-.foundations-journey button:focus-visible,
-.foundations-journey-bar > *:focus-visible,
-.foundations-modal-actions button:focus-visible,
-.foundations-filters select:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-
 /* On a phone: the steps as three compact titles so the list comes sooner; "Propose" only below the
    list, out of the way of the rows' "I use it"; the quotation's credit left to wider screens. */
 @media (max-width: 640px) {
-  .foundations-journey {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 6px;
-  }
-
-  .foundations-journey li {
-    padding: 34px 8px 8px;
-    font-size: 12px;
-  }
-
-  .foundations-journey li::before {
-    left: 8px;
-    top: 8px;
-    width: 20px;
-    height: 20px;
-    font-size: 11px;
-  }
-
-  .foundations-journey li > span,
-  .foundations-journey .foundations-journey-link {
-    display: none;
-  }
-
-  .foundations-journey b {
-    font-size: 13px;
-  }
-
-  .foundations-journey button {
-    font-size: 11px;
-    padding: 2px 8px;
-  }
-
   .foundations-credit {
     display: none;
   }
@@ -1313,20 +1002,492 @@ html[data-journey="done"] .foundations-journey-bar {
     font-size: 16px !important;
     line-height: 1.5 !important;
   }
+}
 
-  /* The three steps tight: titles on short lines, cards only as tall as they need. */
-  .foundations-journey li,
-  .foundations-journey b {
-    line-height: 1.25;
-  }
+/* The library laid out in the harness grid: each cell its practices, the reader's own lit and first. */
+.foundations-lgrid {
+  margin: 8px 0 20px;
+}
 
-  .foundations-journey li {
+.foundations-lgrid-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 120px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+}
+
+.foundations-lgrid-cell[data-on] {
+  border-color: var(--accent);
+}
+
+.foundations-lgrid-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.foundations-lgrid-chip {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--raised);
+  font-size: 12.5px;
+  line-height: 1.2;
+}
+
+.foundations-lgrid-chip a {
+  padding: 4px 4px 4px 10px;
+  color: var(--fg) !important;
+  text-decoration: none !important;
+}
+
+.foundations-lgrid-chip button {
+  margin: 2px 3px 2px 0;
+  width: 22px;
+  height: 22px;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.foundations-lgrid-chip button:hover {
+  background: color-mix(in srgb, var(--accent) 20%, transparent);
+  color: var(--fg);
+}
+
+.foundations-lgrid-chip button:focus-visible {
+  outline: 2px solid var(--accent);
+}
+
+.foundations-lgrid-chip[data-used] {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 22%, var(--surface));
+}
+
+.foundations-lgrid-chip[data-used] button {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.foundations-lgrid-more {
+  border: none;
+  background: none;
+  padding: 4px 6px;
+  font: inherit;
+  font-size: 12.5px;
+  color: var(--accent);
+  cursor: pointer;
+}
+
+@media (max-width: 640px) {
+  .foundations-lgrid {
+    grid-template-columns: 4.5rem 1fr 1fr;
     gap: 6px;
   }
 
-  .foundations-journey button {
-    align-self: flex-start;
-    line-height: 1.3;
-    padding: 4px 10px;
+  .foundations-lgrid-cell {
+    padding: 8px;
   }
+}
+
+/* ---- The home, laid out on one scale: 8px between related controls, 16px inside a block, 48px
+   between blocks (the opening, the grid's heading, the toolbar and the practices). ---- */
+
+/* A name for screen readers only. */
+.foundations-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* The grid's own heading: what to do with it, and the way to start. */
+.foundations-harness-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px 24px;
+  margin: 48px 0 16px;
+  padding-top: 32px;
+  border-top: 1px solid var(--line);
+}
+
+.foundations-harness-head > div {
+  flex: 1 1 22rem;
+}
+
+.foundations-harness-title {
+  margin: 0 0 4px !important;
+  font-size: 1.25rem;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  color: var(--fg);
+}
+
+.foundations-harness-text {
+  margin: 0 !important;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.foundations-harness-head .foundations-cta {
+  margin-top: 0;
+  border: none;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.foundations-harness-link {
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--accent) !important;
+}
+
+/* The toolbar: every control the same height, radius, surface and border. */
+.foundations-filters {
+  gap: 8px;
+  margin: 0 0 16px;
+}
+
+.foundations-filters .foundations-search,
+.foundations-filters select,
+.foundations-filters .foundations-views {
+  box-sizing: border-box;
+  height: 36px;
+  margin: 0;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--fg);
+  font: inherit;
+  font-size: 14px;
+}
+
+.foundations-filters .foundations-search {
+  flex: 1 1 14rem;
+  width: auto;
+  min-width: 0;
+  padding: 0 12px;
+}
+
+.foundations-filters select {
+  padding: 0 8px;
+}
+
+.foundations-filters label {
+  display: contents;
+}
+
+.foundations-filters .foundations-count {
+  font-size: 13px;
+}
+
+.foundations-filters .foundations-views {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px;
+}
+
+.foundations-filters .foundations-views button {
+  height: 28px;
+  padding: 0 12px;
+  font-size: 13px;
+}
+
+/* The opening's own rhythm: the quotation under the title, then the two paragraphs. */
+.foundations-lede {
+  margin-bottom: 16px !important;
+}
+
+.foundations-lede-what {
+  margin-top: 0 !important;
+}
+
+.foundations-lgrid {
+  margin: 0 0 24px;
+}
+
+/* On a phone: the filter on its own line, the selects sharing the next, and the grid in two columns,
+   each row's name above it rather than in a column of its own. */
+@media (max-width: 640px) {
+  .foundations-harness-head {
+    margin-top: 32px;
+    padding-top: 24px;
+  }
+
+  .foundations-filters .foundations-search {
+    flex-basis: 100%;
+  }
+
+  .foundations-filters select {
+    flex: 1 1 8rem;
+    min-width: 0;
+  }
+
+  .foundations-lgrid {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .foundations-lgrid > span:first-child {
+    display: none;
+  }
+
+  .foundations-lgrid .foundations-lgrid-row {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    align-items: baseline;
+    gap: 8px;
+    margin-top: 8px;
+  }
+}
+
+/* The toolbar on two lines: the filter and the switch first, then the selects and the count. */
+.foundations-filters .foundations-search {
+  order: 0;
+  flex: 1 1 calc(100% - 15rem);
+}
+
+.foundations-filters .foundations-views {
+  order: 1;
+  margin-left: auto;
+}
+
+.foundations-filters select {
+  order: 2;
+  flex: 0 1 auto;
+  max-width: 13rem;
+}
+
+.foundations-filters .foundations-count {
+  order: 3;
+}
+
+.foundations-harness-text {
+  line-height: 1.5 !important;
+}
+
+@media (max-width: 640px) {
+  .foundations-filters .foundations-search {
+    flex-basis: 100%;
+  }
+
+  .foundations-filters select {
+    flex: 1 1 7rem;
+    max-width: none;
+  }
+
+  .foundations-filters .foundations-views {
+    order: 4;
+    margin-left: 0;
+  }
+}
+
+/* The toolbar on one line, as Notion's and Linear's: a filter field with its icon, then each filter a
+   compact button that reads by its value (lit once set), the count, and the view switch. */
+.foundations-filters {
+  flex-wrap: nowrap;
+}
+
+.foundations-filters .foundations-search {
+  flex: 1 1 10rem;
+  padding-left: 32px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%238b8fa8' stroke-width='2' stroke-linecap='round' viewBox='0 0 24 24'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='m20 20-3.5-3.5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: 10px center;
+}
+
+.foundations-filters select {
+  flex: 0 0 auto;
+  max-width: 11rem;
+  field-sizing: content;
+  padding: 0 6px 0 10px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.foundations-filters select[data-active] {
+  border-color: var(--accent);
+  color: var(--accent);
+  /* the colour alone: the shorthand would reset the caret's no-repeat and tile it */
+  background-color: color-mix(in srgb, var(--accent) 12%, var(--surface));
+}
+
+.foundations-filters .foundations-views {
+  margin-left: 0;
+}
+
+.foundations-filters .foundations-count {
+  margin-left: 4px;
+  white-space: nowrap;
+}
+
+.foundations-filters .foundations-search,
+.foundations-filters select,
+.foundations-filters .foundations-count,
+.foundations-filters .foundations-views {
+  order: 0;
+}
+
+/* On a phone, the field on its own line, the buttons and the switch on the next. */
+@media (max-width: 640px) {
+  .foundations-filters {
+    flex-wrap: wrap;
+  }
+
+  .foundations-filters .foundations-search {
+    flex-basis: 100%;
+  }
+
+  .foundations-filters select {
+    flex: 0 1 auto;
+  }
+
+  .foundations-filters .foundations-count {
+    display: none;
+  }
+}
+
+/* The selects' caret drawn by us, with room on its right like on its left. */
+.foundations-filters select {
+  appearance: none;
+  padding: 0 28px 0 10px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%238b8fa8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' viewBox='0 0 24 24'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+}
+
+.foundations-filters select[data-active] {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%237c6cff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' viewBox='0 0 24 24'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+}
+
+/* The grid's rows named in a narrow column, the name turned to run along the row, as the columns'
+   names run along the top: no wide column left empty. */
+.foundations-lgrid {
+  grid-template-columns: 22px 1fr 1fr;
+}
+
+.foundations-lgrid .foundations-lgrid-row {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  white-space: nowrap;
+  font-size: 12px;
+}
+
+.foundations-lgrid .foundations-lgrid-row small {
+  font-size: 11px;
+}
+
+@media (max-width: 640px) {
+  .foundations-lgrid {
+    grid-template-columns: 18px 1fr 1fr;
+    gap: 6px;
+  }
+
+  .foundations-lgrid > span:first-child {
+    display: block;
+  }
+
+  .foundations-lgrid .foundations-lgrid-row {
+    grid-column: auto;
+    margin-top: 0;
+  }
+
+  .foundations-lgrid .foundations-lgrid-row small {
+    display: none;
+  }
+}
+
+/* The opening flows into the grid: no rule between them, its last sentence says what to press, and
+   the way to sign in follows it, then the toolbar and the grid. */
+.foundations-harness-head {
+  margin: 0 0 24px;
+  padding-top: 0;
+  border-top: none;
+  justify-content: flex-start;
+}
+
+.foundations-harness-head:empty {
+  display: none;
+}
+
+.foundations-harness-text {
+  flex: 0 1 auto;
+}
+
+@media (max-width: 640px) {
+  .foundations-harness-head {
+    margin-top: 0;
+    padding-top: 0;
+  }
+}
+
+/* The "+" that says "I use it": the same small round button in the grid and in the sentence that
+   points to it, so a reader knows it when they see it. */
+.foundations-plus,
+.foundations-lgrid-chip button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 20px;
+  height: 20px;
+  border: 1px solid color-mix(in srgb, var(--accent) 70%, transparent);
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+  color: var(--accent);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.foundations-plus {
+  margin: 0 2px;
+  vertical-align: 0.1em;
+}
+
+.foundations-lgrid-chip button {
+  margin: 0 4px 0 0;
+}
+
+.foundations-lgrid-chip button:hover {
+  background: color-mix(in srgb, var(--accent) 28%, transparent);
+  color: var(--fg);
+}
+
+.foundations-lgrid-chip[data-used] button {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #fff;
+}
+
+/* A link-looking button inside a sentence. */
+.foundations-inline-link {
+  border: none;
+  background: none;
+  padding: 0;
+  font: inherit;
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
 }

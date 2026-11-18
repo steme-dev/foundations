@@ -5,8 +5,6 @@
  */
 export type Event =
   | "$pageview"
-  | "journey_step"
-  | "start_dialog_shown"
   | "sign_in_started"
   | "vote"
   | "grid_viewed"
