@@ -30,8 +30,11 @@ export default function ProfileGrid({
 }: {
   login: string;
   votes: readonly PracticeId[];
-  /** The title and lede of a grid that is no one's: one shared without an account. */
-  heading?: { title: string; lede: string };
+  /**
+   * The grid's own title and lede, in place of the person's: a grid shared without an account names no
+   * one, and a person's page, which names them at its top, gives the grid no title of its own.
+   */
+  heading?: { title: string | null; lede: string };
 }) {
   const { t, link } = useWords();
   const ids = votes.filter((id) => id in PRACTICES);
@@ -64,7 +67,7 @@ export default function ProfileGrid({
   return (
     <figure className="foundations-pgrid" aria-label="Where these practices act in Böckeler's grid">
       <header className="foundations-pgrid-head">
-        <h3>{heading?.title ?? t.harnessTitle(login)}</h3>
+        {heading?.title === null ? null : <h3>{heading?.title ?? t.harnessTitle(login)}</h3>}
         <p>
           {heading?.lede ?? t.harnessLede(login)}
           <a href={link("/grid/")}>{t.harnessLedeLink}</a>.

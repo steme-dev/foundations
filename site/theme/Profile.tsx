@@ -121,7 +121,11 @@ export default function Profile() {
         </div>
       </div>
       {view === "grid" ? (
-        <ProfileGrid login={profile.login} votes={profile.votes} />
+        <ProfileGrid
+          login={profile.login}
+          votes={profile.votes}
+          heading={{ title: null, lede: t.profileLede }}
+        />
       ) : (
         <>
           <Filters filter={filter} onChange={setFilter} shown={shown.length} />

@@ -71,6 +71,8 @@ export const UI = {
     noGrid: "No grid here.",
     buildYours: "Build your own",
     addMore: "Add or remove practices on the home →",
+    profileLede:
+      "Each practice placed where it acts when an agent writes the code: before it or after, judged by a model or decided by a program. The grid is ",
     saveIt: "Save it with GitHub",
     peopleUse: (n: number) => `${plural(n, "reader uses", "readers use")} it`,
     beFirst: "Be among the first to say you use it.",
@@ -168,6 +170,8 @@ export const UI = {
     noGrid: "Aucune grille ici.",
     buildYours: "Construire la tienne",
     addMore: "Ajouter ou retirer des pratiques sur l'accueil →",
+    profileLede:
+      "Chaque pratique placée là où elle intervient quand un agent écrit le code : avant ou après, jugée par un modèle ou tranchée par un programme. La grille est celle de ",
     saveIt: "Le garder avec GitHub",
     peopleUse: (n: number) => `${n} ${n === 1 ? "personne l'utilise" : "personnes l'utilisent"}`,
     beFirst: "Sois parmi les premiers à dire que tu l'utilises.",
