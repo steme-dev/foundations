@@ -1921,16 +1921,55 @@ body {
   animation: foundations-pulse 1.6s ease-out infinite;
 }
 
-/* The question, on its own line in the cell, over the chip it points at: it covers nothing. */
-.foundations-hint-line {
-  margin: -2px 0 -2px;
-  color: var(--accent);
-  font-size: 12.5px;
+/* The question, floating over the chip, its point on the "+" it asks to press; it starts from the "+"
+   and reads to the right, away from the cell's name, and takes no room, so nothing moves when it goes. */
+.foundations-hint-tip {
+  position: absolute;
+  z-index: 4;
+  left: calc(100% - 36px);
+  bottom: calc(100% + 10px);
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 13px;
   font-weight: 600;
+  white-space: nowrap;
+  box-shadow: 0 4px 14px color-mix(in srgb, var(--fg) 22%, transparent);
+  pointer-events: none;
+  animation: foundations-float 2.4s ease-in-out infinite;
 }
 
-.foundations-hint-line::before {
-  content: "↓ ";
+.foundations-hint-tip::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 12px;
+  border: 6px solid transparent;
+  border-top-color: var(--accent);
+}
+
+/* On a phone the "+" is near the screen's edge: the tooltip reads to the left of it instead. */
+@media (max-width: 600px) {
+  .foundations-hint-tip {
+    right: -6px;
+    left: auto;
+  }
+
+  .foundations-hint-tip::after {
+    right: 18px;
+    left: auto;
+  }
+}
+
+@keyframes foundations-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
 }
 
 @keyframes foundations-pulse {
@@ -1946,7 +1985,8 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .foundations-lgrid-chip[data-hint] .foundations-plus {
+  .foundations-lgrid-chip[data-hint] .foundations-plus,
+  .foundations-hint-tip {
     animation: none;
   }
 }

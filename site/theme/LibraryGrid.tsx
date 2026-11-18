@@ -62,11 +62,6 @@ export default function LibraryGrid({
                   {CELLS[cell].label}
                   <b>{signedIn ? t.ofCell(mine, here.length) : here.length}</b>
                 </a>
-                {hint !== null && visible.some(([id]) => id === hint) ? (
-                  <span className="foundations-hint-line" role="status">
-                    {t.hintBubble}
-                  </span>
-                ) : null}
                 <span className="foundations-lgrid-chips">
                   {visible.map(([id, practice]) => (
                     <span
@@ -87,6 +82,11 @@ export default function LibraryGrid({
                           {used.has(id) ? "✓" : "+"}
                         </span>
                       </button>
+                      {hint === id ? (
+                        <span className="foundations-hint-tip" role="status">
+                          {t.hintBubble}
+                        </span>
+                      ) : null}
                     </span>
                   ))}
                   {here.length > FOLDED ? (
