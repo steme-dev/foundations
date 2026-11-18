@@ -1895,3 +1895,96 @@ body {
   padding: 0 16px;
   font-size: 14px;
 }
+
+/* Before the first practice the line is the invitation: in the text's own colour, its "+" larger. */
+.foundations-harness-text {
+  color: var(--muted);
+}
+
+.foundations-harness-head:not(:has(b)) .foundations-harness-text {
+  color: var(--fg);
+}
+
+.foundations-harness-text .foundations-plus {
+  width: 22px;
+  height: 22px;
+  font-size: 15px;
+}
+
+/* The first step shown: one chip's "+" pulses under a short question, until the first "+". */
+.foundations-lgrid-chip[data-hint] {
+  position: relative;
+  border-color: var(--accent);
+}
+
+.foundations-lgrid-chip[data-hint] .foundations-plus {
+  animation: foundations-pulse 1.6s ease-out infinite;
+}
+
+/* The question, on its own line in the cell, over the chip it points at: it covers nothing. */
+.foundations-hint-line {
+  margin: -2px 0 -2px;
+  color: var(--accent);
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.foundations-hint-line::before {
+  content: "↓ ";
+}
+
+@keyframes foundations-pulse {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 70%, transparent);
+  }
+  70% {
+    box-shadow: 0 0 0 9px transparent;
+  }
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .foundations-lgrid-chip[data-hint] .foundations-plus {
+    animation: none;
+  }
+}
+
+/* Before the first practice the actions take no room, so the invitation holds on one line. */
+.foundations-harness-actions[data-hidden] {
+  display: none;
+}
+
+/* A word marked as with a highlighter: what the grid shows that a list does not. */
+.foundations-highlight {
+  padding: 0 3px;
+  margin: 0 -1px;
+  border-radius: 3px;
+  background: linear-gradient(
+    100deg,
+    transparent 2%,
+    color-mix(in srgb, var(--accent) 55%, transparent) 6%,
+    color-mix(in srgb, var(--accent) 40%, transparent) 94%,
+    transparent 98%
+  );
+  background-size: 100% 62%;
+  background-repeat: no-repeat;
+  background-position: 0 75%;
+  color: inherit;
+}
+
+/* Under the word that matters, a strong pen stroke, drawn by hand rather than by the font. */
+.foundations-stroke {
+  padding-bottom: 3px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 10' preserveAspectRatio='none'%3E%3Cpath d='M2 7 C 30 3, 70 2, 118 5' fill='none' stroke='%23ffffff' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-size: 100% 8px;
+  background-position: 0 100%;
+}
+
+@media (prefers-color-scheme: light) {
+  .foundations-stroke {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 10' preserveAspectRatio='none'%3E%3Cpath d='M2 7 C 30 3, 70 2, 118 5' fill='none' stroke='%230B1020' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E");
+  }
+}

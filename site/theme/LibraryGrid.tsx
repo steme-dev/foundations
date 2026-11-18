@@ -22,11 +22,14 @@ export default function LibraryGrid({
   used,
   signedIn,
   onToggle,
+  hint = null,
 }: {
   shown: readonly [PracticeId, Practice][];
   used: ReadonlySet<PracticeId>;
   signedIn: boolean;
   onToggle: (id: PracticeId) => void;
+  /** The practice whose "+" is shown as the first step, with its question; none once a reader began. */
+  hint?: PracticeId | null;
 }) {
   const { t, link } = useWords();
   const [unfolded, setUnfolded] = useState<ReadonlySet<Cell>>(new Set());
@@ -59,12 +62,18 @@ export default function LibraryGrid({
                   {CELLS[cell].label}
                   <b>{signedIn ? t.ofCell(mine, here.length) : here.length}</b>
                 </a>
+                {hint !== null && visible.some(([id]) => id === hint) ? (
+                  <span className="foundations-hint-line" role="status">
+                    {t.hintBubble}
+                  </span>
+                ) : null}
                 <span className="foundations-lgrid-chips">
                   {visible.map(([id, practice]) => (
                     <span
                       key={used.has(id) ? `${id}-used` : id}
                       className="foundations-lgrid-chip"
                       data-used={used.has(id) ? "" : undefined}
+                      data-hint={hint === id ? "" : undefined}
                     >
                       <a href={link(`/practices/${id}`)}>{practice.name}</a>
                       <button

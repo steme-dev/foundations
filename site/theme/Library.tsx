@@ -13,6 +13,10 @@ import { shownCount, useVoting } from "./votes.tsx";
 
 const practices = Object.entries(PRACTICES) as [PracticeId, Practice][];
 
+/** The practice whose "+" is shown first: one most teams use, in a cell seen at first sight. */
+const HINT: PracticeId = "code-generator";
+const HINT_DONE = "foundations:hint-done";
+
 /** A text as a search compares it: lower case, without accents. */
 const fold = (text: string): string =>
   text
@@ -72,14 +76,18 @@ function HarnessHead({ me }: { me: ReturnType<typeof useVoting>["me"] }) {
   // pops as it grows.
   const line = (tail: string) => (
     <p className="foundations-harness-text">
-      {h.lead}{" "}
+      {used.length === 0 ? null : <>{h.lead} </>}
       {used.length === 0 ? (
         <>
           {h.none[0]}{" "}
           <span className="foundations-plus" role="img" aria-label="+">
             +
           </span>{" "}
-          {h.none[1]}
+          {h.none[1]}{" "}
+          <mark className="foundations-highlight">
+            {h.none[2]} <span className="foundations-stroke">{h.none[3]}</span>
+          </mark>
+          {h.none[4]}
         </>
       ) : (
         <>
@@ -179,6 +187,27 @@ export default function Library() {
     track("view_switched", { view: next, where: "home" });
   };
   const { me, counts, firstVote, toggle } = useVoting("home");
+  // The first step shown, not explained: until a reader's first "+", one practice most people use has
+  // its "+" pulse under a short question; any first "+" ends it for good.
+  const [hinted, setHinted] = useState(true);
+  useEffect(() => {
+    try {
+      setHinted(localStorage.getItem(HINT_DONE) === null);
+    } catch {
+      setHinted(false);
+    }
+  }, []);
+  const press = (id: PracticeId) => {
+    if (hinted) {
+      setHinted(false);
+      try {
+        localStorage.setItem(HINT_DONE, "1");
+      } catch {
+        // Without storage, the hint goes for this page only.
+      }
+    }
+    void toggle(id);
+  };
 
   // A search is counted once it settles, not at every key.
   const searched = useRef("");
@@ -271,7 +300,8 @@ export default function Library() {
           shown={shown}
           used={used}
           signedIn={me.user !== null || me.votes.length > 0}
-          onToggle={(id) => void toggle(id)}
+          onToggle={press}
+          hint={hinted && me.votes.length === 0 ? HINT : null}
         />
       ) : (
         <ol className="foundations-rows">
