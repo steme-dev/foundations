@@ -64,10 +64,14 @@ export function cardSvg({
   login,
   votes,
   origin,
+  path,
 }: {
-  login: string;
+  /** The person's login, or null for a grid shared without an account. */
+  login: string | null;
   votes: readonly string[];
   origin: string;
+  /** The address shown at the foot: the person's list, or the shared grid's. */
+  path?: string;
 }): string {
   const cells = byCell(votes);
   const practices = votes.filter((id) => id in PRACTICES).length;
@@ -103,8 +107,16 @@ export function cardSvg({
     `<g transform="translate(64 58) scale(0.25)"><path fill="${COLORS.fg}" d="${MARK}"/></g>`,
     text(94, 88, 26, COLORS.fg, "teme", 600),
     text(162, 88, 20, COLORS.muted, "foundations"),
-    text(64, 230, 60, COLORS.fg, clip(`@${login}`, 18), 600),
-    text(64, 284, 30, COLORS.muted, "harness, built on the literature"),
+    login === null
+      ? text(64, 230, 60, COLORS.fg, "A harness,", 600)
+      : text(64, 230, 60, COLORS.fg, clip(`@${login}`, 18), 600),
+    text(
+      64,
+      284,
+      30,
+      COLORS.muted,
+      login === null ? "built on the literature" : "harness, built on the literature",
+    ),
     text(
       64,
       352,
@@ -115,7 +127,7 @@ export function cardSvg({
     ),
     text(64, 400, 20, COLORS.muted, "Each practice placed where it acts"),
     text(64, 428, 20, COLORS.muted, "when an agent writes the code."),
-    text(64, 572, 22, COLORS.muted, `${host}/u/${login}`),
+    text(64, 572, 22, COLORS.muted, `${host}${path ?? `/u/${login ?? ""}`}`),
     text(600, 96, 18, COLORS.muted, "Inferential"),
     text(876, 96, 18, COLORS.muted, "Computational"),
     grid,

@@ -1,6 +1,6 @@
 /**
  * After the build: the pages that are no part of the library, a reader's account (/me) and a person's
- * list (/u/), are taken out of sitemap.xml and of each language's llms.txt. They carry a noindex of
+ * list (/u/) and a grid shared without an account (/g/), are taken out of sitemap.xml and of each language's llms.txt. They carry a noindex of
  * their own (site/generate.ts); this keeps the indexes to the practices, the people and the grid.
  *
  *   node scripts/seo.mjs     run by `pnpm build`
@@ -10,7 +10,7 @@ import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const DIST = join(fileURLToPath(new URL(".", import.meta.url)), "..", "dist");
-const PRIVATE = /^https:\/\/foundations\.steme\.dev(?:\/fr)?\/(?:me|u\/)/u;
+const PRIVATE = /^https:\/\/foundations\.steme\.dev(?:\/fr)?\/(?:me|u\/|g\/)/u;
 
 const sitemapPath = join(DIST, "sitemap.xml");
 const sitemap = readFileSync(sitemapPath, "utf8");

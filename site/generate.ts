@@ -55,6 +55,7 @@ const W = {
       `The ones marked Böckeler are from ${title}; the others are added by this library.`,
     yourPractices: "Your account",
     someone: "Practices someone builds on",
+    sharedGrid: "A shared harness",
   },
   fr: {
     buy: (shops: string) => `Disponible chez ${shops}.`,
@@ -81,6 +82,7 @@ const W = {
       `Les exemples marqués Böckeler viennent de ${title} ; les autres ont été ajoutés par cette bibliothèque.`,
     yourPractices: "Ton compte",
     someone: "Les pratiques de quelqu'un",
+    sharedGrid: "Un harness partagé",
   },
 } as const;
 
@@ -298,11 +300,11 @@ title: We stand on the shoulders of giants
 
 # We stand on the shoulders of giants.<br />Let's build on their work.
 
-<p className="foundations-credit">“If I have seen further, it is by standing on ye shoulders of giants.” Isaac Newton, in a <a href="https://digitallibrary.hsp.org/Detail/objects/9792">letter to Robert Hooke</a>, 5 February 1675/76.</p>
+<p className="foundations-credit">“If I have seen further, it is by standing on ye shoulders of giants.” Isaac Newton, <a href="https://digitallibrary.hsp.org/Detail/objects/9792">letter to Robert Hooke</a>, 1675/76.</p>
 
-<p className="foundations-lede">Software engineering has long known how to keep code under control: a property for every function, a mutant for every test, a rule for every boundary. It cost too much to do, so we kept the code base in our heads instead. Agents now write the code and pay that cost, so we can change our approach and rely on the practices rather than on memory.</p>
+<p className="foundations-lede">Software engineering long knew how to keep code under control, but it cost too much, so we kept the code base in our heads. Agents now write the code and pay that cost: we can rely on the practices instead of memory.</p>
 
-<p className="foundations-lede foundations-lede-what">Each practice is here in the literature's own words, with its sources, and placed in the grid where it acts on your agent's harness, what guides and checks the code it writes. Press <span className="foundations-plus" role="img" aria-label="+">+</span> on the ones you use: they light up, and you see what your harness covers, and what it could add.</p>
+<p className="foundations-lede foundations-lede-what">Each practice is here in the literature's own words, with its sources, and placed in <a href="https://martinfowler.com/articles/harness-engineering.html">Birgitta Böckeler's grid</a> of guides and sensors, where it acts on your agent's harness: what guides and checks the code it writes.</p>
 
 <Library />
 `
@@ -315,11 +317,11 @@ title: Nous nous tenons sur les épaules de géants
 
 # Nous nous tenons sur les épaules de géants.<br />Appuyons-nous sur leur travail.
 
-<p className="foundations-credit">“If I have seen further, it is by standing on ye shoulders of giants.” (« Si j'ai vu plus loin, c'est en me tenant sur les épaules de géants », notre traduction.) Isaac Newton, dans une <a href="https://digitallibrary.hsp.org/Detail/objects/9792">lettre à Robert Hooke</a> du 5 février 1675/76.</p>
+<p className="foundations-credit">“If I have seen further, it is by standing on ye shoulders of giants.” (« Si j'ai vu plus loin, c'est en me tenant sur les épaules de géants », notre traduction.) Isaac Newton, <a href="https://digitallibrary.hsp.org/Detail/objects/9792">lettre à Robert Hooke</a>, 1675/76.</p>
 
-<p className="foundations-lede">Le génie logiciel sait depuis longtemps garder un code sous contrôle : une propriété par fonction, un mutant par test, une règle par frontière. C'était trop cher à faire, alors on gardait plutôt toute la base de code en tête. Les agents écrivent désormais le code et en paient le prix : on peut changer d'approche et s'appuyer sur les pratiques plutôt que sur sa mémoire.</p>
+<p className="foundations-lede">Le génie logiciel sait depuis longtemps garder un code sous contrôle, mais c'était trop cher, alors on gardait la base de code en tête. Les agents écrivent désormais le code et en paient le prix : on peut s'appuyer sur les pratiques plutôt que sur sa mémoire.</p>
 
-<p className="foundations-lede foundations-lede-what">Chaque pratique est ici dans les mots de la littérature, avec ses sources, et placée dans la grille là où elle agit sur le harness de ton agent, ce qui guide et vérifie le code qu'il écrit. Appuie sur <span className="foundations-plus" role="img" aria-label="+">+</span> pour celles que tu utilises : elles s'allument, et tu vois ce que ton harness couvre, et ce qu'il pourrait ajouter.</p>
+<p className="foundations-lede foundations-lede-what">Chaque pratique est ici dans les mots de la littérature, avec ses sources, et placée dans <a href="https://martinfowler.com/articles/harness-engineering.html">la grille des guides et sensors de Birgitta Böckeler</a>, là où elle agit sur le harness de ton agent : ce qui guide et vérifie le code qu'il écrit.</p>
 
 <Library />
 `,
@@ -329,6 +331,7 @@ title: Nous nous tenons sur les épaules de géants
     home,
     bare("me.mdx", w.yourPractices, `# ${w.yourPractices}\n\n<Me />`),
     bare("u/index.mdx", w.someone, "<Profile />"),
+    bare("g/index.mdx", w.sharedGrid, "<SharedGrid />"),
     index("practices/index.md", w.practices, [...practices.map(practiceLine), "", w.missing]),
     ...practices.map(practicePage),
     index(

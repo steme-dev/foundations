@@ -69,6 +69,7 @@ export default defineConfig({
   markdown: {
     globalComponents: [
       join(site, "theme", "Library.tsx"),
+      join(site, "theme", "SharedGrid.tsx"),
       join(site, "theme", "Me.tsx"),
       join(site, "theme", "Profile.tsx"),
       join(site, "theme", "GridPlacement.tsx"),

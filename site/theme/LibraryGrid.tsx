@@ -51,7 +51,7 @@ export default function LibraryGrid({
             const visible = open ? here : here.slice(0, FOLDED);
             return (
               <div
-                key={cell}
+                key={mine > 0 ? `${cell}-on` : cell}
                 className="foundations-lgrid-cell"
                 data-on={mine > 0 ? "" : undefined}
               >
@@ -59,13 +59,10 @@ export default function LibraryGrid({
                   {CELLS[cell].label}
                   <b>{signedIn ? t.ofCell(mine, here.length) : here.length}</b>
                 </a>
-                {signedIn && mine === 0 && here.length > 0 ? (
-                  <span className="foundations-pgrid-empty">{t.cellEmptyForYou}</span>
-                ) : null}
                 <span className="foundations-lgrid-chips">
                   {visible.map(([id, practice]) => (
                     <span
-                      key={id}
+                      key={used.has(id) ? `${id}-used` : id}
                       className="foundations-lgrid-chip"
                       data-used={used.has(id) ? "" : undefined}
                     >
@@ -77,7 +74,9 @@ export default function LibraryGrid({
                         title={t.iUseIt}
                         onClick={() => onToggle(id)}
                       >
-                        {used.has(id) ? "✓" : "+"}
+                        <span className="foundations-plus" aria-hidden="true">
+                          {used.has(id) ? "✓" : "+"}
+                        </span>
                       </button>
                     </span>
                   ))}

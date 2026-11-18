@@ -4,7 +4,7 @@ import { CELLS, type Cell } from "../../data/grid.ts";
 import { PEOPLE } from "../../data/people.ts";
 import { PRACTICES, type Practice, type PracticeId } from "../../data/practices.ts";
 import { definition, themeLabel } from "../i18n.ts";
-import { PROPOSE_URL, profilePath, sharePath, signIn } from "./api.ts";
+import { PROPOSE_URL, createGrid, gridSharePath, profilePath, sharePath, signIn } from "./api.ts";
 import { type Filter, Filters, NO_FILTER, type Sort, matches } from "./Filters.tsx";
 import LibraryGrid from "./LibraryGrid.tsx";
 import { useWords } from "./lang.ts";
@@ -21,44 +21,135 @@ const fold = (text: string): string =>
     .toLowerCase();
 
 /**
- * The line between the opening and the grid, once a reader has pressed a "+": how many practices and
- * how much of the grid they cover; signed out, that they are kept in this browser, and the way to save
- * and share them with GitHub; signed in, the way to their own grid. Before any, nothing: the opening
- * has said what to press.
+ * The line between the opening and the grid, there from the start so nothing moves at the first "+":
+ * before any, it invites; then how many practices and how much of the grid they cover. Signed out, kept in this browser: sharing it needs no account (a
+ * short link to the grid as it is, copied), and GitHub is offered beside it, to keep it everywhere
+ * under their name. Signed in, the way to their own grid.
  */
 function HarnessHead({ me }: { me: ReturnType<typeof useVoting>["me"] }) {
-  const { t, link } = useWords();
+  const { t, link: to } = useWords();
   const h = t.harnessHead;
   const used = me.votes.filter((id) => id in PRACTICES);
   const covered = (Object.keys(CELLS) as Cell[]).filter((cell) =>
     used.some((id) => (PRACTICES[id].cells as readonly Cell[]).includes(cell)),
   ).length;
-  if (used.length === 0) return null;
-  return (
-    <div className="foundations-harness-head">
-      {me.user === null ? (
+  const [copied, setCopied] = useState(false);
+  // Whether the line is stuck under the navigation: only then does it draw its rule and its ground.
+  const sentinel = useRef<HTMLSpanElement>(null);
+  const [stuck, setStuck] = useState(false);
+  useEffect(() => {
+    const element = sentinel.current;
+    if (element === null) return;
+    const observer = new IntersectionObserver(
+      ([entry]) =>
+        setStuck(entry !== undefined && !entry.isIntersecting && entry.boundingClientRect.top < 80),
+      { rootMargin: "-65px 0px 0px 0px" },
+    );
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, []);
+  const [sharing, setSharing] = useState(false);
+  // "Link copied" shows over the button for a moment, then goes.
+  useEffect(() => {
+    if (!copied) return;
+    const timer = window.setTimeout(() => setCopied(false), 2000);
+    return () => window.clearTimeout(timer);
+  }, [copied]);
+
+  // A grid shared without an account: frozen as it is now, under a short link, which is copied.
+  const share = async () => {
+    setSharing(true);
+    const id = await createGrid(used);
+    setSharing(false);
+    if (id === null) return;
+    const address = `${window.location.origin}${gridSharePath(id, to)}`;
+    track("share_copied", { from: "grid", saved: false, practices: used.length });
+    await navigator.clipboard.writeText(address).catch(() => undefined);
+    setCopied(true);
+  };
+
+  // The line, the same at every count: before any practice it invites; then it counts, and each number
+  // pops as it grows.
+  const line = (tail: string) => (
+    <p className="foundations-harness-text">
+      {h.lead}{" "}
+      {used.length === 0 ? (
         <>
-          <p className="foundations-harness-text">{h.kept(used.length, covered)}</p>
-          <button
-            type="button"
-            className="foundations-cta"
-            onClick={() => {
-              track("sign_in_started", { from: "grid", practices: used.length });
-              signIn(window.location.pathname);
-            }}
-          >
-            {h.save}
-          </button>
+          {h.none[0]}{" "}
+          <span className="foundations-plus" role="img" aria-label="+">
+            +
+          </span>{" "}
+          {h.none[1]}
         </>
       ) : (
         <>
-          <p className="foundations-harness-text">{h.summary(used.length, covered)}</p>
-          <a className="foundations-harness-link" href={profilePath(me.user.login, link)}>
-            {h.see}
-          </a>
+          <b key={`n${used.length}`} className="foundations-bump">
+            {used.length}
+          </b>{" "}
+          {h.practices(used.length)},{" "}
+          <b key={`c${covered}`} className="foundations-bump">
+            {covered}
+          </b>{" "}
+          {h.cells}
+          {tail}
         </>
       )}
-    </div>
+    </p>
+  );
+
+  return (
+    <>
+      <span ref={sentinel} className="foundations-harness-sentinel" aria-hidden="true" />
+      <div className="foundations-harness-head" data-stuck={stuck ? "" : undefined}>
+        {me.user === null ? (
+          <>
+            {line(h.kept)}
+            <div
+              className="foundations-harness-actions"
+              data-hidden={used.length === 0 ? "" : undefined}
+            >
+              <button
+                type="button"
+                className="foundations-inline-link"
+                onClick={() => {
+                  track("sign_in_started", { from: "grid", practices: used.length });
+                  signIn(window.location.pathname);
+                }}
+              >
+                {h.save}
+              </button>
+              <span className="foundations-tip-anchor">
+                <button
+                  type="button"
+                  className="foundations-cta"
+                  disabled={sharing}
+                  onClick={() => void share()}
+                >
+                  {h.share}
+                </button>
+                {copied ? (
+                  <span className="foundations-tip" role="status">
+                    {h.copied}
+                  </span>
+                ) : null}
+              </span>
+            </div>
+          </>
+        ) : (
+          <>
+            {line(h.saved)}
+            <div
+              className="foundations-harness-actions"
+              data-hidden={used.length === 0 ? "" : undefined}
+            >
+              <a className="foundations-harness-link" href={profilePath(me.user.login, to)}>
+                {h.see}
+              </a>
+            </div>
+          </>
+        )}
+      </div>
+    </>
   );
 }
 
@@ -179,7 +270,7 @@ export default function Library() {
         <LibraryGrid
           shown={shown}
           used={used}
-          signedIn={me.user !== null}
+          signedIn={me.user !== null || me.votes.length > 0}
           onToggle={(id) => void toggle(id)}
         />
       ) : (

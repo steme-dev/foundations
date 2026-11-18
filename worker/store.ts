@@ -17,6 +17,10 @@ export interface Store {
   counts(): Promise<Record<string, number>>;
   /** Forgets a user and every vote of theirs. */
   deleteUser(githubId: number): Promise<void>;
+  /** Keeps a grid shared without an account, its practices frozen, under its id. */
+  saveGrid(id: string, practices: readonly string[], now: string): Promise<void>;
+  /** A shared grid's practices, or null when no grid has this id. */
+  gridById(id: string): Promise<string[] | null>;
 }
 
 /** The store on Cloudflare D1, the schema of `migrations/`. */
@@ -86,6 +90,19 @@ export function d1Store(db: D1Database): Store {
         db.prepare("DELETE FROM users WHERE github_id = ?").bind(githubId),
       ]);
     },
+    async saveGrid(id, practices, now) {
+      await db
+        .prepare("INSERT INTO grids (id, practices, created_at) VALUES (?, ?, ?)")
+        .bind(id, JSON.stringify(practices), now)
+        .run();
+    },
+    async gridById(id) {
+      const row = await db
+        .prepare("SELECT practices FROM grids WHERE id = ?")
+        .bind(id)
+        .first<{ practices: string }>();
+      return row === null ? null : (JSON.parse(row.practices) as string[]);
+    },
   };
 }
 
@@ -93,6 +110,7 @@ export function d1Store(db: D1Database): Store {
 export function memoryStore(): Store {
   const users = new Map<number, User>();
   const votes = new Map<number, Map<string, string>>();
+  const grids = new Map<string, string[]>();
   return {
     async upsertUser(user) {
       for (const [id, other] of users)
@@ -126,6 +144,12 @@ export function memoryStore(): Store {
     async deleteUser(githubId) {
       users.delete(githubId);
       votes.delete(githubId);
+    },
+    async saveGrid(id, practices) {
+      grids.set(id, [...practices]);
+    },
+    async gridById(id) {
+      return grids.get(id) ?? null;
     },
   };
 }

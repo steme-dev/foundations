@@ -26,9 +26,12 @@ const suggestions = (cell: Cell, used: readonly PracticeId[]): PracticeId[] =>
 export default function ProfileGrid({
   login,
   votes,
+  heading,
 }: {
   login: string;
   votes: readonly PracticeId[];
+  /** The title and lede of a grid that is no one's: one shared without an account. */
+  heading?: { title: string; lede: string };
 }) {
   const { t, link } = useWords();
   const ids = votes.filter((id) => id in PRACTICES);
@@ -61,9 +64,9 @@ export default function ProfileGrid({
   return (
     <figure className="foundations-pgrid" aria-label="Where these practices act in Böckeler's grid">
       <header className="foundations-pgrid-head">
-        <h3>{t.harnessTitle(login)}</h3>
+        <h3>{heading?.title ?? t.harnessTitle(login)}</h3>
         <p>
-          {t.harnessLede(login)}
+          {heading?.lede ?? t.harnessLede(login)}
           <a href={link("/grid/")}>{t.harnessLedeLink}</a>.
         </p>
       </header>

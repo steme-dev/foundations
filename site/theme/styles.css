@@ -1046,36 +1046,9 @@ body {
   text-decoration: none !important;
 }
 
-.foundations-lgrid-chip button {
-  margin: 2px 3px 2px 0;
-  width: 22px;
-  height: 22px;
-  border: none;
-  border-radius: 50%;
-  background: transparent;
-  color: var(--muted);
-  font: inherit;
-  font-size: 13px;
-  cursor: pointer;
-}
-
-.foundations-lgrid-chip button:hover {
-  background: color-mix(in srgb, var(--accent) 20%, transparent);
-  color: var(--fg);
-}
-
-.foundations-lgrid-chip button:focus-visible {
-  outline: 2px solid var(--accent);
-}
-
 .foundations-lgrid-chip[data-used] {
   border-color: var(--accent);
   background: color-mix(in srgb, var(--accent) 22%, var(--surface));
-}
-
-.foundations-lgrid-chip[data-used] button {
-  color: var(--accent);
-  font-weight: 700;
 }
 
 .foundations-lgrid-more {
@@ -1443,8 +1416,7 @@ body {
 
 /* The "+" that says "I use it": the same small round button in the grid and in the sentence that
    points to it, so a reader knows it when they see it. */
-.foundations-plus,
-.foundations-lgrid-chip button {
+.foundations-plus {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1465,21 +1437,6 @@ body {
   vertical-align: 0.1em;
 }
 
-.foundations-lgrid-chip button {
-  margin: 0 4px 0 0;
-}
-
-.foundations-lgrid-chip button:hover {
-  background: color-mix(in srgb, var(--accent) 28%, transparent);
-  color: var(--fg);
-}
-
-.foundations-lgrid-chip[data-used] button {
-  border-color: var(--accent);
-  background: var(--accent);
-  color: #fff;
-}
-
 /* A link-looking button inside a sentence. */
 .foundations-inline-link {
   border: none;
@@ -1490,4 +1447,278 @@ body {
   text-decoration: underline;
   text-underline-offset: 2px;
   cursor: pointer;
+}
+
+/* A chip's "+": the round mark is small, the button around it is not. It takes the chip's whole
+   height and a margin on each side of the mark, so a press a little off the mark still says "I use it"
+   rather than opening the practice's page. */
+.foundations-lgrid-chip a {
+  padding-right: 2px !important;
+}
+
+.foundations-lgrid-chip button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  align-self: stretch;
+  width: auto;
+  height: auto;
+  min-height: 28px;
+  margin: 0;
+  padding: 0 8px 0 6px;
+  border: none;
+  border-radius: 0 999px 999px 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.foundations-lgrid-chip button:hover .foundations-plus {
+  background: color-mix(in srgb, var(--accent) 30%, transparent);
+  color: var(--fg);
+}
+
+.foundations-lgrid-chip button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+
+.foundations-lgrid-chip[data-used] .foundations-plus {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #fff;
+}
+
+/* The line over the grid stays in sight while the reader scrolls the grid: their count, and the way
+   to share it, under the navigation. */
+.foundations-harness-head {
+  position: sticky;
+  top: var(--rp-nav-height, 64px);
+  z-index: 5;
+  margin-left: -12px;
+  margin-right: -12px;
+  padding: 10px 12px;
+  border-bottom: 1px solid transparent;
+  transition:
+    border-color 0.2s,
+    background-color 0.2s;
+}
+
+/* Stuck under the navigation, and only then, it draws its rule and its ground over the grid. */
+.foundations-harness-head[data-stuck] {
+  border-bottom-color: var(--line);
+  background-color: color-mix(in srgb, var(--bg) 92%, transparent);
+  backdrop-filter: blur(8px);
+}
+
+.foundations-harness-sentinel {
+  display: block;
+  height: 0;
+}
+
+/* A word over a button for a moment: "Link copied". */
+.foundations-tip-anchor {
+  position: relative;
+  display: inline-flex;
+}
+
+.foundations-tip {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: var(--fg);
+  color: var(--bg);
+  font-size: 12.5px;
+  font-weight: 600;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.foundations-tip::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: var(--fg);
+}
+
+/* Rspress's document column scrolls sideways (overflow-x: auto), which makes it the scroll container a
+   sticky element sticks within: on the home, it does not, so the line over the grid sticks to the page. */
+.rp-doc-layout__doc:has(.foundations-library) {
+  overflow-x: visible;
+}
+
+/* The line over the grid on one row, the toolbar's width: the count on the left, the actions on the
+   right (the secondary before the primary), the button the toolbar's controls' height. */
+.foundations-harness-head {
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 0 -12px 12px;
+  padding: 8px 12px;
+}
+
+.foundations-harness-head > .foundations-harness-text {
+  flex: 1 1 auto;
+  margin: 0 !important;
+}
+
+.foundations-harness-actions {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 16px;
+}
+
+.foundations-harness-actions .foundations-cta {
+  display: inline-flex;
+  align-items: center;
+  height: 36px;
+  padding: 0 16px;
+  font-size: 14px;
+}
+
+.foundations-harness-actions .foundations-inline-link {
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .foundations-harness-head {
+    flex-wrap: wrap;
+  }
+
+  .foundations-harness-head > .foundations-harness-text {
+    flex-basis: 100%;
+  }
+}
+
+.foundations-harness-head > .foundations-harness-actions {
+  flex: 0 0 auto;
+  justify-content: flex-end;
+}
+
+/* The line holds its height from the start; its actions come in at the first practice. */
+.foundations-harness-head {
+  min-height: 52px;
+}
+
+.foundations-harness-actions[data-hidden] {
+  visibility: hidden;
+}
+
+.foundations-harness-actions {
+  animation: foundations-fade-in 0.25s ease-out;
+}
+
+.foundations-harness-text b {
+  color: var(--fg);
+  font-weight: 650;
+}
+
+/* A number that has just grown pops; a practice just said used, and a cell just reached, glow once. */
+.foundations-bump {
+  display: inline-block;
+  animation: foundations-bump 0.45s ease-out;
+}
+
+.foundations-lgrid-chip[data-used] {
+  animation: foundations-pop 0.35s ease-out;
+}
+
+.foundations-lgrid-cell[data-on] {
+  animation: foundations-glow 0.8s ease-out;
+}
+
+@keyframes foundations-bump {
+  0% {
+    transform: scale(1);
+    color: var(--fg);
+  }
+  35% {
+    transform: scale(1.35);
+    color: var(--accent);
+  }
+  100% {
+    transform: scale(1);
+    color: var(--fg);
+  }
+}
+
+@keyframes foundations-pop {
+  0% {
+    transform: scale(0.92);
+  }
+  60% {
+    transform: scale(1.06);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes foundations-glow {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 55%, transparent);
+  }
+  100% {
+    box-shadow: 0 0 0 10px transparent;
+  }
+}
+
+@keyframes foundations-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .foundations-bump,
+  .foundations-lgrid-chip[data-used],
+  .foundations-lgrid-cell[data-on],
+  .foundations-harness-actions {
+    animation: none;
+  }
+}
+
+/* The opening, tighter, so more of the grid shows at first sight: the title, its quotation close under
+   it, then the two short paragraphs. */
+.rp-doc:has(.foundations-library) h1 {
+  margin: 0 0 8px !important;
+}
+
+.foundations-credit {
+  margin: 0 0 20px !important;
+  line-height: 1.5 !important;
+}
+
+.foundations-lede {
+  margin-bottom: 12px !important;
+  line-height: 1.6 !important;
+}
+
+.foundations-lede-what {
+  margin-bottom: 20px !important;
+}
+
+.foundations-lede a {
+  color: var(--accent);
+}
+
+/* On a phone the actions sit on a line of their own: before the first practice it is not kept empty. */
+@media (max-width: 640px) {
+  .foundations-harness-actions[data-hidden] {
+    display: none;
+  }
+
+  .foundations-harness-head {
+    min-height: 0;
+  }
 }

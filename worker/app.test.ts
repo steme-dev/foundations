@@ -359,3 +359,59 @@ describe("who a counted reader is", () => {
     expect(sent[0]?.properties).not.toHaveProperty("practices_used");
   });
 });
+
+/** Shares a grid as the site does, from its own origin unless told otherwise. */
+const share = (deps: Deps, practices: unknown, origin = ORIGIN) =>
+  call(deps, "/api/grids", {
+    method: "POST",
+    body: JSON.stringify({ practices }),
+    headers: { Origin: origin, "Content-Type": "application/json" },
+  });
+
+describe("a grid shared without an account", () => {
+  it("keeps the known practices, once each, under a short id, and gives them back", async () => {
+    const deps = setup();
+    const made = await share(deps, ["fuzzing", "nonsense", "fuzzing", "ratchet"]);
+    expect(made.status).toBe(201);
+    const { id } = (await made.json()) as { id: string };
+    expect(id).toMatch(/^[A-Za-z0-9]{10}$/u);
+    const read = await call(deps, `/api/grids/${id}`);
+    expect(await read.json()).toEqual({ id, practices: ["fuzzing", "ratchet"] });
+  });
+
+  it("refuses a grid with no known practice, and one sent from another site", async () => {
+    const deps = setup();
+    expect((await share(deps, ["nonsense"])).status).toBe(400);
+    expect((await share(deps, ["fuzzing"], "https://elsewhere.example")).status).toBe(403);
+  });
+
+  it("answers 404 for an id no grid has", async () => {
+    expect((await call(setup(), "/api/grids/AAAAAAAAAA")).status).toBe(404);
+    expect((await call(setup(), "/api/grids/not-an-id")).status).toBe(404);
+  });
+
+  it("serves its page with the preview of a shared grid, and its card", async () => {
+    const deps = setup();
+    const { id } = (await (await share(deps, ["fuzzing", "ratchet"])).json()) as { id: string };
+    const page = await (await call(deps, `/g/${id}`)).text();
+    expect(page).toContain('content="A harness, built on the literature"');
+    expect(page).toContain(`/g/${id}/card.png`);
+    expect(page).toContain(`history.replaceState(null, "", "/g/?id=${id}")`);
+    const card = await call(deps, `/g/${id}/card.png`);
+    expect(card.headers.get("Content-Type")).toBe("image/png");
+    expect(await card.text()).toContain(`/g/${id}`);
+  });
+
+  it("serves the preview by the address the site copies, with the id in the query", async () => {
+    const deps = setup();
+    const { id } = (await (await share(deps, ["fuzzing"])).json()) as { id: string };
+    const page = await (await call(deps, `/g/?id=${id}`)).text();
+    expect(page).toContain(`/g/${id}/card.png`);
+  });
+
+  it("sends an unknown shared grid to the page, which says so", async () => {
+    const answer = await call(setup(), "/fr/g/AAAAAAAAAA");
+    expect(answer.status).toBe(302);
+    expect(answer.headers.get("Location")).toBe("/fr/g/?id=AAAAAAAAAA");
+  });
+});

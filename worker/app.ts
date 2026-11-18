@@ -59,7 +59,7 @@ export type Deps = {
 
 /** The events the site sends (site/theme/track.ts), and the one the worker adds on a sign-in. */
 /** The events only the worker sends: a page may not claim them. */
-const WORKER_ONLY = new Set(["signed_in", "account_created"]);
+const WORKER_ONLY = new Set(["signed_in", "account_created", "grid_shared"]);
 
 const EVENTS = new Set([
   "$pageview",
@@ -75,11 +75,19 @@ const EVENTS = new Set([
   "filter_used",
   "search_used",
   "view_switched",
+  "grid_shared",
 ]);
 
 const STATE_COOKIE = "foundations_oauth_state";
 const PRACTICE_IDS = new Set(Object.keys(PRACTICES));
 const LOGIN = /^[A-Za-z0-9-]{1,39}$/u;
+/** A shared grid's id: ten letters and digits, drawn at random. */
+const GRID_ID = /^[A-Za-z0-9]{10}$/u;
+const ALPHABET = "abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+const newGridId = (): string =>
+  [...crypto.getRandomValues(new Uint8Array(10))]
+    .map((b) => ALPHABET[b % ALPHABET.length])
+    .join("");
 
 const json = (body: unknown, status = 200, headers: HeadersInit = {}): Response =>
   Response.json(body, { status, headers: { "Cache-Control": "no-store", ...headers } });
@@ -313,6 +321,82 @@ export async function handle(request: Request, deps: Deps): Promise<Response> {
         : `${votes.length} practice${votes.length === 1 ? "" : "s"} of software engineering, each placed where it acts when an agent writes the code.`,
       image: `${config.publicOrigin}/u/${user.login}/card.png?v=${await votesDigest(votes)}`,
       url: `${config.publicOrigin}${lang}/u/${user.login}`,
+      back,
+    });
+    return new Response(html, {
+      headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store" },
+    });
+  }
+
+  // A grid shared without an account: its practices, frozen, under a short random id.
+  if (url.pathname === "/api/grids" && request.method === "POST") {
+    if (!sameOrigin()) return json({ error: "cross-origin" }, 403);
+    const text = await request.text();
+    if (text.length > 8192) return json({ error: "too-large" }, 413);
+    let body: { practices?: unknown } = {};
+    try {
+      body = JSON.parse(text) as typeof body;
+    } catch {
+      return json({ error: "not-json" }, 400);
+    }
+    const practices = Array.isArray(body.practices)
+      ? [
+          ...new Set(
+            body.practices.filter(
+              (id): id is string => typeof id === "string" && PRACTICE_IDS.has(id),
+            ),
+          ),
+        ]
+      : [];
+    if (practices.length === 0) return json({ error: "no-practice" }, 400);
+    const id = newGridId();
+    await store.saveGrid(id, practices, now.toISOString());
+    capture("grid_shared", { practices: practices.length });
+    return json({ id }, 201);
+  }
+
+  const grid = /^\/api\/grids\/([^/]+)$/u.exec(url.pathname);
+  if (grid !== null && request.method === "GET") {
+    const id = grid[1] ?? "";
+    const practices = GRID_ID.test(id) ? await store.gridById(id) : null;
+    if (practices === null) return json({ error: "unknown-grid" }, 404);
+    return json({ id, practices: practices.filter((p) => PRACTICE_IDS.has(p)) });
+  }
+
+  // A shared grid's card, and its page served with the preview's tags, as a person's list is.
+  const gridCard = /^\/g\/([^/]+)\/card\.png$/u.exec(url.pathname);
+  if (gridCard !== null && request.method === "GET") {
+    const id = gridCard[1] ?? "";
+    const practices = GRID_ID.test(id) ? await store.gridById(id) : null;
+    if (practices === null) return new Response("No grid here.", { status: 404 });
+    const png = await deps.renderPng(
+      cardSvg({ login: null, votes: practices, origin: config.publicOrigin, path: `/g/${id}` }),
+    );
+    return new Response(png, {
+      headers: { "Content-Type": "image/png", "Cache-Control": "public, max-age=86400" },
+    });
+  }
+
+  // A shared grid's page, by its short address /g/<id> or by the one the site copies, /g/?id=<id>.
+  const sharedGrid = /^(\/fr)?\/g\/([^/]*)\/?$/u.exec(url.pathname);
+  const sharedId = sharedGrid === null ? "" : sharedGrid[2] || (url.searchParams.get("id") ?? "");
+  if (sharedGrid !== null && sharedId !== "" && request.method === "GET") {
+    const lang = sharedGrid[1] ?? "";
+    const id = sharedId;
+    const back = `${lang}/g/?id=${encodeURIComponent(id)}`;
+    const practices = GRID_ID.test(id) ? await store.gridById(id) : null;
+    if (practices === null) return new Response(null, { status: 302, headers: { Location: back } });
+    const page = await deps.assets.fetch(new Request(new URL(`${lang}/g/`, url), request));
+    if (!page.ok) return page;
+    const french = lang === "/fr";
+    const n = practices.filter((p) => PRACTICE_IDS.has(p)).length;
+    const html = withPreview(await page.text(), {
+      title: french ? "Un harness, fondé sur la littérature" : "A harness, built on the literature",
+      description: french
+        ? `${n} pratique${n === 1 ? "" : "s"} du génie logiciel, chacune placée là où elle intervient quand un agent écrit le code.`
+        : `${n} practice${n === 1 ? "" : "s"} of software engineering, each placed where it acts when an agent writes the code.`,
+      image: `${config.publicOrigin}/g/${id}/card.png`,
+      url: `${config.publicOrigin}${lang}/g/${id}`,
       back,
     });
     return new Response(html, {
