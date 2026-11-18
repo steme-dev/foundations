@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { PRACTICES } from "../../data/practices.ts";
-import { type Profile as ProfileData, getMe, getProfile } from "./api.ts";
+import { type Profile as ProfileData, getMe, getProfile, sharePath } from "./api.ts";
 import { track } from "./track.ts";
 import { type Filter, Filters, NO_FILTER, matches } from "./Filters.tsx";
 import { PracticeList } from "./PracticeList.tsx";
@@ -28,6 +28,13 @@ export default function Profile() {
   const [profile, setProfile] = useState<ProfileData | null | undefined>(undefined);
   const [filter, setFilter] = useState<Filter>(NO_FILTER);
   const [view, setView] = useState<View>("grid");
+  const [own, setOwn] = useState(false);
+  const [copied, setCopied] = useState(false);
+  useEffect(() => {
+    if (!copied) return;
+    const timer = window.setTimeout(() => setCopied(false), 2000);
+    return () => window.clearTimeout(timer);
+  }, [copied]);
   useEffect(() => setView(viewOf(window.location)), []);
   const show = (next: View) => {
     setView(next);
@@ -42,8 +49,9 @@ export default function Profile() {
     if (login === "") setProfile(null);
     else void getProfile(login).then(setProfile);
     void getMe().then((me) => {
-      const own = me.user !== null && me.user.login.toLowerCase() === login.toLowerCase();
-      track("grid_viewed", { own, list: login });
+      const mine = me.user !== null && me.user.login.toLowerCase() === login.toLowerCase();
+      setOwn(mine);
+      track("grid_viewed", { own: mine, list: login });
     });
   }, []);
 
@@ -55,13 +63,28 @@ export default function Profile() {
       </p>
     );
   const shown = profile.votes.filter((id) => id in PRACTICES && matches(PRACTICES[id], filter));
+  const share = async () => {
+    const address = `${window.location.origin}${sharePath(profile.login, link)}`;
+    await navigator.clipboard.writeText(address).catch(() => undefined);
+    track("share_copied", { from: "profile", saved: true, practices: profile.votes.length });
+    setCopied(true);
+  };
+  const views = (
+    <div className="foundations-views" role="tablist" aria-label={t.views.label}>
+      {(["grid", "list"] as const).map((v) => (
+        <button key={v} type="button" role="tab" aria-selected={view === v} onClick={() => show(v)}>
+          {t.views[v]}
+        </button>
+      ))}
+    </div>
+  );
   return (
     <section className="foundations-profile">
       <div className="foundations-profile-head">
         {profile.avatarUrl === null ? null : (
           <img src={profile.avatarUrl} alt="" width={56} height={56} />
         )}
-        <div>
+        <div className="foundations-profile-who">
           <h2>
             <a
               href={`https://github.com/${profile.login}`}
@@ -73,19 +96,29 @@ export default function Profile() {
           </h2>
           <p>{t.buildsOn(profile.votes.length)}</p>
         </div>
-      </div>
-      <div className="foundations-views" role="tablist" aria-label={t.views.label}>
-        {(["grid", "list"] as const).map((v) => (
-          <button
-            key={v}
-            type="button"
-            role="tab"
-            aria-selected={view === v}
-            onClick={() => show(v)}
-          >
-            {t.views[v]}
-          </button>
-        ))}
+        <div className="foundations-harness-actions">
+          {views}
+          {own ? (
+            <span className="foundations-tip-anchor">
+              <button type="button" className="foundations-cta" onClick={() => void share()}>
+                {t.harnessHead.share}
+              </button>
+              {copied ? (
+                <span className="foundations-tip" role="status">
+                  {t.harnessHead.copied}
+                </span>
+              ) : null}
+            </span>
+          ) : (
+            <a
+              className="foundations-cta"
+              href={link("/")}
+              onClick={() => track("build_own_clicked", { from: "profile" })}
+            >
+              {t.buildYours} →
+            </a>
+          )}
+        </div>
       </div>
       {view === "grid" ? (
         <ProfileGrid login={profile.login} votes={profile.votes} />
@@ -95,9 +128,15 @@ export default function Profile() {
           <PracticeList ids={shown} />
         </>
       )}
-      <a className="foundations-cta" href={link("/")}>
-        {t.sayWhich}
-      </a>
+      {own ? (
+        <a className="foundations-profile-more" href={link("/")}>
+          {t.addMore}
+        </a>
+      ) : (
+        <a className="foundations-cta" href={link("/")}>
+          {t.sayWhich}
+        </a>
+      )}
     </section>
   );
 }

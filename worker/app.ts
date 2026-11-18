@@ -75,6 +75,7 @@ const EVENTS = new Set([
   "filter_used",
   "search_used",
   "view_switched",
+  "build_own_clicked",
   "grid_shared",
 ]);
 

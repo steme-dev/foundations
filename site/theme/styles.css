@@ -1722,3 +1722,176 @@ body {
     min-height: 0;
   }
 }
+
+/* ---- A person's page and the account page, on the home's scale: 8px between related things, 16px
+   inside a block, 48px between blocks. ---- */
+
+/* A person's page: who, how many, and the one action, on one row; then the switch, then the grid. */
+.foundations-profile-head {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 0 0 32px;
+}
+
+.foundations-profile-who {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.foundations-profile-head .foundations-harness-actions .foundations-cta {
+  text-decoration: none !important;
+}
+
+.foundations-profile-bar {
+  justify-content: flex-end;
+  margin-bottom: 8px;
+}
+
+.foundations-profile .foundations-pgrid {
+  margin-top: 0;
+}
+
+.foundations-profile-more {
+  display: inline-block;
+  margin-top: 16px;
+  font-size: 14px;
+  color: var(--accent) !important;
+}
+
+.foundations-profile > .foundations-cta {
+  margin-top: 16px;
+}
+
+/* The account page: who you are, then your list and its link, then, apart, deleting everything. */
+.foundations-me {
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+  margin-top: 8px;
+}
+
+.foundations-me-who {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.foundations-me-who img {
+  border-radius: 50%;
+}
+
+.foundations-me-who p {
+  flex: 1 1 auto;
+  margin: 0 !important;
+  line-height: 1.4 !important;
+}
+
+.foundations-me-who p span {
+  display: block;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.foundations-me-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.foundations-me-title {
+  margin: 0 !important;
+  font-size: 1.125rem;
+  font-weight: 650;
+  color: var(--fg);
+}
+
+.foundations-me-list .foundations-hint {
+  margin: 0 0 8px !important;
+}
+
+.foundations-me .foundations-share {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.foundations-me .foundations-share code {
+  flex: 1 1 16rem;
+  box-sizing: border-box;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  font-size: 13px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.foundations-me .foundations-share button {
+  box-sizing: border-box;
+  height: 36px;
+  padding: 0 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--fg);
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.foundations-me .foundations-share .foundations-cta {
+  display: inline-flex;
+  align-items: center;
+  height: 36px;
+  margin: 0;
+  padding: 0 16px;
+  font-size: 14px;
+}
+
+.foundations-me .foundations-danger-zone {
+  margin-top: 0;
+}
+
+@media (max-width: 640px) {
+  .foundations-profile-head {
+    flex-wrap: wrap;
+  }
+
+  .foundations-profile-head .foundations-harness-actions {
+    flex-basis: 100%;
+  }
+}
+
+/* The switch beside the page's action, at the toolbar's height. */
+.foundations-profile-head .foundations-views {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  height: 36px;
+  margin: 0;
+  padding: 3px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.foundations-profile-head .foundations-views button {
+  height: 28px;
+  padding: 0 12px;
+  font-size: 13px;
+}
+
+.foundations-profile-head .foundations-cta {
+  display: inline-flex;
+  align-items: center;
+  height: 36px;
+  margin: 0;
+  padding: 0 16px;
+  font-size: 14px;
+}

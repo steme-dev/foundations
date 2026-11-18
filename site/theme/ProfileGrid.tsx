@@ -70,13 +70,13 @@ export default function ProfileGrid({
           <a href={link("/grid/")}>{t.harnessLedeLink}</a>.
         </p>
       </header>
-      <div className="foundations-pgrid-grid">
+      <div className="foundations-pgrid-grid foundations-lgrid">
         <span />
         <span className="foundations-placement-axis">Inferential</span>
         <span className="foundations-placement-axis">Computational</span>
         {ROWS.map((row) => (
           <div key={row.label} className="foundations-placement-row">
-            <span className="foundations-placement-axis">
+            <span className="foundations-placement-axis foundations-lgrid-row">
               {row.label}
               <small>{t[row.hint]}</small>
             </span>

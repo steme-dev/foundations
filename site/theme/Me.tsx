@@ -22,6 +22,11 @@ export default function Me() {
   const { t, link: to } = useWords();
   const [me, setMe] = useState<MeState | null>(null);
   const [copied, setCopied] = useState(false);
+  useEffect(() => {
+    if (!copied) return;
+    const timer = window.setTimeout(() => setCopied(false), 2000);
+    return () => window.clearTimeout(timer);
+  }, [copied]);
   const [confirming, setConfirming] = useState<"sign-out" | "delete" | null>(null);
   useEffect(() => void getMe().then(setMe), []);
 
@@ -38,10 +43,14 @@ export default function Me() {
   const close = () => setConfirming(null);
   return (
     <section className="foundations-me">
-      <p className="foundations-signed-in">
-        <span>
-          {t.signedInAs} <strong>@{login}</strong>. {t.youUse(me.votes.length)}
-        </span>
+      <div className="foundations-me-who">
+        {me.user.avatarUrl === null ? null : (
+          <img src={me.user.avatarUrl} alt="" width={48} height={48} />
+        )}
+        <p>
+          {t.signedInAs} <strong>@{login}</strong>
+          <span>{t.youUse(me.votes.length)}</span>
+        </p>
         <button
           type="button"
           className="foundations-sign-out"
@@ -49,28 +58,36 @@ export default function Me() {
         >
           {t.signOut}
         </button>
-      </p>
-      <p>
-        <a className="foundations-cta" href={profilePath(login, to)}>
-          {t.seeList}
-        </a>
-      </p>
-      <div className="foundations-share">
-        <span>{t.shareIt}</span>
-        <code>{link}</code>
-        <button
-          type="button"
-          onClick={() =>
-            void navigator.clipboard.writeText(link).then(() => {
-              setCopied(true);
-              track("share_copied", { from: "me" });
-            })
-          }
-        >
-          {copied ? t.copied : t.copyLink}
-        </button>
       </div>
-      <p className="foundations-hint">{t.publicList}</p>
+
+      <div className="foundations-me-list">
+        <p className="foundations-me-title">{t.yourList}</p>
+        <p className="foundations-hint">{t.publicList}</p>
+        <div className="foundations-share">
+          <code>{link}</code>
+          <span className="foundations-tip-anchor">
+            <button
+              type="button"
+              onClick={() =>
+                void navigator.clipboard.writeText(link).then(() => {
+                  setCopied(true);
+                  track("share_copied", { from: "me" });
+                })
+              }
+            >
+              {t.copyLink}
+            </button>
+            {copied ? (
+              <span className="foundations-tip" role="status">
+                {t.harnessHead.copied}
+              </span>
+            ) : null}
+          </span>
+          <a className="foundations-cta" href={profilePath(login, to)}>
+            {t.seeList}
+          </a>
+        </div>
+      </div>
 
       <section className="foundations-danger-zone">
         <p className="foundations-danger-title">{t.dangerZone}</p>
