@@ -34,12 +34,40 @@ function PageView() {
   return null;
 }
 
+/** Every link to another site opens in a new tab, wherever it is written: a source, a shop, the menu. */
+const openOutside = (root: ParentNode): void => {
+  for (const anchor of root.querySelectorAll<HTMLAnchorElement>("a[href]")) {
+    let url: URL;
+    try {
+      url = new URL(anchor.href, window.location.href);
+    } catch {
+      continue;
+    }
+    if (!url.protocol.startsWith("http") || url.host === window.location.host) continue;
+    anchor.target = "_blank";
+    anchor.rel = "noopener noreferrer";
+  }
+};
+
+/** Holds the rule for the whole page, and for what the page renders later (a list, a dialog). */
+function ExternalLinks() {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    openOutside(document);
+    const observer = new MutationObserver(() => openOutside(document));
+    observer.observe(document.body, { childList: true, subtree: true });
+    return () => observer.disconnect();
+  }, [pathname]);
+  return null;
+}
+
 export function Layout(props: Parameters<typeof DefaultLayout>[0]) {
   return (
     <>
       <DefaultLayout {...props} beforeNavMenu={<Account />} />
       <Propose />
       <PageView />
+      <ExternalLinks />
     </>
   );
 }

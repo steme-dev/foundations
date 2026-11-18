@@ -128,9 +128,9 @@ export const UI = {
     noneYet: "None yet: say which ones you use on",
     theLibrary: "the library",
     signOut: "Sign out",
-    deleteAll: "Delete my account and votes",
+    deleteAll: "Delete my account and data",
     confirmDelete:
-      "Delete your account and every practice you said you use? This cannot be undone.",
+      "Delete your account and all its data, every practice you said you use included? This cannot be undone.",
   },
   fr: {
     seeList: "Voir ta liste →",
@@ -231,7 +231,8 @@ export const UI = {
     noneYet: "Aucune pour l'instant. Indique celles que tu utilises dans",
     theLibrary: "la bibliothèque",
     signOut: "Se déconnecter",
-    deleteAll: "Supprimer mon compte et mes votes",
-    confirmDelete: "Supprimer ton compte et toutes tes pratiques ? Cette action est définitive.",
+    deleteAll: "Supprimer mon compte et mes données",
+    confirmDelete:
+      "Supprimer ton compte et toutes ses données, y compris les pratiques que tu as dit utiliser ? Cette action est définitive.",
   },
 } as const;
